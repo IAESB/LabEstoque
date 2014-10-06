@@ -1,0 +1,40 @@
+﻿<!DOCTYPE HTML>
+<html>
+	<head>
+		<link href="css/materiais.css" rel="stylesheet" type="text/css"  media="all" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<script src="js/materiais.js"></script>
+	</head>
+	<body>
+		<div class="listaMateriais"  onclick="mostrarTodosMateriais();">
+			<div class="material" onclick="mostrarFormNovoMaterial();">
+				<img alt="Novo" src="images/serverces.png"/>			
+				<h4>Novo Material</h4>
+			</div>
+		</div>
+		<form class="formNovoMaterial" method="post" action="material/salvar">
+			<span><label>Nome:</label>
+				<input name="nome" type="text"/>
+			</span>
+			<span><label>Descrição:</label>
+				<input name="descricao" type="text"/>
+			</span>
+			<span><label>Lote:</label>
+				<input name="lote" type="text"/>
+			</span>
+			<span><label>Validade:</label>
+				<input name="validade" type="date"/>
+			</span>
+			<span><label>Grupo/Tipo/Categoria:</label>
+				<select name="grupo">  					
+				</select>
+			</span>
+			<span><label>Imagem:</label>
+				<input name="imagem" type="file"/>
+			</span>
+			<input type="submit" value="Salvar"/>
+			<input type="button" value="Cancelar" onClick="mostrarFormNovoMaterial();"/>
+		</form>
+	</body>
+</html>
+
