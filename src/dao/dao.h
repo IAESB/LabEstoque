@@ -18,11 +18,19 @@ typedef shared_ptr<Dao> DaoPrt;
 
 class Dao
 {
+    string url;
+    string user;
+    string password;
+    string database;
     static DaoPrt instance;
     unique_ptr<sql::Connection> connection;
     Dao(string url, string user, string password, string database);
 public:
     static DaoPrt getInstance(string url="" /*tcp://127.0.0.1:3306*/, string user="", string password="", string database="");
+    ~Dao();
+
+    bool isConnected();
+    void reconnect();
 
     template<typename type>
     bool update(type& obj)
@@ -45,18 +53,17 @@ public:
     }
 
     template<typename type>
-    shared_ptr< vector<type> > select(string table, string columns="", string where="", string options="")
+    shared_ptr< vector< shared_ptr<type> > > select(string table, string columns="", string options="")
     {
-        shared_ptr< vector<type> > vec(new vector<type>);
+        shared_ptr< vector< shared_ptr<type> > > vec(new vector< shared_ptr<type> >);
         string sql = "SELECT ";
         sql += columns.empty()?"*":columns;
-        sql += " FROM "+table;
-        sql += where.empty()?where:" WHERE "+where;
-        sql += options.empty()?options:" OPTIONS "+options;
+        sql += " FROM "+table+" ";
+        sql += options.empty()?"":options;
         unique_ptr<sql::Statement> stmt( connection->createStatement() );
         unique_ptr<sql::ResultSet> rs( stmt->executeQuery(sql) );
         while (rs->next()) {
-            vec->push_back( type(*rs) );
+            vec->push_back( shared_ptr<type>(new type(*rs) ) );
         }
         rs->close();
         return vec;
@@ -66,7 +73,7 @@ public:
     long long insert(type& obj)
     {
         long long id = -1;
-        string sql = obj.getSqlInsert();
+        const string& sql = obj.getSqlInsert();
         unique_ptr<sql::Statement> stmt( connection->createStatement() );
         stmt->executeUpdate(sql);
         unique_ptr<sql::ResultSet> rs( stmt->executeQuery("SELECT LAST_INSERT_ID()") );

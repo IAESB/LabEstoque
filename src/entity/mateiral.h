@@ -11,32 +11,30 @@ class Mateiral
 {
     int id;
     string nome;
-    string formula;
-    string lote;
-    string validade;
+    string descricao;
+    string imagem;
     GrupoPtr grupo;
 public:
     Mateiral();
+    Mateiral(const int& id);
     Mateiral(sql::ResultSet& rs);
 
     string getSqlInsert();
     string getSqlUpdate();
     string getSqlDelete();
-    string getValidade() const;
-    void setValidade(const string &value);
-    string getLote() const;
-    void setLote(const string &value);
-    string getFormula() const;
-    void setFormula(const string &value);
+    string getDescricao() const;
+    void setDescricao(const string &value);
     string getNome() const;
     void setNome(const string &value);
     int getId() const;
     void setId(int value);
     GrupoPtr getGrupo() const;
     void setGrupo(const GrupoPtr &value);
+    string getImagem() const;
+    void setImagem(const string &value);
 };
 
 typedef shared_ptr<Mateiral> MateiralPtr;
-typedef shared_ptr< vector<Mateiral> > ListMateiral;
+typedef shared_ptr< vector<MateiralPtr> > MateiralList;
 
 #endif // MATEIRAL_H

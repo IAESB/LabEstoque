@@ -1,34 +1,13 @@
 #include "mateiral.h"
 
-
-string Mateiral::getValidade() const
+string Mateiral::getDescricao() const
 {
-    return validade;
+    return descricao;
 }
 
-void Mateiral::setValidade(const string &value)
+void Mateiral::setDescricao(const string &value)
 {
-    validade = value;
-}
-
-string Mateiral::getLote() const
-{
-    return lote;
-}
-
-void Mateiral::setLote(const string &value)
-{
-    lote = value;
-}
-
-string Mateiral::getFormula() const
-{
-    return formula;
-}
-
-void Mateiral::setFormula(const string &value)
-{
-    formula = value;
+    descricao = value;
 }
 
 string Mateiral::getNome() const
@@ -60,31 +39,47 @@ void Mateiral::setGrupo(const GrupoPtr &value)
 {
     grupo = value;
 }
+
+string Mateiral::getImagem() const
+{
+    return imagem;
+}
+
+void Mateiral::setImagem(const string &value)
+{
+    imagem = value;
+}
 Mateiral::Mateiral()
 {
+}
+
+Mateiral::Mateiral(const int& id)
+{
+    this->id = id;
 }
 
 Mateiral::Mateiral(sql::ResultSet &rs)
 {
     id = rs.getInt64(1);
     nome = rs.getString(2);
-    formula = rs.getString(3);
-    lote = rs.getString(4);
-    validade = rs.getString(5);
+    descricao = rs.getString(3);
+    imagem = rs.getString(4);
     GrupoPtr grupo(new Grupo);
-    grupo->setId(rs.getInt(6));
-    grupo->setNome(rs.getString(7));
+    grupo->setId(rs.getInt(5));
+    grupo->setNome(rs.getString(6));
     setGrupo(grupo);
 }
 
 string Mateiral::getSqlInsert()
 {
-    string grupoId = "NULL";
+    string grupoId = "";
     if(grupo){
         grupoId = to_string(grupo->getId());
     }
-    string sql = "INSERT INTO material (nome, formula, lote, validade, grupo_id)\
-            VALUES ('"+nome+"', '"+formula+"', '"+lote+"', '"+validade+"', '"+grupoId+"');";
+    string sql = "INSERT INTO material (nome, descricao, validade, imagem";
+    sql += grupoId.size()?", grupo_id)":")";
+    sql += "VALUES ('"+nome+"', '"+descricao+"', '"+imagem+"'";
+    sql += grupoId.size()?", '"+grupoId+"');":");";
 
     return sql;
 }
@@ -96,7 +91,7 @@ string Mateiral::getSqlUpdate()
         grupoId = to_string(grupo->getId());
     }
     string sql = "UPDATE material \
-                 SET(nome='"+nome+"', formula'"+formula+"', lote'"+lote+"', validade'"+validade+"', grupo_id'"+grupoId+"')\
+                 SET(nome='"+nome+"', descricao'"+descricao+"', imagem='"+imagem+"',grupo_id'"+grupoId+"')\
                  WHERE id="+to_string(id)+";";
 
     return sql;

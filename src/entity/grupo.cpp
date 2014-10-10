@@ -1,6 +1,21 @@
 #include "grupo.h"
 
 
+Grupo::Grupo()
+{
+}
+
+Grupo::Grupo(const string& nome)
+{
+    this->nome = nome;
+}
+
+Grupo::Grupo(sql::ResultSet &rs)
+{
+    id = rs.getInt(1);
+    nome = rs.getString(2);
+}
+
 int Grupo::getId() const
 {
     return id;
@@ -30,18 +45,17 @@ void Grupo::setGrupo(const shared_ptr<Grupo> &value)
 {
     grupo = value;
 }
-Grupo::Grupo()
-{
-}
 
 string Grupo::getSqlInsert()
 {
-    string grupoId = "NULL";
+    string grupoId = "";
     if(grupo){
         grupoId = to_string(grupo->getId());
     }
-    string sql = "INSERT INTO grupo (nome, grupo_id)\
-            VALUES ('"+nome+"', '"+grupoId+"');";
+    string sql = "INSERT INTO grupo (nome";
+    sql += grupoId.size()?", grupo_id)":")";
+    sql += "VALUES ('"+nome+"'";
+    sql += grupoId.size()?", '"+grupoId+"');":");";
 
     return sql;
 }

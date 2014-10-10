@@ -28,3 +28,6 @@
 	background-color:gray;
 }
 
+.formNovoMaterial span{
+	display: block; 
+}

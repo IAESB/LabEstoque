@@ -1,0 +1,38 @@
+
+.formNovaEntrada{
+	display: none;
+}
+
+.invalido{
+	border-style: solid;
+	border-color: red;
+}
+
+#linhaMaterial td button{
+	cursor: not-allowed;
+}
+
+
+table#tabelaEntrada {
+    width:100%;
+}
+table#tabelaEntrada, 
+table#tabelaEntrada th, 
+table#tabelaEntrada td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+table tbody tr:nth-child(even) {
+    background-color: #EEE;
+}
+table tbody tr:nth-child(odd) {
+   background-color: #DDD;
+}
+table#tabelaEntrada  th	{
+    background-color: black;
+    color: white;
+}

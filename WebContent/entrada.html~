@@ -32,8 +32,8 @@
 							</datalist>
 						</td>
 						<td><input name="quantidade" type="number"/></td>
-						<td><input name="validade" type="date"/></td>
 						<td><input name="valor" type="number" pattern="^\d+(\.|\,)\d{2}$"/></td>
+						<td><input name="validade" type="date"/></td>
 						<td><button onclick="removeMaterial(this)" type="button" alt="Remover" disabled>X</button></td>
 					</tr>
 				</table>

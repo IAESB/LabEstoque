@@ -29,7 +29,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 				</div>
 				<nav class="top-nav">
 					<ul>
-						<li><a href="/">Materiais</a></li>
+						<li class="active"><a href="/">Materiais</a></li>
 						<li><a href="/entrada">Entrada</a></li>
 						<li><a href="saida.html">Saida</a></li>
 						<li><a href="-config.html">Configuração</a></li>

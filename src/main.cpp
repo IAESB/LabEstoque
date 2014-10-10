@@ -1,23 +1,38 @@
+#include <unistd.h>
+#include <stdlib.h>
+#include <signal.h>
 #include <iostream>
-#include "model/materialmodel.h"
-using namespace std;
+#include <mongoose/Server.h>
+#include "control/materialcontroller.h"
+#include "control/entradacontroller.h"
 
-void configureDao()
-{
-    DaoPrt dao = Dao::getInstance("tcp://127.0.0.1:3306", "root", "root", "estoque_lab_quimica");
+using namespace std;
+using namespace Mongoose;
+
+void configureDao(){
+    DaoPrt dao = Dao::getInstance("tcp://localhost:3306", "root", "root", "estoque_lab_quimica");
+    if( ! dao->isConnected())
+        dao->reconnect();
 }
 
 int main(int argc, char** argv)
 {
     configureDao();
-    Mateiral mat;
-    MaterialModel matModel;
-    matModel.salvarMaterial(mat);
-    ListMateiral listMat = matModel.getListMaterial();
-    matModel.alterarMaterial(mat);
-    matModel.excluirMaterial(mat);
-
     cout << "Hello World!" << endl;
+    Server server(8080, "WebContent");
+    server.setOption("enable_directory_listing", "false");
+    MaterialController material;
+    EntradaController entrada;
+    server.registerController(&material);
+    server.registerController(&entrada);
+
+    server.start();
+
+    while (true) {
+        configureDao();
+        sleep(10);
+    }
+
     return 0;
 }
 

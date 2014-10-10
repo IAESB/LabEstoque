@@ -14,7 +14,9 @@ public:
     int salvarMaterial(Mateiral& material);
     bool alterarMaterial(Mateiral& material);
     bool excluirMaterial(Mateiral& material);
-    ListMateiral getListMaterial();
+    MateiralPtr getMaterialPorId(const int& id);
+    MateiralList getListMaterial();
+    GrupoList getListGrupo();
 };
 
 #endif // MATERIALMODEL_H

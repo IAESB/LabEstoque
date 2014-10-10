@@ -10,6 +10,7 @@ class GrupoModel
 public:
     GrupoModel();
     int salvarGrupo(Grupo& grupo);
+    GrupoList getListGrupo(string where="");
 };
 
 #endif // GRUPOMODEL_H
