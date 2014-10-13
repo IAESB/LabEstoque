@@ -1,4 +1,6 @@
-#include <unistd.h>
+#ifndef WIN32
+#	include <unistd.h>
+#endif
 #include <stdlib.h>
 #include <signal.h>
 #include <iostream>
@@ -30,7 +32,8 @@ int main(int argc, char** argv)
 
     while (true) {
         configureDao();
-        sleep(10);
+        //sleep(10);
+		Sleep(2000);
     }
 
     return 0;

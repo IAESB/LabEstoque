@@ -161,4 +161,5 @@ void View::setText(treeNode::iterator node, const string &text)
 std::ostream& operator<<(std::ostream &stream, calassomys::View &view)
 {
     view.write(stream, view.getDom());
+	return stream;
 }
