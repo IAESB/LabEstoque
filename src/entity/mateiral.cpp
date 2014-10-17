@@ -49,6 +49,16 @@ void Mateiral::setImagem(const string &value)
 {
     imagem = value;
 }
+
+int Mateiral::getQuantidade() const
+{
+    return quantidade;
+}
+
+void Mateiral::setQuantidade(int value)
+{
+    quantidade = value;
+}
 Mateiral::Mateiral()
 {
 }
@@ -64,9 +74,11 @@ Mateiral::Mateiral(sql::ResultSet &rs)
     nome = rs.getString(2);
     descricao = rs.getString(3);
     imagem = rs.getString(4);
+    quantidade = rs.getInt(5);
     GrupoPtr grupo(new Grupo);
-    grupo->setId(rs.getInt(5));
-    grupo->setNome(rs.getString(6));
+    grupo->setId(rs.getInt(6));
+    if(rs.findColumn("grupo_nome"))
+        grupo->setNome(rs.getString(7));
     setGrupo(grupo);
 }
 
@@ -76,9 +88,9 @@ string Mateiral::getSqlInsert()
     if(grupo){
         grupoId = to_string(grupo->getId());
     }
-    string sql = "INSERT INTO material (nome, descricao, validade, imagem";
+    string sql = "INSERT INTO material (nome, descricao, imagem, quantidade";
     sql += grupoId.size()?", grupo_id)":")";
-    sql += "VALUES ('"+nome+"', '"+descricao+"', '"+imagem+"'";
+    sql += "VALUES ('"+nome+"', '"+descricao+"', '"+imagem+"', '"+to_string(quantidade)+"'";
     sql += grupoId.size()?", '"+grupoId+"');":");";
 
     return sql;
@@ -91,7 +103,7 @@ string Mateiral::getSqlUpdate()
         grupoId = to_string(grupo->getId());
     }
     string sql = "UPDATE material \
-                 SET(nome='"+nome+"', descricao'"+descricao+"', imagem='"+imagem+"',grupo_id'"+grupoId+"')\
+                 SET nome='"+nome+"', descricao='"+descricao+"', imagem='"+imagem+"', quantidade='"+to_string(quantidade)+"', grupo_id='"+grupoId+"'\
                  WHERE id="+to_string(id)+";";
 
     return sql;

@@ -2,6 +2,9 @@
 .formNovaEntrada{
 	display: none;
 }
+#mostrarEntrada{
+	display: none;
+}
 
 .invalido{
 	border-style: solid;
@@ -17,7 +20,8 @@ table#tabelaEntrada {
     width:100%;
 }
 table#tabelaEntrada, 
-table#tabelaEntrada th {
+table#tabelaEntrada th, 
+table#tabelaEntrada td {
     border: 1px solid black;
     border-collapse: collapse;
 }

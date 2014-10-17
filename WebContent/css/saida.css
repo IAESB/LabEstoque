@@ -1,0 +1,8 @@
+.saida{
+	display: none;
+    width:100%;
+}
+
+#tabelaSaida{
+    display: inline-table;
+}

@@ -1,32 +1,58 @@
 
-function mostrarNovaEntrada(elem)
-{
-	$("#tabelaEntrada").toggle();
-	var form = $(".formNovaEntrada");
-	form.toggle();
-	$("input[name='data']").focus();
-	if(form.is(':visible'))
-		elem.innerHTML = "Cancelar";
-	else 
-		elem.innerHTML = "Criar Entrada";
+function mostrarEntrada(id) 
+{	
+	$(".entrada").hide();
+	$("#mostrarEntrada").show();
+	$("#tableMostraEntrada tbody").remove();
+	$("#tableMostraEntrada").append("<tbody></tbody>");
+	$.get("/entrada/get", { id: id }, function(dados) 
+	{
+		$("#fornecedor").prop('value', dados.fornecedor);
+		$("#data").prop('value', dados.data.substr(0, 10));
+		for (var i in dados.materiais) {
+			var tr = "<tr><td>"+dados.materiais[i].nome+"</td>\
+						 <td>"+dados.materiais[i].quantidade+"</td>\
+						 <td>"+dados.materiais[i].validade.substr(0, 10)+"</td>\
+						 <td>"+dados.materiais[i].lote+"</td>\
+						 <td>"+dados.materiais[i].valor+"</td></tr>";
+			
+			$("#tableMostraEntrada tbody").append(tr);
+		}
+	},
+	"json"
+	);
 }
 
-function maisUmMaterial()
+function inicioEntrada() 
 {
-	var novaLinha = $("#linhaMaterial").clone();
-	novaLinha.attr("id","");
-	novaLinha.find(':input').val('').end();
-	$("#tabelaMateriais").append(novaLinha);
-	novaLinha.find(':input:first').focus();
-	novaLinha.find(':button').prop("disabled",false);
+	$(".entrada").hide();
+	$("#tabelaEntrada").show();		
 }
+
+function mostrarNovaEntrada(btm)
+{
+	$('div').find('input').prop('disabled', false);
+	var form = $(".formNovaEntrada");
+	if(form.is(':visible')){
+		$(".entrada").hide();
+		$("#criarCancelar").html("Criar Entrada");
+		$("#tabelaEntrada").show();		
+	}
+	else{	
+		$(".entrada").hide();
+		$("#criarCancelar").html("Cancelar");		
+		form.show();
+		$("input[name='data']").focus();
+	}
+}
+
 
 function validarSalvarEntrada() {
 	var datalist = $("#tabelaMateriais datalist:last");
 	var erros=0;
 	var inputRemove = new Array();
 	var idMaterial;
-	var data = $("#data");
+	var data = $("input[name=data]");
 	if (!data.val()){
 		data.addClass("invalido");
   		erros++;	

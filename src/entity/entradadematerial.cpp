@@ -66,7 +66,22 @@ EntradaDeMaterial::EntradaDeMaterial()
 
 EntradaDeMaterial::EntradaDeMaterial(sql::ResultSet &rs)
 {
-
+    lote = rs.getString(3);
+    valor = rs.getDouble(4);
+    validade = rs.getString(5);
+    quantidade = rs.getInt(6);
+    entrada = EntradaPtr(new Entrada);
+    entrada->setId(rs.getInt(7));
+    entrada->setData(rs.getString(8));
+    entrada->setFornecedor(rs.getString(9));
+    entrada->setAnotacao(rs.getString(10));
+    //entrada->setUsuario(rs.getint(11));
+    material = MateiralPtr(new Mateiral);
+    material->setId(rs.getInt(12));
+    material->setNome(rs.getString(13));
+    material->setDescricao(rs.getString(14));
+    //material->setGrupo(rs.getInt(15));
+    material->setImagem(rs.getString(16));
 }
 
 string EntradaDeMaterial::getSqlInsert()

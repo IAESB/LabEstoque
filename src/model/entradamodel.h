@@ -15,7 +15,7 @@ public:
     EntradaModel();
     MateiralList getListMaterial();
     EntradaList getListEntrada();
-    EntradaDeMaterialList getListEntradaDeMaterial();
+    EntradaDeMaterialList getListEntradaDeMaterial(const string& idEntrada);
     MateiralPtr getMaterialPorId(const int& id);
     void salvaEntrada(Entrada& entrada);
     void salvaListEntradaDeMaterial(EntradaDeMaterialList& list);

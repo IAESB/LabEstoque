@@ -1108,3 +1108,6 @@ body{
 .formulario span{
 	display: block; 
 }
+input ,  select , textarea { 
+    color :  #000; 
+}

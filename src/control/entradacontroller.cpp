@@ -1,6 +1,7 @@
 #include "entradacontroller.h"
 #include "view/view.h"
 #include "entity/entradadematerial.h"
+#include <jsoncpp/json/json.h>
 
 EntradaController::EntradaController()
 {
@@ -9,6 +10,7 @@ EntradaController::EntradaController()
 void EntradaController::setup()
 {
     addRoute("GET", "/entrada", EntradaController, listaEntrada);
+    addRoute("GET", "/entrada/get", EntradaController, getEntrada);
     addRoute("POST", "/entrada/salvar", EntradaController, salvaEntrada);
 }
 
@@ -23,18 +25,19 @@ void EntradaController::listaEntrada(Request &request, StreamResponse &response)
         materialList = model.getListMaterial();
         for(MateiralPtr& material: *materialList)
         {
-            view.insertContentId("materiais", "<option label='"+material->getNome()+"'>"+to_string(material->getId())+"</option>");
+            view.insertContentId("materiais",
+                                 "<option value='"+material->getNome()+"' label='"+to_string(material->getId())+"'></option>");
         }
 
         entradaList = model.getListEntrada();
         for(EntradaPtr& entrada: *entradaList)
         {
-            string html = "<tr>\
+            string html = "<tr onclick='mostrarEntrada("+to_string(entrada->getId())+");'>\
                     <td>"+entrada->getData().substr(0,10)+"</td>\
                     <td>"+entrada->getFornecedor()+"</td>\
                     <td>"+entrada->getAnotacao()+"</td>\
-                </tr>";
-            view.insertContentId("tabelaEntrada", html);
+                    </tr>";
+                    view.insertContentId("tabelaEntrada", html);
         }
         response << view;
     }
@@ -47,40 +50,56 @@ void EntradaController::listaEntrada(Request &request, StreamResponse &response)
 
 void EntradaController::salvaEntrada(Request &request, StreamResponse &response)
 {
-    map<string, string> variables = request.getAllVariable();    
-    EntradaPtr entrada(new Entrada());
-    entrada->setData(variables["data"]);
-    entrada->setFornecedor(variables["fornecedor"]);
-    variables.erase("data");
-    variables.erase("fornecedor");
+    try{
+        map<string, string> variables = request.getAllVariable();
+        EntradaPtr entrada(new Entrada());
+        entrada->setData(variables["data"]);
+        entrada->setFornecedor(variables["fornecedor"]);
+        variables.erase("data");
+        variables.erase("fornecedor");
 
-    MateiralPtr mat;
-    EntradaDeMaterialPtr entradaDeMaterial;
-    EntradaDeMaterialList vecEntradaMaetrial(new vector<EntradaDeMaterialPtr>);
-    int idMat=0;
-    int i=0;
-    for(const pair<string,string>& par: variables)
-    {
-        switch (i) {
-        case 0:
+        MateiralPtr material;
+        EntradaDeMaterialPtr entradaDeMaterial;
+        EntradaDeMaterialList vecEntradaMaetrial(new vector<EntradaDeMaterialPtr>);
+        while (variables.size())
+        {
+            auto itr = variables.begin();
+            string id = itr->first;
+            id = id.substr(id.find('_')+1);
+            material = MateiralPtr( new Mateiral(stoi(id.find("novo")?id:"0")) );
+            material->setNome(variables["material_"+id]);
+            variables.erase("material_"+id);
+
             entradaDeMaterial = EntradaDeMaterialPtr(new EntradaDeMaterial);
-            entradaDeMaterial->setQuantidade(stoi(par.second));
-            idMat = stoi(par.first.substr(par.first.find('_')+1));
-            mat.reset( new Mateiral(idMat) );
-            entradaDeMaterial->setMaterial(mat);
+            entradaDeMaterial->setMaterial(material);
             entradaDeMaterial->setEntrada(entrada);
             vecEntradaMaetrial->push_back(entradaDeMaterial);
-            break;
-        case 1:
-            entradaDeMaterial->setValidade(par.second);
-            break;
-        case 2:
-            entradaDeMaterial->setValor(stof(par.second));
-            break;
+
+            itr = variables.find("quantidade_"+id);
+            if(itr!=variables.end())
+            {
+                entradaDeMaterial->setQuantidade(stoi(itr->second));
+                variables.erase(itr);
+            }
+            itr = variables.find("validade_"+id);
+            if(itr!=variables.end())
+            {
+                entradaDeMaterial->setValidade(itr->second);
+                variables.erase(itr);
+            }
+            itr = variables.find("lote_"+id);
+            if(itr!=variables.end())
+            {
+                entradaDeMaterial->setLote(itr->second);
+                variables.erase(itr);
+            }
+            itr = variables.find("valor_"+id);
+            if(itr!=variables.end())
+            {
+                entradaDeMaterial->setValor(stof(itr->second.empty()?"0":itr->second));
+                variables.erase(itr);
+            }
         }
-        i++;
-    }
-    try{
         model.salvaListEntradaDeMaterial(vecEntradaMaetrial);
     }
     catch(exception& ex){
@@ -90,4 +109,25 @@ void EntradaController::salvaEntrada(Request &request, StreamResponse &response)
     }
 
     listaEntrada(request, response);
+}
+
+void EntradaController::getEntrada(Request &request, StreamResponse &response)
+{
+    Json::Value json;
+    string idEntrada = request.get("id");
+    EntradaDeMaterialList list = model.getListEntradaDeMaterial(idEntrada);
+    if(list->size()){
+        json["data"] = list->at(0)->getEntrada()->getData();
+        json["fornecedor"] = list->at(0)->getEntrada()->getFornecedor();
+    }
+    for(EntradaDeMaterialPtr ptr: *list) {
+        Json::Value mat;
+        mat["nome"] = ptr->getMaterial()->getNome();
+        mat["quantidade"] = ptr->getQuantidade();
+        mat["validade"] = ptr->getValidade();
+        mat["valor"] = ptr->getValor();
+        mat["lote"] = ptr->getLote();
+        json["materiais"].append(mat);
+    }
+    response << json;
 }

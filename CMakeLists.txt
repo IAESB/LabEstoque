@@ -19,7 +19,7 @@ list(APPEND FULL_SRC
     ${DAO}
     ${EXCEPTION} )
 add_executable(${PROJECT_NAME} ${FULL_SRC})
-target_link_libraries(${PROJECT_NAME} _mongoose)
+target_link_libraries(${PROJECT_NAME} _mongoose jsoncpp)
 
 if(WIN32)
 	include_directories(../mongoose 

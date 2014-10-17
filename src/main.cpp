@@ -7,6 +7,7 @@
 #include <mongoose/Server.h>
 #include "control/materialcontroller.h"
 #include "control/entradacontroller.h"
+#include "control/saidacontroller.h"
 
 using namespace std;
 using namespace Mongoose;
@@ -17,6 +18,16 @@ void configureDao(){
         dao->reconnect();
 }
 
+volatile static bool running = true;
+
+void handle_signal(int sig)
+{
+    if (running) {
+        cout << "Exiting..." << endl;
+        running = false;
+    }
+}
+
 int main(int argc, char** argv)
 {
     configureDao();
@@ -25,15 +36,20 @@ int main(int argc, char** argv)
     server.setOption("enable_directory_listing", "false");
     MaterialController material;
     EntradaController entrada;
+    SaidaController saida;
     server.registerController(&material);
     server.registerController(&entrada);
+    server.registerController(&saida);
 
     server.start();
 
-    while (true) {
+    while (running) {
         configureDao();
-        //sleep(10);
-		Sleep(2000);
+#ifdef WIN32
+        Sleep(10000);
+#else
+        sleep(10);
+#endif
     }
 
     return 0;

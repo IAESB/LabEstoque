@@ -35,6 +35,9 @@ public:
     template<typename type>
     bool update(type& obj)
     {
+        if( ! isConnected())
+            reconnect();
+
         string sql = obj.getSqlUpdate();
         unique_ptr<sql::Statement> stmt( connection->createStatement() );
         if(stmt->executeUpdate(sql)>0)
@@ -45,6 +48,9 @@ public:
     template<typename type>
     bool remove(type& obj)
     {
+        if( ! isConnected())
+            reconnect();
+
         string sql = obj.getSqlDelete();
         unique_ptr<sql::Statement> stmt( connection->createStatement() );
         if(stmt->executeUpdate(sql)>0)
@@ -55,6 +61,9 @@ public:
     template<typename type>
     shared_ptr< vector< shared_ptr<type> > > select(string table, string columns="", string options="")
     {
+        if( ! isConnected())
+            reconnect();
+
         shared_ptr< vector< shared_ptr<type> > > vec(new vector< shared_ptr<type> >);
         string sql = "SELECT ";
         sql += columns.empty()?"*":columns;
@@ -72,6 +81,9 @@ public:
     template<typename type>
     long long insert(type& obj)
     {
+        if( ! isConnected())
+            reconnect();
+
         long long id = -1;
         const string& sql = obj.getSqlInsert();
         unique_ptr<sql::Statement> stmt( connection->createStatement() );

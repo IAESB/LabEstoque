@@ -19,6 +19,7 @@ int GrupoModel::salvarGrupo(Grupo &grupo)
     else
     {
         grupo.setId((*list)[0]->getId());
+        id = grupo.getId();
     }
     return id;
 }

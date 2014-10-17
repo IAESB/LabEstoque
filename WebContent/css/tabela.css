@@ -1,0 +1,24 @@
+
+table.tabela {
+    width:100%;
+}
+table.tabela, 
+table.tabela th, 
+table.tabela td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+table tbody tr:nth-child(even) {
+    background-color: #EEE;
+}
+table tbody tr:nth-child(odd) {
+    background-color: #DDD;
+}
+table.tabela  th	{
+    background-color: black;
+    color: white;
+}

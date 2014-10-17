@@ -1,70 +1,73 @@
 
-function mostrarNovaEntrada(elem)
+function mostrarEntrada(id) 
+{	
+	$(".entrada").hide();
+	$("#mostrarEntrada").show();
+	$("#tableMostraEntrada tbody").remove();
+	$("#tableMostraEntrada").append("<tbody></tbody>");
+	$.get("/entrada/get", { id: id }, function(dados) 
+	{
+		$("#fornecedor").prop('value', dados.fornecedor);
+		$("#data").prop('value', dados.data.substr(0, 10));
+		for (var i in dados.materiais) {
+			var tr = "<tr><td>"+dados.materiais[i].nome+"</td>\
+						 <td>"+dados.materiais[i].quantidade+"</td>\
+						 <td>"+dados.materiais[i].validade.substr(0, 10)+"</td>\
+						 <td>"+dados.materiais[i].lote+"</td>\
+						 <td>"+dados.materiais[i].valor+"</td></tr>";
+			
+			$("#tableMostraEntrada tbody").append(tr);
+		}
+	},
+	"json"
+	);
+}
+
+function inicioEntrada() 
 {
-	$("#tabelaEntrada").toggle();
+	$(".entrada").hide();
+	$("#tabelaEntrada").show();		
+}
+
+function mostrarNovaEntrada(btm)
+{
+	$('div').find('input').prop('disabled', false);
 	var form = $(".formNovaEntrada");
-	form.toggle();
-	$("input[name='data']").focus();
-	if(form.is(':visible'))
-		elem.innerHTML = "Cancelar";
-	else 
-		elem.innerHTML = "Criar Entrada";
-}
-
-function maisUmMaterial()
-{
-	var novaLinha = $("#linhaMaterial").clone();
-	novaLinha.attr("id","");
-	novaLinha.find(':input').val('').end();
-	$("#tabelaMateriais").append(novaLinha);
-	novaLinha.find(':input:first').focus();
-	novaLinha.find(':button').prop("disabled",false);
-}
-
-function validarSalvarEntrada() {
-	var datalist = $("#tabelaMateriais datalist:last");
-	var erros=0;
-	var inputRemove = new Array();
-	var idMaterial;
-	var data = $("input[name=data]");
-	if (!data.val()){
-		data.addClass("invalido");
-  		erros++;	
+	if(form.is(':visible')){
+		$(".entrada").hide();
+		$("#criarCancelar").html("Criar Entrada");
+		$("#tabelaEntrada").show();		
 	}
+	else{	
+		$(".entrada").hide();
+		$("#criarCancelar").html("Cancelar");		
+		form.show();
+		$("input[name='data']").focus();
+	}
+}
+
+
+function validarSalvarEntrada() 
+{
+    var idMaterial =-1;
+    var cont = 1;
 	$("#tabelaMateriais input").each(function( ) 
 	{
-  			var input = $( this );
-  			input.removeClass();
-  			var name = input.prop("name");
-  			if (name=="material")
-  			{
-  				inputRemove.push(input);
-  				idMaterial = datalist.find("option[value='"+input.val()+"']").html();
-  			}
-  			if ((name=="material" || name=="quantidade") && !input.val())
-  			{
-  				input.addClass("invalido");
-  				erros++;
-  			}
-  			input.prop("name2", name+"_"+idMaterial);  	
+        var input = $( this );
+        var name = input.prop("name");
+        if (name=="material")
+        {
+            idMaterial = $("#tabelaMateriais option[value='"+input.val()+"']").prop('label');
+            if(!idMaterial)
+                idMaterial = "novo"+cont;
+        }
+        input.prop("name", name+"_"+idMaterial);  
+        cont++;
 	});
 	
-	if (erros>0)
-		return false;
-	else{
-		$("#tabelaMateriais input").each(function( index )
-		{
-			var input = $( this );
-			if(input.prop("name")=="material")
-				input.remove();
-			else
-				input.prop("name", input.prop("name2") );
-		});
-	}	
-	return true;			
+    if(idMaterial>0)
+        return true;
+
+    return false;			
 }
 
-function removeMaterial(elemento) {
-	var row = elemento.parentNode.parentNode;
-	row.remove();
-}

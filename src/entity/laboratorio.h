@@ -2,7 +2,9 @@
 #define LABORATORIO_H
 
 #include <iostream>
+#include <vector>
 #include <memory>
+#include <cppconn/resultset.h>
 using namespace std;
 
 class Laboratorio
@@ -11,10 +13,14 @@ class Laboratorio
     string nome;
 public:
     Laboratorio();
+    Laboratorio(int id);
+    Laboratorio(sql::ResultSet& rs);
+    string getSqlInsert();
     int getId() const;
     void setId(int value);
     string getNome() const;
     void setNome(const string &value);
 };
 typedef shared_ptr<Laboratorio> LaboratorioPtr;
+typedef shared_ptr< vector<LaboratorioPtr> > LaboratorioList;
 #endif // LABORATORIO_H

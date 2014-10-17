@@ -10,6 +10,7 @@ using namespace std;
 class Mateiral
 {
     int id;
+    int quantidade;
     string nome;
     string descricao;
     string imagem;
@@ -32,6 +33,8 @@ public:
     void setGrupo(const GrupoPtr &value);
     string getImagem() const;
     void setImagem(const string &value);
+    int getQuantidade() const;
+    void setQuantidade(int value);
 };
 
 typedef shared_ptr<Mateiral> MateiralPtr;

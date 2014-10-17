@@ -11,6 +11,7 @@ public:
     EntradaController();
     void listaEntrada(Request &request, StreamResponse &response);
     void salvaEntrada(Request &request, StreamResponse &response);
+    void getEntrada(Request &request, StreamResponse &response);
     void setup();
 };
 

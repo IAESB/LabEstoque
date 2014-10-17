@@ -12,7 +12,6 @@ class Entrada
     string fornecedor;
     string anotacao;
     UsuarioPtr usuario;
-    MateiralPtr material;
 public:
     Entrada();
     Entrada(sql::ResultSet& rs);
@@ -23,8 +22,6 @@ public:
     void setData(const string &value);
     UsuarioPtr getUsuario() const;
     void setUsuario(const UsuarioPtr &value);
-    MateiralPtr getMaterial() const;
-    void setMaterial(const MateiralPtr &value);
     string getFornecedor() const;
     void setFornecedor(const string &value);
     string getAnotacao() const;

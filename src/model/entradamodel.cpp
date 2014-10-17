@@ -15,9 +15,9 @@ EntradaList EntradaModel::getListEntrada()
     return dao->select<Entrada>("entrada");
 }
 
-EntradaDeMaterialList EntradaModel::getListEntradaDeMaterial()
+EntradaDeMaterialList EntradaModel::getListEntradaDeMaterial(const string& idEntrada)
 {
-    return entradaDeMaterialModel.getListEntradaDeMaterial();
+    return entradaDeMaterialModel.getListEntradaDeMaterial(idEntrada);
 }
 
 MateiralPtr EntradaModel::getMaterialPorId(const int &id)
@@ -27,7 +27,7 @@ MateiralPtr EntradaModel::getMaterialPorId(const int &id)
 
 void EntradaModel::salvaEntrada(Entrada &entrada)
 {
-    dao->insert(entrada);
+     entrada.setId(dao->insert(entrada));
 }
 
 void EntradaModel::salvaListEntradaDeMaterial(EntradaDeMaterialList& list)
@@ -35,8 +35,11 @@ void EntradaModel::salvaListEntradaDeMaterial(EntradaDeMaterialList& list)
     if(list->size())
         salvaEntrada(*list->at(0)->getEntrada());
 
-    for(EntradaDeMaterialPtr entrada: *list)
+    for(EntradaDeMaterialPtr entradaDeMaterial: *list)
     {
-        dao->insert(*entrada);
+        MateiralPtr mat = entradaDeMaterial->getMaterial();
+        mat->setQuantidade(entradaDeMaterial->getQuantidade());
+        materialModel.incrementaQuantidadeMaterial(mat);
+        dao->insert(*entradaDeMaterial);
     }
 }

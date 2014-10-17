@@ -32,15 +32,6 @@ void Entrada::setUsuario(const UsuarioPtr &value)
     usuario = value;
 }
 
-MateiralPtr Entrada::getMaterial() const
-{
-    return material;
-}
-
-void Entrada::setMaterial(const MateiralPtr &value)
-{
-    material = value;
-}
 
 string Entrada::getFornecedor() const
 {
@@ -65,8 +56,8 @@ Entrada::Entrada(sql::ResultSet &rs)
 
 string Entrada::getSqlInsert()
 {
-    string sql = "INSERT INTO entrada(data, fornecedor, anotacao, material_id)\
-           VALUES ('"+data+"', '"+fornecedor+"', '"+anotacao+"', '"+to_string(material->getId())+"');";
+    string sql = "INSERT INTO entrada(data, fornecedor, anotacao)\
+           VALUES ('"+data+"', '"+fornecedor+"', '"+anotacao+"');";
 
     return sql;
 }

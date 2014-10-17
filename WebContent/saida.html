@@ -1,16 +1,58 @@
-
-<!--
-Author: W3layouts
-Author URL: http://w3layouts.com
-License: Creative Commons Attribution 3.0 Unported
-License URL: http://creativecommons.org/licenses/by/3.0/
--->
 <!DOCTYPE HTML>
 <html>
-	<head>
+    <head>
+        <link href="/css/saida.css" rel="stylesheet" type="text/css"  media="all" />
+        <link href="/css/tabela.css" rel="stylesheet" type="text/css"  media="all" />
+		<script src="/js/saida.js"></script>
+		<script src="/js/tabelaMateriais.js"></script>
 	</head>
 	<body>
-		saida dos produtos
+		<button onclick="mostrarNovaSaida()" id="criarCancelar">Nova Saida</button>
+		<hr/>
+        <table class="saida tabela" id="tabelaSaida">
+            <tr>
+                <th>Data</th>
+                <th>Solicitante</th>
+            </tr>
+        </table>
+        <form class="saida" id="formNovaSaida" method="post" onsubmit="return validarSalvarSaida();" action="/saida/salvar">
+			<span>
+				<label>Data de Referência:</label>
+				<input name="data" type="date" required/>
+			</span>
+			<span>
+				<label>Laboratório:</label>
+				<input list="laboratorios" name="laboratorio" required/>
+				<datalist id="laboratorios">
+				</datalist>
+			</span>
+				<label>Solicitante</label>
+				<input list="solicitantes" name="solicitante"/>
+                <datalist id="solicitantes">
+                </datalist>
+			<span>
+			</span>
+			<fieldset>
+				<legend>Materiais:</legend>
+				<table id="tabelaMateriais">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Quantidade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="linhaMaterial">
+                            <td><select id="materiais" name="materiais" required></select></td>
+                            <td><input name="quantidade" type="number" required pattern="[0-9]+$"/></td>
+                            <td><button id="removerLinha" onclick="removeMaterial(this)" type="button" alt="Remover" disabled>X</button></td>
+                        </tr>
+                    </tbody>
+				</table>
+				<button id="maisUm" onclick="maisUmMaterial()" type="button">Mais Um</button>
+			</fieldset>
+			<button>Salvar</button>
+		</form>
 	</body>
 </html>
 

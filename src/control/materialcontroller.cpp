@@ -20,12 +20,13 @@ void MaterialController::listaMateriais(Request &request, StreamResponse &respon
         MateiralList list = model.getListMaterial();
         for(MateiralPtr& material: *list)
         {
-            const string& img = material->getImagem().size()?material->getImagem():"/images/tyre.png";
+            const string& img = material->getImagem().size()?material->getImagem():"/images/ampolas.jpg";
             string html = "<div class='material' >\
                     <img alt='' src='"+img+"'/>\
                     <h4>"+material->getNome()+"</h4>\
                     <label>"+material->getDescricao()+"</label>\
                     <label>"+material->getGrupo()->getNome()+"</label>\
+                    <label>quantidade: "+to_string(material->getQuantidade())+"</label>\
                     </div>";
                     view.insertContentId("listMateiral", html);
         }
@@ -41,10 +42,9 @@ void MaterialController::salvarMaterial(Request &request, StreamResponse &respon
 {
     const string& nome = request.get("nome");
     const string& descricao = request.get("descricao");
-    const string& lote = request.get("lote");
-    const string& validade = request.get("validade");
     const string& grupo = request.get("grupo");
     const string& imagem = request.get("imagem");
+    const string& quantidade = request.get("quantidade");
 
     Mateiral material;
     material.setNome(nome);
@@ -52,16 +52,17 @@ void MaterialController::salvarMaterial(Request &request, StreamResponse &respon
     if(!grupo.empty())
         material.setGrupo(GrupoPtr(new Grupo(grupo)));
     material.setImagem(imagem);
+    material.setQuantidade(stoi(quantidade));
 
-    string msg = "<h1>Erro ao salvar o material</h1><br>";
     try{
-        if(model.salvarMaterial(material)>0)
-            msg = "<h1>Sucesso ao salvar o material!!!</h1>";
+        model.salvarMaterial(material);
+        response.setCode(301);
+        response.setHeader("Location", "/");
     }catch(const exception& ex){
-        msg += ex.what();
-    }catch(...){
+        string msg = "<h1>Erro ao salvar o material</h1><br>";
+        msg += ex.what();        
+        this->mensagem(response, msg);
     }
-    this->mensagem(response, msg);
 }
 
 void MaterialController::setup()

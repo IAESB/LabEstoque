@@ -1,7 +1,7 @@
 ﻿
 .material{
 	box-shadow: 10px 10px 5px #888888;
-   	background-color: #cccccc; 
+   background-color: #cccccc; 
 	width:250px;
 	height:100px;
 	float: left;
@@ -25,9 +25,6 @@
 	left:auto;
 	padding:10px;
 	border:1px solid #d0d0d0;
-	background-color:gray;
+	background-color:222;
 }
 
-.formNovoMaterial span{
-	display: block; 
-}

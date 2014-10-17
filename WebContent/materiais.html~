@@ -1,8 +1,8 @@
 ﻿<!DOCTYPE HTML>
 <html>
 	<head>
-		<link href="css/materiais.css" rel="stylesheet" type="text/css"  media="all" />
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="css/materiais.css" rel="stylesheet" type="text/css"  media="all" />
 		<script src="js/materiais.js"></script>
 	</head>
 	<body>

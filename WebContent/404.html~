@@ -1,0 +1,13 @@
+
+<!DOCTYPE HTML>
+<html>
+	<head>
+	</head>
+	<body>
+		<div class="error-page">
+			<h4>404</h4>
+			<h3>A Page Not Found 404 error occured</h3>
+		</div>
+	</body>
+</html>
+

@@ -9,7 +9,7 @@ class EntradaDeMaterialModel
     DaoPrt dao;
 public:
     EntradaDeMaterialModel();
-    EntradaDeMaterialList getListEntradaDeMaterial();
+    EntradaDeMaterialList getListEntradaDeMaterial(string id="");
 };
 
 #endif // ENTRADADEMATERIALMODEL_H
