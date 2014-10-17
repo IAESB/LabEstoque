@@ -84,7 +84,6 @@ function validarSalvarSaida()
         else if(!name)
             input.remove();
         else{
-            name = input.getAttribute("name");
             input.setAttribute("name", name+"_"+idMaterial);
         }
     }

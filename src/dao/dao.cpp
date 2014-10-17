@@ -9,8 +9,6 @@ Dao::Dao(string url, string user, string password, string database)
     this->user = user;
     this->password = password;
     this->database = database;
-
-    reconnect();
 }
 
 DaoPrt Dao::getInstance(string url, string user, string password, string database)
@@ -28,21 +26,17 @@ DaoPrt Dao::getInstance(string url, string user, string password, string databas
 
 Dao::~Dao()
 {
-    connection->close();
 }
 
-bool Dao::isConnected()
-{
-    return !connection->isClosed();
-}
 
-void Dao::reconnect()
+Dao::Connection Dao::getConnection()
 {
     if(!url.empty() && !user.empty()){
         sql::Driver *driver = get_driver_instance();
         sql::Connection* con = driver->connect(url, user, password);
-        connection.reset(con);
+		Connection connection(con);
         connection->setSchema(database);
+		return connection;
     }
     else
         throw Exception("Passe a URL, Usuario e Senha na primeira vez que chamar: Dao::getInstance");

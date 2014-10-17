@@ -4,6 +4,8 @@ build/
 # Backup temp
 *.bak
 *.lock
+*.*~
+~$*.*
 
 # Windows image file caches
 Thumbs.db

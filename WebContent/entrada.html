@@ -20,25 +20,29 @@
 			<fieldset>
 				<legend>Materiais:</legend>
 				<table id="tabelaMateriais">
-					<tr>
-						<th>Nome</th>
-						<th>Quantidade</th>
-						<th>Validade</th>
-						<th>Lote</th>
-						<th>Valor</th>
-					</tr>
-					<tr id="linhaMaterial">
-						<td>
-                            <input list="materiais" name="material" required/>
-							<datalist id="materiais">
-							</datalist>
-						</td>
-                        <td><input name="quantidade" type="number" required/></td>
-						<td><input name="validade" type="date"/></td>
-						<td><input name="lote" type="text"/></td>
-						<td><input name="valor" type="number" pattern="^\d+(\.|\,)\d{2}$"/></td>
-						<td><button id="removerLinha" onclick="removeMaterial(this)" type="button" alt="Remover" disabled>X</button></td>
-					</tr>
+					<thead>
+						<tr>
+							<th>Nome</th>
+							<th>Quantidade</th>
+							<th>Validade</th>
+							<th>Lote</th>
+							<th>Valor</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr id="linhaMaterial">
+							<td>
+								<input list="materiais" name="material" required/>
+								<datalist id="materiais">
+								</datalist>
+							</td>
+							<td><input name="quantidade" type="number" required/></td>
+							<td><input name="validade" type="date"/></td>
+							<td><input name="lote" type="text"/></td>
+							<td><input name="valor" type="number" step="any" pattern="^\d+(\.|\,)\d{2}$"/></td>
+							<td><button id="removerLinha" onclick="removeMaterial(this)" type="button" alt="Remover" disabled>X</button></td>
+						</tr>
+					</tbody>
 				</table>
 				<button id="maisUm" onclick="maisUmMaterial()" type="button">Mais Um</button>
 			</fieldset>

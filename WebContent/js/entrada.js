@@ -49,25 +49,24 @@ function mostrarNovaEntrada(btm)
 
 function validarSalvarEntrada() 
 {
-    var idMaterial =-1;
-    var cont = 1;
-	$("#tabelaMateriais input").each(function( ) 
+	var tr = document.querySelectorAll("#tabelaMateriais tbody tr");
+	for(var j=0; j<tr.length; j++)
 	{
-        var input = $( this );
-        var name = input.prop("name");
-        if (name=="material")
-        {
-            idMaterial = $("#tabelaMateriais option[value='"+input.val()+"']").prop('label');
-            if(!idMaterial)
-                idMaterial = "novo"+cont;
-        }
-        input.prop("name", name+"_"+idMaterial);  
-        cont++;
-	});
-	
-    if(idMaterial>0)
-        return true;
-
-    return false;			
+		var idMaterial;
+		var inputs = tr[j].querySelectorAll("input");
+		for(var i=0; i<inputs.length; i++)
+		{
+			var input = inputs[i];
+			var name = input.getAttribute("name");
+			if (name=="material")
+			{
+				var opt = $("#tabelaMateriais option[value='"+input.value+"']");
+				idMaterial = opt.prop('label');
+				if(!idMaterial)
+					idMaterial = "novo"+j;
+			}
+			input.setAttribute("name", name+"_"+idMaterial); 
+		}
+	}
 }
 

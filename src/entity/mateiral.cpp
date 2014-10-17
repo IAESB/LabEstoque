@@ -74,12 +74,13 @@ Mateiral::Mateiral(sql::ResultSet &rs)
     nome = rs.getString(2);
     descricao = rs.getString(3);
     imagem = rs.getString(4);
-    quantidade = rs.getInt(5);
-    GrupoPtr grupo(new Grupo);
-    grupo->setId(rs.getInt(6));
-    if(rs.findColumn("grupo_nome"))
-        grupo->setNome(rs.getString(7));
-    setGrupo(grupo);
+	quantidade = rs.getInt(5);
+	if (rs.findColumn("grupo_nome")){
+		GrupoPtr grupo(new Grupo);
+		grupo->setId(rs.getInt(6));
+		grupo->setNome(rs.getString(7));
+		setGrupo(grupo);
+	}
 }
 
 string Mateiral::getSqlInsert()
@@ -103,7 +104,7 @@ string Mateiral::getSqlUpdate()
         grupoId = to_string(grupo->getId());
     }
     string sql = "UPDATE material \
-                 SET nome='"+nome+"', descricao='"+descricao+"', imagem='"+imagem+"', quantidade='"+to_string(quantidade)+"', grupo_id='"+grupoId+"'\
+                 SET nome='"+nome+"', descricao='"+descricao+"', imagem='"+imagem+"', quantidade='"+to_string(quantidade)+"', grupo_id="+grupoId+"\
                  WHERE id="+to_string(id)+";";
 
     return sql;

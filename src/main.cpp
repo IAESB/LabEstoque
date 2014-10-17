@@ -14,8 +14,6 @@ using namespace Mongoose;
 
 void configureDao(){
     DaoPrt dao = Dao::getInstance("tcp://localhost:3306", "root", "root", "estoque_lab_quimica");
-    if( ! dao->isConnected())
-        dao->reconnect();
 }
 
 volatile static bool running = true;
@@ -31,7 +29,7 @@ void handle_signal(int sig)
 int main(int argc, char** argv)
 {
     configureDao();
-    cout << "Hello World!" << endl;
+    cout << "Server Up!" << endl;
     Server server(8080, "WebContent");
     server.setOption("enable_directory_listing", "false");
     MaterialController material;
@@ -44,7 +42,6 @@ int main(int argc, char** argv)
     server.start();
 
     while (running) {
-        configureDao();
 #ifdef WIN32
         Sleep(10000);
 #else

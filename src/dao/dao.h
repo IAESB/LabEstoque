@@ -23,20 +23,19 @@ class Dao
     string password;
     string database;
     static DaoPrt instance;
-    unique_ptr<sql::Connection> connection;
     Dao(string url, string user, string password, string database);
 public:
     static DaoPrt getInstance(string url="" /*tcp://127.0.0.1:3306*/, string user="", string password="", string database="");
     ~Dao();
 
     bool isConnected();
-    void reconnect();
+	typedef shared_ptr<sql::Connection> Connection;
+	Connection getConnection();
 
     template<typename type>
     bool update(type& obj)
     {
-        if( ! isConnected())
-            reconnect();
+		Connection connection = getConnection();
 
         string sql = obj.getSqlUpdate();
         unique_ptr<sql::Statement> stmt( connection->createStatement() );
@@ -48,8 +47,7 @@ public:
     template<typename type>
     bool remove(type& obj)
     {
-        if( ! isConnected())
-            reconnect();
+		Connection connection = getConnection();
 
         string sql = obj.getSqlDelete();
         unique_ptr<sql::Statement> stmt( connection->createStatement() );
@@ -61,8 +59,7 @@ public:
     template<typename type>
     shared_ptr< vector< shared_ptr<type> > > select(string table, string columns="", string options="")
     {
-        if( ! isConnected())
-            reconnect();
+		Connection connection = getConnection();
 
         shared_ptr< vector< shared_ptr<type> > > vec(new vector< shared_ptr<type> >);
         string sql = "SELECT ";
@@ -81,8 +78,7 @@ public:
     template<typename type>
     long long insert(type& obj)
     {
-        if( ! isConnected())
-            reconnect();
+		Connection connection = getConnection();
 
         long long id = -1;
         const string& sql = obj.getSqlInsert();

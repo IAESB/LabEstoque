@@ -12,7 +12,7 @@ MateiralList EntradaModel::getListMaterial()
 
 EntradaList EntradaModel::getListEntrada()
 {
-    return dao->select<Entrada>("entrada");
+    return dao->select<Entrada>("entrada", "*", "ORDER BY id DESC");
 }
 
 EntradaDeMaterialList EntradaModel::getListEntradaDeMaterial(const string& idEntrada)

@@ -86,7 +86,8 @@ EntradaDeMaterial::EntradaDeMaterial(sql::ResultSet &rs)
 
 string EntradaDeMaterial::getSqlInsert()
 {
+	string validade = this->validade.empty() ? "NULL" : "'" + this->validade + "'";
     string sql = "INSERT INTO entrada_de_material(entrada_id, material_id, lote, valor, validade, quantidade) \
-                  VALUES('"+to_string(entrada->getId())+"', '"+to_string(material->getId())+"', '"+lote+"', '"+to_string(valor)+"', '"+validade+"', '"+to_string(quantidade)+"')";
+                  VALUES('"+to_string(entrada->getId())+"', '"+to_string(material->getId())+"', '"+lote+"', '"+to_string(valor)+"', "+validade+", '"+to_string(quantidade)+"')";
     return sql;
 }

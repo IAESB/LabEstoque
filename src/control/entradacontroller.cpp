@@ -1,7 +1,7 @@
 #include "entradacontroller.h"
 #include "view/view.h"
 #include "entity/entradadematerial.h"
-#include <jsoncpp/json/json.h>
+#include <json/json.h>
 
 EntradaController::EntradaController()
 {
@@ -96,7 +96,7 @@ void EntradaController::salvaEntrada(Request &request, StreamResponse &response)
             itr = variables.find("valor_"+id);
             if(itr!=variables.end())
             {
-                entradaDeMaterial->setValor(stof(itr->second.empty()?"0":itr->second));
+				entradaDeMaterial->setValor(stof(itr->second.empty() ? "0" : itr->second));
                 variables.erase(itr);
             }
         }
