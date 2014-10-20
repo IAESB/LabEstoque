@@ -13,3 +13,9 @@ void Controlador::mensagem(Mongoose::StreamResponse& response, const string& htm
 
     response << view;
 }
+
+void Controlador::redirecionar(StreamResponse& response, const string& local)
+{
+	response.setCode(301);
+	response.setHeader("Location", local);
+}

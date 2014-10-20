@@ -7,6 +7,8 @@ MaterialModel::MaterialModel()
 
 bool MaterialModel::alterarMaterial(Mateiral &material)
 {
+	if (material.getGrupo())
+		grupoModel.salvarGrupo(*(material.getGrupo()));
     return dao->update(material);
 }
 

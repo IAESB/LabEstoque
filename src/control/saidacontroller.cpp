@@ -99,6 +99,7 @@ void SaidaController::listaSaida(Request &request, StreamResponse &response)
         string html = "<tr onclick='mostrarSaida("+to_string(saida->getId())+");'>\
                 <td>"+saida->getData().substr(0,10)+"</td>\
                 <td>"+saida->getLaboratorio()->getNome()+"</td>\
+				<td>" + saida->getSolicitante()->getNome() + "</td>\
             </tr>";
         view.insertContentId("tabelaSaida", html);
     }

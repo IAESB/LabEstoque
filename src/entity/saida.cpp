@@ -77,8 +77,10 @@ Saida::Saida(sql::ResultSet &rs)
     laboratorio = LaboratorioPtr(new Laboratorio(rs.getInt(3)));
     solicitante = SolicitantePtr(new Solicitante(rs.getInt(4)));
     //usuario = rs.getInt(5);
-    if(rs.findColumn("lab"))
-        laboratorio->setNome(rs.getString(6));
+	if (int i = rs.findColumn("lab"))
+		laboratorio->setNome(rs.getString(i));
+	if (int i = rs.findColumn("solicitante"))
+		solicitante->setNome(rs.getString(i));
 }
 
 string Saida::getSqlInsert()

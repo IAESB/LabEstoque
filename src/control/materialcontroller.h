@@ -12,8 +12,10 @@ class MaterialController :  public Controlador
     MaterialModel model;
 public:
     MaterialController();
-    void listaMateriais(Request &request, StreamResponse &response);
-    void salvarMaterial(Request &request, StreamResponse &response);
+	void listaMateriais(Request &request, StreamResponse &response);
+	void salvarMaterial(Request &request, StreamResponse &response);
+	void excluirMaterial(Request &request, StreamResponse &response);
+	void alterarMaterial(Request &request, StreamResponse &response);
     void setup();
 };
 

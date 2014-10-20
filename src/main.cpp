@@ -2,6 +2,7 @@
 #	include <unistd.h>
 #endif
 #include <stdlib.h>
+#include <direct.h>
 #include <signal.h>
 #include <iostream>
 #include <mongoose/Server.h>
@@ -28,6 +29,7 @@ void handle_signal(int sig)
 
 int main(int argc, char** argv)
 {
+	//chdir("..");
     configureDao();
     cout << "Server Up!" << endl;
     Server server(8080, "WebContent");

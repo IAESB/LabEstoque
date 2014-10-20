@@ -10,7 +10,7 @@ function mostrarSaida(idSaida)
         buttons[i].style.display = "none";
     
     $.getJSON("/saida/get", { id: idSaida }, function(saida) 
-              {
+    {
         document.querySelector("#formNovaSaida input[name=data]").value = saida.data.substr(0, 10);
         
         var opt = document.querySelector("#laboratorios option[label='"+saida.laboratorio+"'");

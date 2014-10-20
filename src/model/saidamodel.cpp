@@ -33,7 +33,10 @@ SolicitanteList SaidaModel::getListSolicitantes()
 
 SaidaList SaidaModel::getListSaidas()
 {
-    return dao->select<Saida>("saida s", "s.*, l.nome as lab", "LEFT OUTER JOIN laboratorio l ON(s.laboratorio_id=l.id) ORDER BY s.id DESC");
+    return dao->select<Saida>("saida s", "s.*, l.nome as lab, so.nome as solicitante", 
+		"LEFT OUTER JOIN laboratorio l ON(s.laboratorio_id = l.id) \
+		 LEFT OUTER JOIN solicitante so ON(s.solicitante_id = so.id) \
+		 ORDER BY s.id DESC");
 }
 
 void SaidaModel::salvaSaida(SaidaPtr& saida)

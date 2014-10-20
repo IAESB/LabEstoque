@@ -11,6 +11,7 @@ class Controlador : public WebController
 public:
     Controlador();
     void mensagem(StreamResponse& response, const string& htmlTextErro);
+	void redirecionar(StreamResponse& response, const string& local);
 };
 
 #endif // Controlador_H
