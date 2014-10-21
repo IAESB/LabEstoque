@@ -1,27 +1,70 @@
 
 function mostrarEntrada(id) 
 {	
-	$(".entrada").hide();
-	$("#mostrarEntrada").show();
-	$("#tableMostraEntrada tbody").remove();
-	$("#tableMostraEntrada").append("<tbody></tbody>");
+	mostrarNovaEntrada();
+    $("#criarCancelar").html("Voltar");
+    var formEntrada = document.querySelector("#formNovaEntrada");
+    desabilitaEdicao(formEntrada);
+    
+    var btAlterar = formEntrada.querySelector("#btAlterar");
+    btAlterar.innerHTML="Alterar";
+    btAlterar.onclick = function(event){
+        if(btAlterar.innerHTML=="Alterar"){
+            btAlterar.innerHTML="Cancelar";
+            abilitaEdicao(formEntrada);
+            formEntrada.setAttribute("action", "/entrada/alterar?id="+id);
+        }else{
+            desabilitaEdicao(formEntrada);
+            btAlterar.innerHTML="Alterar";
+            formEntrada.setAttribute("action", "/entrada/salvar");
+        }
+    }
+    
 	$.get("/entrada/get", { id: id }, function(dados) 
 	{
-		$("#fornecedor").prop('value', dados.fornecedor);
-		$("#data").prop('value', dados.data.substr(0, 10));
-		for (var i in dados.materiais) {
-			var tr = "<tr><td>"+dados.materiais[i].nome+"</td>\
-						 <td>"+dados.materiais[i].quantidade+"</td>\
-						 <td>"+dados.materiais[i].validade.substr(0, 10)+"</td>\
-						 <td>"+dados.materiais[i].lote+"</td>\
-						 <td>"+dados.materiais[i].valor+"</td></tr>";
-			
-			$("#tableMostraEntrada tbody").append(tr);
+		formEntrada.querySelector("input[name=fornecedor]").value = dados.fornecedor;
+		formEntrada.querySelector("input[name=data]").value = dados.data.substr(0, 10);
+		formEntrada.querySelector("textarea").value = dados.anotacao;
+		for (var i=0; i<dados.materiais.length; i++) {
+            var linha = formEntrada.querySelector("#tabelaMateriais tbody tr:last-child");
+            linha.querySelector("input[name=material]").value = dados.materiais[i].nome;
+            linha.querySelector("input[name=quantidade]").value = dados.materiais[i].quantidade;
+            linha.querySelector("input[name=validade]").value = dados.materiais[i].validade.substr(0, 10);
+            linha.querySelector("input[name=lote]").value = dados.materiais[i].lote;
+            linha.querySelector("input[name=valor]").value = dados.materiais[i].valor;
+            
+            maisUmMaterial();
 		}
+        formEntrada.querySelector("#tabelaMateriais tbody tr:last-child").remove();
 	},
 	"json"
 	);
 }
+
+function abilitaEdicao(formEntrada)
+{
+    var fields =  formEntrada.querySelectorAll("input");
+    for(var i=0; i<fields.length; i++)
+        fields[i].removeAttribute("disabled");
+    var buttons = formEntrada.querySelectorAll("fieldset button");
+    for(var i=0; i<buttons.length; i++)
+        buttons[i].style.display = ""; 
+    
+    formEntrada.querySelector("#salvar").style.display = ""; 
+}
+
+function desabilitaEdicao(formEntrada)
+{
+    var fields =  formEntrada.querySelectorAll("input");
+    for(var i=0; i<fields.length; i++)
+        fields[i].setAttribute("disabled", true);
+    var buttons = formEntrada.querySelectorAll("fieldset button");
+    for(var i=0; i<buttons.length; i++)
+        buttons[i].style.display = "none";            
+    
+    formEntrada.querySelector("#salvar").style.display = "none"; 
+}
+
 
 function inicioEntrada() 
 {
@@ -36,8 +79,12 @@ function mostrarNovaEntrada(btm)
 	if(form.is(':visible')){
 		$(".entrada").hide();
 		$("#criarCancelar").html("Criar Entrada");
-		$("#tabelaEntrada").show();		
-	}
+		$("#criarCancelar").show();
+		$("#tabelaEntrada").show();	
+        var linhas = document.querySelectorAll("#tabelaMateriais tbody tr");
+        for(var i=1; i<linhas.length; i++)
+            linhas[i].remove();
+    }
 	else{	
 		$(".entrada").hide();
 		$("#criarCancelar").html("Cancelar");		

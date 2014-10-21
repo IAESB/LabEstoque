@@ -43,6 +43,12 @@ SaidaDeMaterial::SaidaDeMaterial(sql::ResultSet &rs)
 
 string SaidaDeMaterial::getSqlInsert()
 {
-    return "INSERT INTO saida_de_material (saida_id, material_id, quantidade) \
-            VALUE ('"+to_string(saida->getId())+"', '"+to_string(material->getId())+"', '"+to_string(quantidade)+"')";
+	return "INSERT INTO saida_de_material (saida_id, material_id, quantidade) \
+		               VALUE ('" + to_string(saida->getId()) + "', '" + to_string(material->getId()) + "', '" + to_string(quantidade) + "')";
+}
+
+string SaidaDeMaterial::getSqlUpdate()
+{
+	return "UPDATE saida_de_material SET material_id='" + to_string(material->getId()) + "', quantidade='" + to_string(quantidade) + "' \
+			WHERE saida_id='" + to_string(saida->getId()) + "' ;";
 }

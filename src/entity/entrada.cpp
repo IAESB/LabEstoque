@@ -62,6 +62,14 @@ string Entrada::getSqlInsert()
     return sql;
 }
 
+string Entrada::getSqlUpdate()
+{
+	string sql = "UPDATE entrada SET data='" + data + "', fornecedor='" + fornecedor + "', anotacao='" + anotacao + "'\
+				  WHERE id="+to_string(id);
+
+	return sql;
+}
+
 string Entrada::getAnotacao() const
 {
     return anotacao;

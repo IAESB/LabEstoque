@@ -42,3 +42,10 @@ Dao::Connection Dao::getConnection()
         throw Exception("Passe a URL, Usuario e Senha na primeira vez que chamar: Dao::getInstance");
 }
 
+void Dao::executeSql(const string& sql)
+{
+	Connection connection = getConnection();
+
+	unique_ptr<sql::Statement> stmt(connection->createStatement());
+	stmt->executeUpdate(sql);
+}

@@ -9,8 +9,9 @@ SaidaController::SaidaController()
 void SaidaController::setup()
 {
     addRoute("GET", "/saida", SaidaController, listaSaida);
-    addRoute("GET", "/saida/get", SaidaController, getSaida);
-    addRoute("POST", "/saida/salvar", SaidaController, salvarSaida);
+	addRoute("GET", "/saida/get", SaidaController, getSaida);
+	addRoute("POST", "/saida/salvar", SaidaController, salvarSaida);
+	addRoute("POST", "/saida/alterar", SaidaController, alterarSaida);
 }
 
 void SaidaController::getSaida(Request &request, StreamResponse &response)
@@ -30,40 +31,29 @@ void SaidaController::getSaida(Request &request, StreamResponse &response)
     response << json;
 }
 
+void SaidaController::alterarSaida(Request &request, StreamResponse &response)
+{
+	try{
+		SaidaPtr saida = criarSaida(request);
+		saida->setId(stoi(request.get("id")));
+		model.alterarSaida(saida);
+		response.setCode(301);
+		response.setHeader("Location", "/saida");
+	}
+	catch (sql::SQLException& ex){
+		mensagem(response, ex.what());
+		cerr << ex.what() << endl;
+		cerr << ex.getErrorCode() << ex.getSQLState() << endl;
+	}
+	catch (exception& ex){
+		mensagem(response, ex.what());
+	}
+}
+
 void SaidaController::salvarSaida(Request &request, StreamResponse &response)
 {
-    map<string, string> variables = request.getAllVariable();
-    SolicitantePtr solicitante(new Solicitante);
-    solicitante->setNome( variables["solicitante"] );
-    LaboratorioPtr laboratorio(new Laboratorio);
-    laboratorio->setNome(variables["laboratorio"]);
-    string data = variables["data"];
-    variables.erase("solicitante");
-    variables.erase("data");
-    variables.erase("laboratorio");
-    SaidaPtr saida(new Saida);
-    saida->setData(data);
-    saida->setSolicitante(solicitante);
-    saida->setLaboratorio(laboratorio);
-
-   SaidaDeMaterialList vecMateriais(new vector<SaidaDeMaterialPtr>);
-    while (variables.size())
-    {
-        auto itr = variables.begin();
-        string id = itr->first;
-        id = id.substr(id.find('_')+1);
-        MateiralPtr material(new Mateiral(stoi(id)));
-
-        SaidaDeMaterialPtr saidaDeMaterial(new SaidaDeMaterial);
-        saidaDeMaterial->setMaterial(material);
-        saidaDeMaterial->setSaida(saida);
-        saidaDeMaterial->setQuantidade(stoi(variables["quantidade_"+id]));
-        variables.erase("quantidade_"+id);
-
-        vecMateriais->push_back(saidaDeMaterial);
-    }
-    saida->setSaidaDeMateriais(vecMateriais);
-    try{
+	try{
+		SaidaPtr saida = criarSaida(request);
         model.salvaSaida(saida);
         response.setCode(301);
         response.setHeader("Location", "/saida");
@@ -104,4 +94,40 @@ void SaidaController::listaSaida(Request &request, StreamResponse &response)
         view.insertContentId("tabelaSaida", html);
     }
     response << view;
+}
+SaidaPtr SaidaController::criarSaida(Request& request)
+{
+	map<string, string> variables = request.getAllVariable();
+	SolicitantePtr solicitante(new Solicitante);
+	solicitante->setNome(variables["solicitante"]);
+	LaboratorioPtr laboratorio(new Laboratorio);
+	laboratorio->setNome(variables["laboratorio"]);
+	string data = variables["data"];
+	variables.erase("solicitante");
+	variables.erase("data");
+	variables.erase("laboratorio");
+	SaidaPtr saida(new Saida);
+	saida->setData(data);
+	saida->setSolicitante(solicitante);
+	saida->setLaboratorio(laboratorio);
+
+	SaidaDeMaterialList vecMateriais(new vector<SaidaDeMaterialPtr>);
+	while (variables.size())
+	{
+		auto itr = variables.begin();
+		string id = itr->first;
+		id = id.substr(id.find('_') + 1);
+		MateiralPtr material(new Mateiral(stoi(id)));
+
+		SaidaDeMaterialPtr saidaDeMaterial(new SaidaDeMaterial);
+		saidaDeMaterial->setMaterial(material);
+		saidaDeMaterial->setSaida(saida);
+		saidaDeMaterial->setQuantidade(stoi(variables["quantidade_" + id]));
+		variables.erase("quantidade_" + id);
+
+		vecMateriais->push_back(saidaDeMaterial);
+	}
+	saida->setSaidaDeMateriais(vecMateriais);
+
+	return saida;
 }

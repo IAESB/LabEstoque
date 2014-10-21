@@ -20,6 +20,7 @@ public:
     SolicitanteList getListSolicitantes();
     SaidaList getListSaidas();
     void salvaSaida(SaidaPtr& saida);
+	void alterarSaida(SaidaPtr& saida);
 };
 
 #endif // SAIDAMODEL_H

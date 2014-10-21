@@ -13,8 +13,9 @@ public:
     MaterialModel();
     int salvarMaterial(Mateiral& material);
     bool alterarMaterial(Mateiral& material);
-    bool excluirMaterial(Mateiral& material);
-    bool incrementaQuantidadeMaterial(MateiralPtr material);
+	bool excluirMaterial(Mateiral& material);
+	bool incrementaQuantidadeMaterial(MateiralPtr material);
+	bool decrementaQuantidadeMaterial(MateiralPtr material);
     MateiralPtr getMaterialPorId(const int& id);
     MateiralList getListMaterial();
     GrupoList getListGrupo();

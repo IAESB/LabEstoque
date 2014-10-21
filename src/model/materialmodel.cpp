@@ -19,14 +19,23 @@ bool MaterialModel::excluirMaterial(Mateiral &material)
 
 bool MaterialModel::incrementaQuantidadeMaterial(MateiralPtr material)
 {
-    MateiralPtr matBase = getMaterialPorId(material->getId());
-    if( !matBase ){
-        salvarMaterial(*material);
-        return true;
-    }else{
-        matBase->setQuantidade(material->getQuantidade()+matBase->getQuantidade());
-        return dao->update(*matBase);
-    }
+	MateiralPtr matBase = getMaterialPorId(material->getId());
+	if (!matBase){
+		salvarMaterial(*material);
+		return true;
+	}
+	else{
+		matBase->setQuantidade(material->getQuantidade() + matBase->getQuantidade());
+		return dao->update(*matBase);
+	}
+}
+bool MaterialModel::decrementaQuantidadeMaterial(MateiralPtr material)
+{
+	MateiralPtr matBase = getMaterialPorId(material->getId());
+	if (matBase){
+		matBase->setQuantidade(matBase->getQuantidade() - material->getQuantidade());
+		return dao->update(*matBase);
+	}
 }
 
 MateiralPtr MaterialModel::getMaterialPorId(const int& id)

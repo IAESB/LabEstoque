@@ -1,13 +1,49 @@
+function desabilitaEdicao(formNovaSaida)
+{
+    var fields =  formNovaSaida.querySelectorAll("input, select");
+    for(var i=0; i<fields.length; i++)
+        fields[i].setAttribute("disabled", true);
+    var buttons = formNovaSaida.querySelectorAll("button");
+    for(var i=0; i<buttons.length; i++)
+        buttons[i].style.display = "none";
+    
+    var btAlterar = formNovaSaida.querySelector("#btAlterar");
+    btAlterar.style.display = "inline";
+        
+}
+
+function abilitaEdicao(formNovaSaida)
+{
+    var fields =  formNovaSaida.querySelectorAll("input, select");
+    for(var i=0; i<fields.length; i++)
+        fields[i].removeAttribute("disabled");
+    
+    var buttons = formNovaSaida.querySelectorAll("button");
+    for(var i=0; i<buttons.length; i++)
+        buttons[i].style.display = "inline";
+    
+}
+
 function mostrarSaida(idSaida)
 {
     mostrarNovaSaida();
     $("#criarCancelar").html("Voltar");
-    var fields = document.querySelectorAll("#formNovaSaida input, #formNovaSaida select");
-    for(var i=0; i<fields.length; i++)
-        fields[i].setAttribute("disabled", true);
-    var buttons = document.querySelectorAll("#formNovaSaida button");
-    for(var i=0; i<buttons.length; i++)
-        buttons[i].style.display = "none";
+    var formNovaSaida = document.querySelector("#formNovaSaida");
+    desabilitaEdicao(formNovaSaida);
+    
+    var btAlterar = formNovaSaida.querySelector("#btAlterar");
+    btAlterar.innerHTML="Alterar";
+    btAlterar.onclick = function(event){
+        if(btAlterar.innerHTML=="Alterar"){
+            btAlterar.innerHTML="Cancelar";
+            abilitaEdicao(formNovaSaida);
+            formNovaSaida.setAttribute("action", "/saida/alterar?id="+idSaida);
+        }else{
+            desabilitaEdicao(formNovaSaida);
+            btAlterar.innerHTML="Alterar";
+            formNovaSaida.setAttribute("action", "/saida/salvar");
+        }
+    }
     
     $.getJSON("/saida/get", { id: idSaida }, function(saida) 
     {
@@ -29,6 +65,7 @@ function mostrarSaida(idSaida)
             maisUmMaterial();
         }
         document.querySelector("#tabelaMateriais tbody tr:last-child").remove();
+        desabilitaEdicao(formNovaSaida);
     },
     "json"
     );
@@ -72,7 +109,7 @@ function validarSalvarSaida()
 {    
 	var idMaterial =-1;
     var inputs = $("#tabelaMateriais :input");
-    for(i in inputs)
+    for(var i=0; i<inputs.length; i++)
     {
         var input = inputs[i];
         var name = input.getAttribute("name");

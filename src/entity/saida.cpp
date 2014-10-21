@@ -91,3 +91,12 @@ string Saida::getSqlInsert()
     sql += solicitante?", '"+to_string(solicitante->getId())+"')":")";
     return sql;
 }
+
+
+string Saida::getSqlUpdate()
+{
+	string sql = "UPDATE saida SET data='" + data + "', laboratorio_id='" + to_string(laboratorio->getId()) + "'";
+	sql += solicitante ? ", solicitante_id='" + to_string(solicitante->getId()) + "'" : "";
+	sql += " WHERE id="+to_string(id);
+	return sql;
+}

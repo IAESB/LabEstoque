@@ -45,8 +45,12 @@
 					</tbody>
 				</table>
 				<button id="maisUm" onclick="maisUmMaterial()" type="button">Mais Um</button>
-			</fieldset>
+			</fieldset>            
+			<span><label>Anotação:</label>
+                <textarea name="anotacao" rows="3"></textarea>
+			</span><br/>
 			<button id="salvar">Salvar</button>
+			<button type="button" id="btAlterar">Alterar</button>
 		</form>
 		<table id="tabelaEntrada" class="entrada tabela">
 			<tr>
@@ -55,30 +59,5 @@
 				<th>Anotação</th>
 			</tr>	
 		</table>
-		<div id="mostrarEntrada" class="entrada">
-			<span><label>Data de Referência:</label>
-				<input name="data" type="date" id="data" disabled/>
-			</span>
-			<span><label>Fornecedor:</label>
-				<input name="fornecedor" id="fornecedor" disabled/>
-			</span>
-			<fieldset>
-				<legend>Materiais:</legend>
-				<table id="tableMostraEntrada">
-					<thead>
-						<tr>
-							<th>Nome</th>
-							<th>Quantidade</th>
-							<th>Validade</th>	
-							<th>Lote</th>
-							<th>Valor</th>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-			</fieldset>
-			<button onclick="inicioEntrada();">Voltar</button>
-		</div>
 	</body>
 </html>

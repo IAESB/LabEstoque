@@ -2,6 +2,9 @@
 .formNovaEntrada{
 	display: none;
 }
+.formNovaEntrada textarea{
+    width: 99.5%;
+}
 #mostrarEntrada{
 	display: none;
 }

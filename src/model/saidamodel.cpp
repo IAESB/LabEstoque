@@ -41,10 +41,19 @@ SaidaList SaidaModel::getListSaidas()
 
 void SaidaModel::salvaSaida(SaidaPtr& saida)
 {
-    solicitanteModel.salvaSolicitante(*saida->getSolicitante());
-    laboratorioModel.salvarLaboratorio(*saida->getLaboratorio());
-    saida->setId( dao->insert(*saida) );
-    saidaDeMaterialModel.salvaSaidaDeMaterial( saida->getSaidaDeMaterialList() );
+	solicitanteModel.salvaSolicitante(*saida->getSolicitante());
+	laboratorioModel.salvarLaboratorio(*saida->getLaboratorio());
+	saida->setId(dao->insert(*saida));
+	saidaDeMaterialModel.salvaSaidaDeMaterial(saida->getSaidaDeMaterialList());
+}
+
+void SaidaModel::alterarSaida(SaidaPtr& saida)
+{
+	solicitanteModel.salvaSolicitante(*saida->getSolicitante());
+	laboratorioModel.salvarLaboratorio(*saida->getLaboratorio());
+	dao->update(*saida);
+	saidaDeMaterialModel.removerSaidaDeMaterial(*saida);
+	saidaDeMaterialModel.salvaSaidaDeMaterial(saida->getSaidaDeMaterialList());
 }
 
 

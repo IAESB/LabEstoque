@@ -25,9 +25,40 @@ MateiralPtr EntradaModel::getMaterialPorId(const int &id)
     return materialModel.getMaterialPorId(id);
 }
 
+void EntradaModel::alterarEntrada(Entrada& entrada)
+{
+	dao->update(entrada);
+}
+
 void EntradaModel::salvaEntrada(Entrada &entrada)
 {
      entrada.setId(dao->insert(entrada));
+}
+
+void EntradaModel::alterarListEntradaDeMaterial(EntradaDeMaterialList& list, string id)
+{
+	EntradaPtr ent;
+	if (list->size()){
+		ent = list->at(0)->getEntrada();
+		alterarEntrada(*ent);
+		ent->setId(stoi(id));
+	}
+	EntradaDeMaterialList listDecrement = entradaDeMaterialModel.getListEntradaDeMaterial(id);
+	for (EntradaDeMaterialPtr entradaDeMaterial : *listDecrement)
+	{
+		MateiralPtr mat = entradaDeMaterial->getMaterial();
+		mat->setQuantidade(entradaDeMaterial->getQuantidade());
+		materialModel.decrementaQuantidadeMaterial(mat);
+	}
+
+	dao->executeSql("DELETE FROM entrada_de_material WHERE entrada_id=" + id);
+	for (EntradaDeMaterialPtr entradaDeMaterial : *list)
+	{
+		MateiralPtr mat = entradaDeMaterial->getMaterial();
+		mat->setQuantidade(entradaDeMaterial->getQuantidade());
+		materialModel.incrementaQuantidadeMaterial(mat);
+		dao->insert(*entradaDeMaterial);
+	}
 }
 
 void EntradaModel::salvaListEntradaDeMaterial(EntradaDeMaterialList& list)

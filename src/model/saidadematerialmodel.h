@@ -8,8 +8,10 @@ class SaidaDeMaterialModel : public Model
 {
 public:
     SaidaDeMaterialModel();
-    void salvaSaidaDeMaterial(SaidaDeMaterial& saidaDeMaterial);
-    void salvaSaidaDeMaterial(const SaidaDeMaterialList& saidaDeMaterialList);
+	void salvaSaidaDeMaterial(SaidaDeMaterial& saidaDeMaterial);
+	void salvaSaidaDeMaterial(const SaidaDeMaterialList& saidaDeMaterialList);
+	void alterarSaidaDeMaterial(const SaidaDeMaterialList& saidaDeMaterialList);
+	void removerSaidaDeMaterial(const Saida& saida);
     SaidaDeMaterialList getListSaidaDeMaterial(SaidaPtr& saida);
 };
 

@@ -16,6 +16,7 @@ public:
     Entrada();
     Entrada(sql::ResultSet& rs);
     string getSqlInsert();
+	string getSqlUpdate();
     int getId() const;
     void setId(int value);
     string getData() const;

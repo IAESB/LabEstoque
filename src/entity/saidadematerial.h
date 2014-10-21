@@ -15,8 +15,9 @@ class SaidaDeMaterial
     int quantidade;
 public:
     SaidaDeMaterial();
-    SaidaDeMaterial(sql::ResultSet& rs);
-    string getSqlInsert();
+	SaidaDeMaterial(sql::ResultSet& rs);
+	string getSqlInsert();
+	string getSqlUpdate();
     SaidaPtr getSaida() const;
     void setSaida(const SaidaPtr &value);
     MateiralPtr getMaterial() const;
