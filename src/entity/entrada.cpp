@@ -70,6 +70,12 @@ string Entrada::getSqlUpdate()
 	return sql;
 }
 
+string Entrada::getSqlDelete()
+{
+	string sql = "DELETE FROM entrada WHERE id=" + to_string(id) + ";";
+	return sql;
+}
+
 string Entrada::getAnotacao() const
 {
     return anotacao;

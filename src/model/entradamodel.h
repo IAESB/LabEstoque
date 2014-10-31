@@ -19,8 +19,9 @@ public:
     MateiralPtr getMaterialPorId(const int& id);
     void salvaEntrada(Entrada& entrada);
 	void alterarEntrada(Entrada& entrada);
-    void salvaListEntradaDeMaterial(EntradaDeMaterialList& list);
+	void salvaListEntradaDeMaterial(EntradaDeMaterialList& list);
 	void alterarListEntradaDeMaterial(EntradaDeMaterialList& list, string id);
+	void excluirEntrada(string id);
 };
 
 #endif // ENTRADAMODEL_H

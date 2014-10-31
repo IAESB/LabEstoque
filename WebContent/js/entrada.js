@@ -1,4 +1,15 @@
 
+function removeEntrada(id)
+{
+    $.post("/entrada/excluir", {id: id}, function(result)
+    {
+        if(result == "ok")
+            document.location.href = "/entrada";
+        else
+            alert(result);
+    });
+}
+
 function mostrarEntrada(id) 
 {	
 	mostrarNovaEntrada();
@@ -18,6 +29,10 @@ function mostrarEntrada(id)
             btAlterar.innerHTML="Alterar";
             formEntrada.setAttribute("action", "/entrada/salvar");
         }
+    }
+    var btExcluir = formEntrada.querySelector("#btExcluir");
+    btExcluir.onclick = function(event){
+        removeEntrada(id);
     }
     
 	$.get("/entrada/get", { id: id }, function(dados) 

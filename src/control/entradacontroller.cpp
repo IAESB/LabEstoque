@@ -13,6 +13,7 @@ void EntradaController::setup()
 	addRoute("GET", "/entrada/get", EntradaController, getEntrada);
 	addRoute("POST", "/entrada/salvar", EntradaController, salvaEntrada);
 	addRoute("POST", "/entrada/alterar", EntradaController, alterarEntrada);
+	addRoute("POST", "/entrada/excluir", EntradaController, excluirEntrada);
 }
 
 void EntradaController::listaEntrada(Request &request, StreamResponse &response)
@@ -115,6 +116,20 @@ void EntradaController::alterarEntrada(Request &request, StreamResponse &respons
 	catch (exception& ex){
 		string msg = "<h1 class='erro'>Não foi possivel alterar as entradas</h1>";
 		mensagem(response, msg + ex.what());
+		return;
+	}
+}
+
+void EntradaController::excluirEntrada(Request &request, StreamResponse &response)
+{
+	try{
+		model.excluirEntrada( request.get("id") );
+		response << "ok";
+	}
+	catch (exception& ex){
+		string msg = "Não foi possivel Excluir a entrada\n";
+		cerr << msg << ex.what() << endl;
+		response << msg << ex.what();
 		return;
 	}
 }

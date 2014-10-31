@@ -12,7 +12,8 @@ public:
 	void listaEntrada(Request &request, StreamResponse &response);
 	void salvaEntrada(Request &request, StreamResponse &response);
 	void alterarEntrada(Request &request, StreamResponse &response);
-    void getEntrada(Request &request, StreamResponse &response);
+	void getEntrada(Request &request, StreamResponse &response);
+	void excluirEntrada(Request &request, StreamResponse &response);
     void setup();
 private:
 	EntradaDeMaterialList criarEntradas(Request& request);

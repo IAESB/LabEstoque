@@ -1,4 +1,4 @@
-﻿function mostrarMaterial(id)
+function mostrarMaterial(id)
 {
     var divMaterial = document.querySelector("#mat"+id);
     var formMaterial = document.querySelector(".formNovoMaterial");
@@ -35,14 +35,21 @@ function encodeImageFileAsURL(){
     if (filesSelected.length > 0)
     {
         var fileToLoad = filesSelected[0];
-
         var fileReader = new FileReader();
+        var type = 'image/png';
+        var quality = 0.92;
 
         fileReader.onload = function(fileLoadedEvent) {
             var srcData = fileLoadedEvent.target.result; // <--- data: base64
 
             var newImage = document.getElementById('imgPreview');
             newImage.src = srcData;
+            var canvas = document.createElement('canvas');
+            canvas.height = 120;
+            canvas.width = 120;
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(newImage, 0, 0, canvas.height, canvas.width);
+            newImage.src = canvas.toDataURL(type, quality);
             document.querySelector("#formNovoMaterial input[name=imagem]").value = newImage.src;
             
             console.log("Converted Base64 version is "+newImage.src);

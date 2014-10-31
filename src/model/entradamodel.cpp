@@ -74,3 +74,9 @@ void EntradaModel::salvaListEntradaDeMaterial(EntradaDeMaterialList& list)
         dao->insert(*entradaDeMaterial);
     }
 }
+
+void EntradaModel::excluirEntrada(string id)
+{
+	dao->executeSql("DELETE FROM entrada_de_material WHERE entrada_id=" + id);
+	dao->executeSql("DELETE FROM entrada WHERE id=" + id);
+}
