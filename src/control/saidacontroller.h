@@ -15,6 +15,7 @@ public:
 	void listaSaida(Request &request, StreamResponse &response);
 	void salvarSaida(Request &request, StreamResponse &response);
 	void alterarSaida(Request &request, StreamResponse &response);
+	void excluirSaida(Request &request, StreamResponse &response);
 };
 
 #endif // SAIDACONTROLLER_H

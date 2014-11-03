@@ -56,4 +56,8 @@ void SaidaModel::alterarSaida(SaidaPtr& saida)
 	saidaDeMaterialModel.salvaSaidaDeMaterial(saida->getSaidaDeMaterialList());
 }
 
-
+void SaidaModel::excluirSaida(string id)
+{
+	dao->executeSql("DELETE FROM saida_de_material WHERE saida_id=" + id);
+	dao->executeSql("DELETE FROM saida WHERE id=" + id);
+}

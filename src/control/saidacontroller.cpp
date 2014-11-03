@@ -12,6 +12,7 @@ void SaidaController::setup()
 	addRoute("GET", "/saida/get", SaidaController, getSaida);
 	addRoute("POST", "/saida/salvar", SaidaController, salvarSaida);
 	addRoute("POST", "/saida/alterar", SaidaController, alterarSaida);
+	addRoute("POST", "/saida/excluir", SaidaController, excluirSaida);
 }
 
 void SaidaController::getSaida(Request &request, StreamResponse &response)
@@ -47,6 +48,22 @@ void SaidaController::alterarSaida(Request &request, StreamResponse &response)
 	}
 	catch (exception& ex){
 		mensagem(response, ex.what());
+	}
+}
+
+void SaidaController::excluirSaida(Request &request, StreamResponse &response)
+{
+	try{
+		model.excluirSaida( request.get("id") );
+		response << "0k";
+	}
+	catch (sql::SQLException& ex){
+		response << ex.what();
+		cerr << ex.what() << endl;
+		cerr << ex.getErrorCode() << ex.getSQLState() << endl;
+	}
+	catch (exception& ex){
+		response << ex.what();
 	}
 }
 

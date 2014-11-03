@@ -21,6 +21,7 @@ public:
     SaidaList getListSaidas();
     void salvaSaida(SaidaPtr& saida);
 	void alterarSaida(SaidaPtr& saida);
+	void excluirSaida(string id);
 };
 
 #endif // SAIDAMODEL_H

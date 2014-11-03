@@ -27,7 +27,8 @@ MateiralPtr EntradaModel::getMaterialPorId(const int &id)
 
 void EntradaModel::alterarEntrada(Entrada& entrada)
 {
-	dao->update(entrada);
+	if (dao->update(entrada))
+		throw runtime_error("Não foi possível alterar a entrada");
 }
 
 void EntradaModel::salvaEntrada(Entrada &entrada)
@@ -40,8 +41,8 @@ void EntradaModel::alterarListEntradaDeMaterial(EntradaDeMaterialList& list, str
 	EntradaPtr ent;
 	if (list->size()){
 		ent = list->at(0)->getEntrada();
-		alterarEntrada(*ent);
 		ent->setId(stoi(id));
+		alterarEntrada(*ent);
 	}
 	EntradaDeMaterialList listDecrement = entradaDeMaterialModel.getListEntradaDeMaterial(id);
 	for (EntradaDeMaterialPtr entradaDeMaterial : *listDecrement)

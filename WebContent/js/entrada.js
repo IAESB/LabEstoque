@@ -66,6 +66,7 @@ function abilitaEdicao(formEntrada)
         buttons[i].style.display = ""; 
     
     formEntrada.querySelector("#salvar").style.display = ""; 
+    formEntrada.querySelector("textarea").removeAttribute("disabled");
 }
 
 function desabilitaEdicao(formEntrada)
@@ -76,8 +77,9 @@ function desabilitaEdicao(formEntrada)
     var buttons = formEntrada.querySelectorAll("fieldset button");
     for(var i=0; i<buttons.length; i++)
         buttons[i].style.display = "none";            
-    
+
     formEntrada.querySelector("#salvar").style.display = "none"; 
+    formEntrada.querySelector("textarea").setAttribute("disabled", true);
 }
 
 

@@ -3,12 +3,12 @@ function desabilitaEdicao(formNovaSaida)
     var fields =  formNovaSaida.querySelectorAll("input, select");
     for(var i=0; i<fields.length; i++)
         fields[i].setAttribute("disabled", true);
-    var buttons = formNovaSaida.querySelectorAll("button");
+    var buttons = formNovaSaida.querySelectorAll("fieldset button");
     for(var i=0; i<buttons.length; i++)
         buttons[i].style.display = "none";
     
-    var btAlterar = formNovaSaida.querySelector("#btAlterar");
-    btAlterar.style.display = "inline";
+    var btAlterar = formNovaSaida.querySelector("#btSalvar");
+    btAlterar.style.display = "none";
         
 }
 
@@ -24,12 +24,27 @@ function abilitaEdicao(formNovaSaida)
     
 }
 
+function removerSaida(id)
+{
+    $.post("/saida/excluir", {id: id}, function(result)
+    {
+        if(result == "ok")
+            document.location.href = "/saida";
+        else
+            alert(result);
+    });
+}
+
 function mostrarSaida(idSaida)
 {
     mostrarNovaSaida();
     $("#criarCancelar").html("Voltar");
     var formNovaSaida = document.querySelector("#formNovaSaida");
     desabilitaEdicao(formNovaSaida);
+    var btm = $("#btAlterar");
+    btm.show();
+    btm = $("#btExcluir");
+    btm.show();
     
     var btAlterar = formNovaSaida.querySelector("#btAlterar");
     btAlterar.innerHTML="Alterar";
@@ -43,6 +58,11 @@ function mostrarSaida(idSaida)
             btAlterar.innerHTML="Alterar";
             formNovaSaida.setAttribute("action", "/saida/salvar");
         }
+    }
+    
+    var btExcluir = document.querySelector("#btExcluir");
+    btExcluir.onclick = function(event){
+        removerSaida(idSaida);
     }
     
     $.getJSON("/saida/get", { id: idSaida }, function(saida) 
@@ -103,6 +123,10 @@ function mostrarNovaSaida()
 	else {		
 		voltaInicioSaida();	
 	}
+    btm = $("#btAlterar");
+    btm.hide();
+    btm = $("#btExcluir");
+    btm.hide();
 }
 
 function validarSalvarSaida()

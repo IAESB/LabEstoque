@@ -42,8 +42,8 @@ public:
         string sql = obj.getSqlUpdate();
         unique_ptr<sql::Statement> stmt( connection->createStatement() );
         if(stmt->executeUpdate(sql)>0)
-            return true;
-        return false;
+            return false;
+        return true;
     }
 
     template<typename type>
