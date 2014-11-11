@@ -20,15 +20,16 @@ list(APPEND FULL_SRC
 	${CONTROL}
     ${DAO}
     ${EXCEPTION} )
-if(WIN32)
+if(MSVC)
 	include_directories(../)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHa")
 	IF(CMAKE_BUILD_TYPE STREQUAL "Debug")	
-		link_directories( ${LINK_DIRECTORIES} ${MYSQL_DIR}/lib/debug ../../htmlcxx/Debug ${JSON_DIR}/lib/debug)
+		link_directories( ${LINK_DIRECTORIES} ${MYSQL_DIR}/lib/debug ../../htmlcxx/Debug ${JSON_DIR}/lib/debug ${MONGOOSE_DIR}/lib_debug)
 	ELSE()
 		link_directories( ${LINK_DIRECTORIES} ${MYSQL_DIR}/lib/opt ../../htmlcxx/Release ${JSON_DIR}/lib ${MONGOOSE_DIR}/lib)
 	ENDIF(CMAKE_BUILD_TYPE STREQUAL "Debug")
 else()
-	target_link_libraries(${PROJECT_NAME} pthread dl)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif()
 link_directories(c:/Boost/lib)
 
@@ -42,6 +43,6 @@ target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} _mongoose jsoncpp mysql
 
 
 # install
-install (FILES msvcp100d.dll msvcr100d.dll mysqlcppconn.dll DESTINATION bin)
+install (FILES mysqlcppconn.dll DESTINATION bin)
 install (DIRECTORY WebContent/ DESTINATION WebContent)
 install (TARGETS ${PROJECT_NAME} DESTINATION bin)

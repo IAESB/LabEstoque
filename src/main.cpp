@@ -7,88 +7,146 @@
 #include <iostream>
 #include <fstream>
 #include <boost/thread.hpp>
+#include "boost/program_options.hpp" 
 #include <mongoose/Server.h>
 #include "control/materialcontroller.h"
 #include "control/entradacontroller.h"
 #include "control/saidacontroller.h"
+#include "control/pesquisacontroller.h"
 
 using namespace std;
 using namespace Mongoose;
+using namespace boost::program_options;
 
-#define ARQ_LOCK "tmp/labEstoque.lock"
 
-void configureDao(){
-    DaoPrt dao = Dao::getInstance("tcp://localhost:3306", "root", "root", "estoque_lab_quimica");
-}
-
-volatile static bool running = true;
-
-extern "C" __declspec(dllexport) void handle_signal(int sig)
+namespace
 {
-    if (running) {
-        cout << "Signal: "<< sig << endl << "Exiting..." << endl;
-        running = false;
-    }
-}
-
-bool verificaArqLock()
-{
-	ifstream arq(ARQ_LOCK);
-	return ! arq.is_open();
-}
-
-#ifdef SHARED_LIB
-int run(char** argv)
-#else
-int main(int argc, char** argv)
+	const size_t SUCCESS = 0;
+	const size_t ERROR_IN_COMMAND_LINE = 1;
+	const size_t ERROR_IN_FILE_LOCK = 2;
+#ifndef _MSC_VER
+    const size_t ERROR_UNHANDLED_EXCEPTION = 3;
 #endif
-{
-	if (argc < 2)
-	{
-		std::cerr << "Usage: labStoqueServer <port>\n";
-		return 1;
+
+
+	const char* ARQ_LOCK = "tmp/labEstoque.lock";
+
+	void configureDao(string url, string user, string password, string dataBase){
+		DaoPrt dao = Dao::getInstance(url, user, password, dataBase);
 	}
 
+	volatile static bool running = true;
+
+	extern "C" __declspec(dllexport) void handle_signal(int sig)
+	{
+		cout << "Signal: " << sig << endl << "Exiting..." << endl;
+		running = false;
+	}
+
+	bool verificaArqLock()
+	{
+		ifstream arq(ARQ_LOCK);
+		return !arq.is_open();
+	}
+
+} // namespace
+
+int main(int argc, char** argv)
+{
 	signal(SIGINT, handle_signal);
+	signal(SIGSEGV, handle_signal);
+	signal(SIGABRT, handle_signal);
 
-	string path = argv[0];
-	path = path.substr(0, path.rfind("\\"));
-#ifdef _MSC_VER
-	path = path.substr(0, path.rfind("\\"));
-	path = path.substr(0, path.rfind("\\"));
-#endif
-	chdir(path.c_str());
+	namespace po = boost::program_options;
 
-    configureDao();
-    cout << "Server Up!" << endl;
-    Server server(stoi(argv[1]), "WebContent");
-    server.setOption("enable_directory_listing", "false");
-    MaterialController material;
-    EntradaController entrada;
-    SaidaController saida;
-    server.registerController(&material);
-    server.registerController(&entrada);
-    server.registerController(&saida);
+	/** Define and parse the program options
+	*/
+	po::options_description desc("Options");
+	try
+	{
+		desc.add_options()
+			("help,h", "Print help messages")
+			("port,p", po::value<int>(), "<PORT> set port to open socket ex.: 8080")
+			("webdir,w", po::value<string>(), "<DIR> set dir to web content ex.: ../WebContent")
+			("url-data-base,r", po::value<string>(), "<URL> set url to connect data base ex.: tcp://localhost:3306")
+			("user-data-base,u", po::value<string>(), "<USER> set user connect data base ex.: root")
+			("passowrd-data-base,s", po::value<string>(), "<PASSWORD> set user connect data base ex.: root")
+			("data-base,d", po::value<string>(), "<DATA BASE> set data base ex.: estoque_lab");
 
-    server.start();
-	
-	mkdir("tmp");
-	ofstream arq(ARQ_LOCK);
-	arq << "running" << endl;
-	arq.close();
+		po::variables_map vm;
+		po::store(po::parse_command_line(argc, argv, desc),
+			vm); // can throw 
+		po::notify(vm); // throws on error, so do after help in case there are any problems 
 
-    while (running) {
-#ifdef WIN32
-        Sleep(2000);
-#else
-        sleep(2);
-#endif
-		if (verificaArqLock())
-			handle_signal(0);
-    }
+		if (vm.count("help"))
+		{
+			std::cout << "Basic Command Line Parameter App" << std::endl
+				<< desc << std::endl;
+			return SUCCESS;
+		}
+		int porta = 8080;
+		if (vm.count("port"))
+		{
+			porta = vm["port"].as<int>();
+			std::cerr << "Usando porta: " << porta << endl;
+		}
+		string path = "WebContent";
+		if (vm.count("webdir"))
+		{
+			path = vm["webdir"].as<string>();
+		}
+		cout << "WebDir: " << path << endl;
 
-	cout << "Server Down!" << endl;
-    return 0;
+		mkdir("tmp");
+		ofstream arq(ARQ_LOCK);
+		if (!arq.good()){
+			cerr << "problemas ao criar o arquivo de trava: " << ARQ_LOCK << endl;
+			return ERROR_IN_FILE_LOCK;
+		}
+		arq << "running" << endl;
+		arq.close();
+
+		configureDao(vm.count("url-data-base") ? vm["url-data-base"].as<string>() : "tcp://localhost:3306", 
+					 vm.count("user-data-base") ? vm["user-data-base"].as<string>() : "root", 
+					 vm.count("passowrd-data-base") ? vm["passowrd-data-base"].as<string>() : "root", 
+					 vm.count("data-base") ? vm["data-base"].as<string>() : "lab_estoque");
+		cout << "Server Up!" << endl;
+		Server server(porta, path.c_str());
+		server.setOption("enable_directory_listing", "false");
+		MaterialController material;
+		EntradaController entrada;
+		SaidaController saida;
+        PesquisaController relatorio;
+		server.registerController(&material);
+		server.registerController(&entrada);
+		server.registerController(&saida);
+		server.registerController(&relatorio);
+
+		server.start();		
+
+		while (running) {
+			boost::this_thread::sleep(boost::posix_time::seconds(2));
+			if (verificaArqLock())
+				handle_signal(0);
+		}
+
+		cout << "Server Down!" << endl;
+	}
+	catch (po::error& e)
+	{
+		std::cerr << "ERROR: " << e.what() << std::endl << std::endl;
+		std::cerr << desc << std::endl;
+		return ERROR_IN_COMMAND_LINE;
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << "Unhandled Exception reached the top of main: "
+			<< e.what() << ", application will now exit" << std::endl;
+		return ERROR_UNHANDLED_EXCEPTION;
+
+	}
+
+	return SUCCESS;
 }
 
 extern "C" __declspec(dllexport) int startServer(int argc, char** argv)

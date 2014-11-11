@@ -9,6 +9,8 @@ Dao::Dao(string url, string user, string password, string database)
     this->user = user;
     this->password = password;
     this->database = database;
+
+	getConnection();
 }
 
 DaoPrt Dao::getInstance(string url, string user, string password, string database)
@@ -39,13 +41,22 @@ Dao::Connection Dao::getConnection()
 		return connection;
     }
     else
-        throw Exception("Passe a URL, Usuario e Senha na primeira vez que chamar: Dao::getInstance");
+        throw Exception("Não foi possivél realizar uma conexão, verifique os parametros de conexão do banco");
 }
 
-void Dao::executeSql(const string& sql)
+shared_ptr<sql::ResultSet> Dao::executeQuery(const string &sql)
+{
+    Connection connection = getConnection();
+
+    unique_ptr<sql::Statement> stmt(connection->createStatement());
+    shared_ptr<sql::ResultSet> rs(stmt->executeQuery(sql));
+    return rs;
+}
+
+void Dao::executeUpdate(const string& sql)
 {
 	Connection connection = getConnection();
 
-	unique_ptr<sql::Statement> stmt(connection->createStatement());
-	stmt->executeUpdate(sql);
+    unique_ptr<sql::Statement> stmt(connection->createStatement());
+    stmt->executeUpdate(sql);
 }

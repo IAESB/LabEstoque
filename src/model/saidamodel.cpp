@@ -58,6 +58,6 @@ void SaidaModel::alterarSaida(SaidaPtr& saida)
 
 void SaidaModel::excluirSaida(string id)
 {
-	dao->executeSql("DELETE FROM saida_de_material WHERE saida_id=" + id);
-	dao->executeSql("DELETE FROM saida WHERE id=" + id);
+	dao->executeUpdate("DELETE FROM saida_de_material WHERE saida_id=" + id);
+	dao->executeUpdate("DELETE FROM saida WHERE id=" + id);
 }

@@ -1,4 +1,4 @@
-#include "entradamodel.h"
+ï»¿#include "entradamodel.h"
 
 EntradaModel::EntradaModel()
 {
@@ -27,8 +27,8 @@ MateiralPtr EntradaModel::getMaterialPorId(const int &id)
 
 void EntradaModel::alterarEntrada(Entrada& entrada)
 {
-	if (dao->update(entrada))
-		throw runtime_error("Não foi possível alterar a entrada");
+	if (!dao->update(entrada))
+		throw runtime_error("NÃ£o foi possÃ­vel alterar a entrada");
 }
 
 void EntradaModel::salvaEntrada(Entrada &entrada)
@@ -36,7 +36,7 @@ void EntradaModel::salvaEntrada(Entrada &entrada)
      entrada.setId(dao->insert(entrada));
 }
 
-void EntradaModel::alterarListEntradaDeMaterial(EntradaDeMaterialList& list, string id)
+void EntradaModel::alterarListEntradaDeMaterial(const EntradaDeMaterialList& list, const string id)
 {
 	EntradaPtr ent;
 	if (list->size()){
@@ -52,7 +52,7 @@ void EntradaModel::alterarListEntradaDeMaterial(EntradaDeMaterialList& list, str
 		materialModel.decrementaQuantidadeMaterial(mat);
 	}
 
-	dao->executeSql("DELETE FROM entrada_de_material WHERE entrada_id=" + id);
+    dao->executeUpdate("DELETE FROM entrada_de_material WHERE entrada_id=" + id);
 	for (EntradaDeMaterialPtr entradaDeMaterial : *list)
 	{
 		MateiralPtr mat = entradaDeMaterial->getMaterial();
@@ -62,7 +62,7 @@ void EntradaModel::alterarListEntradaDeMaterial(EntradaDeMaterialList& list, str
 	}
 }
 
-void EntradaModel::salvaListEntradaDeMaterial(EntradaDeMaterialList& list)
+void EntradaModel::salvaListEntradaDeMaterial(const EntradaDeMaterialList& list)
 {
     if(list->size())
         salvaEntrada(*list->at(0)->getEntrada());
@@ -78,6 +78,6 @@ void EntradaModel::salvaListEntradaDeMaterial(EntradaDeMaterialList& list)
 
 void EntradaModel::excluirEntrada(string id)
 {
-	dao->executeSql("DELETE FROM entrada_de_material WHERE entrada_id=" + id);
-	dao->executeSql("DELETE FROM entrada WHERE id=" + id);
+    dao->executeUpdate("DELETE FROM entrada_de_material WHERE entrada_id=" + id);
+    dao->executeUpdate("DELETE FROM entrada WHERE id=" + id);
 }

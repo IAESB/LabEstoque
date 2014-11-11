@@ -32,7 +32,8 @@ public:
 	typedef shared_ptr<sql::Connection> Connection;
 	Connection getConnection();
 
-	void executeSql(const string& sql);
+    void executeUpdate(const string& sql);
+    shared_ptr<sql::ResultSet> executeQuery(const string& sql);
 
     template<typename type>
     bool update(type& obj)

@@ -8,10 +8,11 @@ MaterialController::MaterialController()
 
 void MaterialController::listaMateriais(Request &request, StreamResponse &response)
 {
-    calassomys::View view;
-    view.setContent(ifstream("WebContent/template.html"));
-    view.insertContentId("conteudo", ifstream("WebContent/materiais.html"));
-    try{
+	try{
+
+		calassomys::View view;
+		view.setContent(ifstream(server->getOption("document_root")+"/template.html"));
+		view.insertContentId("conteudo", ifstream(server->getOption("document_root") + "/materiais.html"));
         GrupoList grupoList = model.getListGrupo();
         for(GrupoPtr& grupo: *grupoList)
         {
@@ -21,7 +22,7 @@ void MaterialController::listaMateriais(Request &request, StreamResponse &respon
         for(MateiralPtr& material: *list)
         {
             const string& img = material->getImagem().size()?material->getImagem():"/images/ampolas.jpg";
-			string html = "<div class='material' onclick=mostrarMaterial('" + to_string(material->getId()) + "') id='mat" + to_string(material->getId()) + "'>\
+            string html = "<div class='material' name='"+material->getNome()+"' onclick=mostrarMaterial('" + to_string(material->getId()) + "') id='mat" + to_string(material->getId()) + "'>\
                     <img name='imagem' src='"+img+"'/>\
                     <h4 name='nome'>"+material->getNome()+"</h4>\
                     <label name='descricao'>"+material->getDescricao()+"</label>\
@@ -84,12 +85,12 @@ void MaterialController::alterarMaterial(Request &request, StreamResponse &respo
 	try{
 		MateiralPtr material = model.getMaterialPorId(stoi(request.get("id")));
 		auto params = request.getAllVariable();
-		material->setNome(params["nome"]);
-		material->setDescricao(params["descricao"]);
-		material->setImagem(params["imagem"]);
-		material->setQuantidade(stoi(params["quantidade"]));
-		if ( ! params["grupo"].empty() )
-			material->setGrupo(GrupoPtr(new Grupo(params["grupo"])));
+		material->setNome(params.find("nome")->second);
+		material->setDescricao(params.find("descricao")->second);
+		material->setImagem(params.find("imagem")->second);
+		material->setQuantidade(stoi(params.find("quantidade")->second));
+		if (!params.find("grupo")->second.empty())
+			material->setGrupo(GrupoPtr(new Grupo(params.find("grupo")->second)));
 		
 		model.alterarMaterial(*material);
 		redirecionar(response, "/");

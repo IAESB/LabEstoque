@@ -21,24 +21,29 @@ void View::setContent(const string &htmlText)
     html.parse(htmlText);
 }
 
-void View::setContentId(string id, string fileNameContent)
+void View::setContentId(string id, const string& html)
 {
-    ifstream file(fileNameContent);
+	HTML::ParserDom dom;
+	dom.parse(html);
+	const treeNode& newTree = (treeNode&)dom.getTree();
+
+	treeNode::iterator it = getTagById(id);
+	if (getDom().is_valid(it)){
+		treeNode& tree = const_cast<treeNode&>(getDom());
+		tree.erase_children(it);
+		tree.append_child(it, newTree.begin());
+	}
+
+	mapeiaIdNode();
+	mapeiaNameNode();
+}
+
+void View::setContentId(string id, const ifstream& file)
+{
     stringstream ss;
     ss << file.rdbuf();
-    HTML::ParserDom dom;
-    dom.parse(ss.str());
-    const treeNode& newTree = (treeNode&)dom.getTree();
-
-    treeNode::iterator it = getTagById(id);
-    if(getDom().is_valid(it)){
-        treeNode& tree = const_cast<treeNode&>(getDom());
-        tree.erase_children(it);
-        tree.append_child(it, newTree.begin());
-    }
-
-    mapeiaIdNode();
-    mapeiaNameNode();
+    
+	setContentId(id, ss.str());
 }
 
 void View::insertContentId(string id, View &view)
@@ -111,8 +116,10 @@ void View::insertMapNameNode(treeNode::iterator& it)
 void View::mapeiaNameNode()
 {
     mapNameItrNodes.clear();
-    for(auto it=getDom().begin(); it!=getDom().end(); it++)
+	for (auto it = getDom().begin(); it != getDom().end(); it++)
     {
+		if (it == getDom().end())
+			return;
         insertMapNameNode(it);
     }
 }

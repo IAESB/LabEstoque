@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <link href="/css/relatorio.css" rel="stylesheet" type="text/css"  media="all"/>
+        <link href="/css/tabela.css" rel="stylesheet" type="text/css"  media="all"/>
+        <script src="/js/relatorio.js"></script>
+        <script src="/js/jquery.printElement.js"></script>
+    </head>
+    <body>
+        <div class="direita">
+            <form action="/relatorio/pesquisar" method="get" id="formNovoRelatorio">
+                <label>Nome do Relatorio: <input name="nome" placeholder="Identifique o relatorio"></label>
+                <fieldset>
+                    <legend>Periodo</legend>
+                    <label>Inicio<input type="date" name="dataIncial" required></label><br/>
+                    <label>Fim<input type="date" name="dataFinal" required></label>
+                </fieldset>
+                <fieldset>
+                    <legend>Tipo</legend>
+                    <label><input type="checkbox" name="entrada" onchange="mostrarDetalheEntrada(this);">Entrada</label>
+                    <label><input type="checkbox" name="saida" onchange="mostrarDetalheSaida(this);">Saida</label>
+                </fieldset>
+                <fieldset>
+                    <legend>Materiais</legend>
+                    <select name="material" multiple id="selectMaterial">
+                    </select><br/>
+                    <label>Em estoque de <input name="quantidadeMaterialDe" type="number"> ate <input name="quantidadeMaterialAte" type="number"> </label>
+                </fieldset>
+                <fieldset id="detalheEntrada">
+                    <legend>Entrada</legend>
+                    <label>Fornecedor<input name="fornecedor"></label><br/>
+                    <label>Lote<input name="lote"></label><br/>
+                    <label>Validade<input name="validade"></label><br/>
+                    <label>Valor<input name="valor"></label><br/>
+                    <label>Quantidade de <input name="quantidadeEntradaDe" type="number"> ate <input name="quantidadeEntradaAte" type="number"> </label>
+                </fieldset>
+                <fieldset id="detalheSaida">
+                    <legend>Saida</legend>
+                    <label>Laboratorio<input name="laboratorio"></label><br/>
+                    <label>Solicitante<input name="solicitante"></label><br/>
+                    <label>Quantidade de <input name="quantidadeSaidaDe" type="number"> ate <input name="quantidadeSaidaAte" type="number"> </label>
+                </fieldset>
+                <button type="submit">Pesquisar</button>
+            </form>
+        </div>
+        <div class="esquerda">
+            <button onclick="imiprimirRelatorio()">Imprimir</button>
+            <hr/>
+            <div id="relatorio" class="relatorio">
+
+                <h1 id="nome">Nome do Relatorio</h1>
+
+                <p>Periodo de <label id="dataInicial">----</label> ate <label id="dataFinal">----</label></p>
+
+                <div id="relatorioEntrada">
+                    <h2>Entradas</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Data</th>
+                                <th>Fornecedor</th>
+                                <th>Quantidade</th>
+                                <th>Validade</th>
+                                <th>Lote</th>
+                                <th>Valor</th>
+                                <th>Em Estoque</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyEntrada">
+                        </tbody>
+                    </table>
+                </div>
+                <div id="relatorioSaida">
+                    <h2>Saidas</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Data</th>
+                                <th>Quantidade</th>
+                                <th>Solicitante</th>
+                                <th>Laboratorio</th>
+                                <th>Em Estoque</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodySaida">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+

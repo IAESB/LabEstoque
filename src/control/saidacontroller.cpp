@@ -24,8 +24,8 @@ void SaidaController::getSaida(Request &request, StreamResponse &response)
     json["solicitante"] = saida->getSolicitante()->getId();
     for(SaidaDeMaterialPtr& mat: *saida->getSaidaDeMaterialList())
     {
-        Json::Value matJ;
-        matJ["material"] = mat->getMaterial()->getId();
+		Json::Value matJ;
+		matJ["material_id"] = mat->getMaterial()->getId();
         matJ["quantidade"] = mat->getQuantidade();
         json["materiais"].append(matJ);
     }
@@ -87,11 +87,11 @@ void SaidaController::salvarSaida(Request &request, StreamResponse &response)
 void SaidaController::listaSaida(Request &request, StreamResponse &response)
 {
     calassomys::View view;
-    view.setContent(ifstream("WebContent/template.html"));
-    view.insertContentId("conteudo", ifstream("WebContent/saida.html"));
+	view.setContent(ifstream(server->getOption("document_root") + "/template.html"));
+	view.insertContentId("conteudo", ifstream(server->getOption("document_root") + "/saida.html"));
     MateiralList materialList = model.getListMaterial();
     for(MateiralPtr& material: *materialList)
-        view.insertContentId("materiais", "<option value='"+to_string(material->getId())+"'>"+material->getNome()+"</option>");
+		view.insertContentId("materiais", "<option value='" + to_string(material->getId()) + "' qtd='" + to_string(material->getQuantidade()) + "'>" + material->getNome() + " (" + to_string(material->getQuantidade()) + ")" + "</option>");
     LaboratorioList laboratorioList = model.getListLaboratorio();
     for(LaboratorioPtr& laboratorio: *laboratorioList)
         view.insertContentId("laboratorios",
@@ -114,15 +114,19 @@ void SaidaController::listaSaida(Request &request, StreamResponse &response)
 }
 SaidaPtr SaidaController::criarSaida(Request& request)
 {
-	map<string, string> variables = request.getAllVariable();
+	auto& variables = request.getAllVariable();
 	SolicitantePtr solicitante(new Solicitante);
-	solicitante->setNome(variables["solicitante"]);
+	solicitante->setNome(variables.find("solicitante")->second);
 	LaboratorioPtr laboratorio(new Laboratorio);
-	laboratorio->setNome(variables["laboratorio"]);
-	string data = variables["data"];
+	laboratorio->setNome(variables.find("laboratorio")->second);
+	string data = variables.find("data")->second;
 	variables.erase("solicitante");
 	variables.erase("data");
 	variables.erase("laboratorio");
+	auto id = variables.find("id");
+	if (id != variables.end())
+		variables.erase(id);
+
 	SaidaPtr saida(new Saida);
 	saida->setData(data);
 	saida->setSolicitante(solicitante);
@@ -133,13 +137,20 @@ SaidaPtr SaidaController::criarSaida(Request& request)
 	{
 		auto itr = variables.begin();
 		string id = itr->first;
-		id = id.substr(id.find('_') + 1);
+		size_t fTraco = id.find('_');
+		if (fTraco == string::npos){
+			variables.erase(itr);
+			continue;
+		}
+		id = id.substr(fTraco + 1);
+		int qtd = stoi(variables.find("quantidade_" + id)->second);
 		MateiralPtr material(new Mateiral(stoi(id)));
+		material->setQuantidade(qtd);
 
 		SaidaDeMaterialPtr saidaDeMaterial(new SaidaDeMaterial);
 		saidaDeMaterial->setMaterial(material);
 		saidaDeMaterial->setSaida(saida);
-		saidaDeMaterial->setQuantidade(stoi(variables["quantidade_" + id]));
+		saidaDeMaterial->setQuantidade(qtd);
 		variables.erase("quantidade_" + id);
 
 		vecMateriais->push_back(saidaDeMaterial);

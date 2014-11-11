@@ -2,10 +2,13 @@
 #define SAIDADEMATERIALMODEL_H
 
 #include "entity/saidadematerial.h"
+#include "entity/pesquisa.h"
 #include "model.h"
+#include "materialmodel.h"
 
 class SaidaDeMaterialModel : public Model
 {
+	MaterialModel materialModel;
 public:
     SaidaDeMaterialModel();
 	void salvaSaidaDeMaterial(SaidaDeMaterial& saidaDeMaterial);
@@ -13,6 +16,7 @@ public:
 	void alterarSaidaDeMaterial(const SaidaDeMaterialList& saidaDeMaterialList);
 	void removerSaidaDeMaterial(const Saida& saida);
     SaidaDeMaterialList getListSaidaDeMaterial(SaidaPtr& saida);
+    SaidaDeMaterialList getListSaidaDeMaterial(Pesquisa& pesquisa);
 };
 
 #endif // SAIDADEMATERIALMODEL_H

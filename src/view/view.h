@@ -29,8 +29,9 @@ public:
     void setContent(const string& html);
     void insertContentId(string id, View& view);
     void insertContentId(string id, const ifstream& file);
-    void insertContentId(string id, const string& html);
-    void setContentId(string id, string fileNameContent);
+	void insertContentId(string id, const string& html);
+	void setContentId(string id, const string& html);
+	void setContentId(string id, const ifstream& file);
     void write(std::ostream& out, const treeNode& dom);
     treeNode& getDom();
     treeNode::iterator getTagById(string id);

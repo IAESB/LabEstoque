@@ -2,6 +2,7 @@
 #define Controlador_H
 
 #include <mongoose/WebController.h>
+#include <mongoose/Server.h>
 
 using namespace std;
 using namespace Mongoose;

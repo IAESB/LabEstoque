@@ -22,6 +22,13 @@ function abilitaEdicao(formNovaSaida)
     for(var i=0; i<buttons.length; i++)
         buttons[i].style.display = "inline";
     
+    var linhas = formNovaSaida.querySelectorAll("#tabelaMateriais tbody tr");
+    for(var i=0; i<linhas.length; i++)
+    {
+        linhas[i].querySelector("select[name=materiais]").hidden = false;
+        linhas[i].querySelector("input[name=material2]").hidden = true;
+    }
+    
 }
 
 function removerSaida(id)
@@ -79,7 +86,14 @@ function mostrarSaida(idSaida)
         {
             var mat = saida.materiais[i];
             var linha = document.querySelector("#tabelaMateriais tbody tr:last-child");
-            linha.querySelector("select[name=materiais]").value = mat.material;
+            var selectMat = linha.querySelector("select[name=materiais]");
+            var inputMat2 = linha.querySelector("input[name=material2]");
+            selectMat.hidden = true;
+            inputMat2.hidden = false;
+            selectMat.value = mat.material_id;
+            var materialNome = selectMat.querySelector("option[value='"+mat.material_id+"']").innerHTML;
+            materialNome = materialNome.substring(0, materialNome.indexOf('(') );
+            inputMat2.value = materialNome;
             linha.querySelector("input[name=quantidade]").value = mat.quantidade;
             
             maisUmMaterial();
@@ -110,6 +124,8 @@ function voltaInicioSaida()
     {
         linhas[i].remove();
     }
+    linhas[0].querySelector("select[name=materiais]").hidden = false;
+    linhas[0].querySelector("input[name=material2]").hidden = true;
 }
 
 function mostrarNovaSaida()
@@ -132,25 +148,55 @@ function mostrarNovaSaida()
 function validarSalvarSaida()
 {    
 	var idMaterial =-1;
+    var erro = false;
     var inputs = $("#tabelaMateriais :input");
+    var inputsDisable = [];
     for(var i=0; i<inputs.length; i++)
     {
         var input = inputs[i];
         var name = input.getAttribute("name");
+        var qtd;
+        if (name=="materiais")
+        {            
+            qtd = parseInt( input.options[input.selectedIndex].attributes.qtd.value );
+        }
+        else if(name=="quantidade")
+        {
+            if( qtd< parseInt(input.value) ){
+                input.style.borderColor="red";
+                erro = true;
+            }
+        }
+    }
+    if(erro){
+        return false;
+    }
+    
+    for(var i=0; i<inputs.length; i++)
+    {
+        var input = inputs[i];
+        var name = input.getAttribute("name");
+        var qtd;
         if (name=="materiais")
         {            
             idMaterial = input.options[input.selectedIndex].value;
-            input.remove();
+            qtd = parseInt( input.options[input.selectedIndex].attributes.qtd.value );
+            input.disabled = true;
+            inputsDisable[i] = input;
         }
         else if(!name)
-            input.remove();
+            input.disabled = true;
         else{
             input.setAttribute("name", name+"_"+idMaterial);
         }
     }
     
-    if(idMaterial>0)
-	   return true;
+    if(idMaterial<0 || erro){
+        for(var i in inputsDisable)
+            inputsDisable[i].disabled = false;
+	   return false;
+    }
     
-    return false;
+    
+    return true;
 }

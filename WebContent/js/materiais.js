@@ -57,3 +57,23 @@ function encodeImageFileAsURL(){
         fileReader.readAsDataURL(fileToLoad);
     }
 }
+
+function filtraMaterial(input)
+{
+    var valor = input.value;
+    if(valor.length>0)
+    {
+        $(".material").hide();
+        var mats = $('div[name]').filter(function() {
+            var nome = $(this).attr('name');
+            if(nome)
+                return nome.toLowerCase().indexOf(valor) > -1;
+            else
+                return false;
+        });
+        mats.show();
+    }
+    else{
+        $(".material").show();
+    }
+}

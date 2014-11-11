@@ -19,8 +19,8 @@ void EntradaController::setup()
 void EntradaController::listaEntrada(Request &request, StreamResponse &response)
 {
     calassomys::View view;
-    view.setContent(ifstream("WebContent/template.html"));
-    view.insertContentId("conteudo", ifstream("WebContent/entrada.html"));
+	view.setContent(ifstream(server->getOption("document_root") + "/template.html"));
+	view.insertContentId("conteudo", ifstream(server->getOption("document_root") + "/entrada.html"));
     MateiralList materialList;
     EntradaList entradaList;
     try{
@@ -52,14 +52,15 @@ void EntradaController::listaEntrada(Request &request, StreamResponse &response)
 
 EntradaDeMaterialList EntradaController::criarEntradas(Request& request)
 {
-	map<string, string> variables = request.getAllVariable();
+	multimap<string, string> variables = request.getAllVariable();
 	EntradaPtr entrada(new Entrada());
-	entrada->setData(variables["data"]);
-	entrada->setFornecedor(variables["fornecedor"]);
-	entrada->setAnotacao(variables["anotacao"]);
+	entrada->setData(variables.find("data")->second);
+	entrada->setFornecedor(variables.find("fornecedor")->second);
+	entrada->setAnotacao(variables.find("anotacao")->second);
 	variables.erase("data");
 	variables.erase("fornecedor");
 	variables.erase("anotacao");
+	variables.erase("id");
 
 	MateiralPtr material;
 	EntradaDeMaterialPtr entradaDeMaterial;
@@ -70,7 +71,7 @@ EntradaDeMaterialList EntradaController::criarEntradas(Request& request)
 		string id = itr->first;
 		id = id.substr(id.find('_') + 1);
 		material = MateiralPtr(new Mateiral(stoi(id.find("novo") ? id : "0")));
-		material->setNome(variables["material_" + id]);
+		material->setNome(variables.find("material_" + id)->second);
 		variables.erase("material_" + id);
 
 		entradaDeMaterial = EntradaDeMaterialPtr(new EntradaDeMaterial);

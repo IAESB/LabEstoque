@@ -1,21 +1,25 @@
+function urlParameters () {
+    var result = {};
+    result.length = 0;
+
+    var params = window.location.search.split(/\?|\&/);
+
+    params.forEach( function(it) {
+        if (it) {
+            var param = it.split("=");
+            result[param[0]] = decodeURI( param[1] ).replace('+', ' ');
+            result.length++;
+        }
+    });
+
+    return result;
+}
 
 $(document).ready( function() 
-{		
-	$("a[href='"+window.location.pathname+"']").parent().addClass('active');
-	
-    /*
-    $('.top-nav ul li').click(function(){
-		$('.top-nav ul li').removeClass('active');
-		$(this).addClass('active');	
-	});
-	$('.top-nav ul li a').on("click", function (e) {
-    	e.preventDefault();
-    	var dest = this.href.split("/");
-    	dest = "#"+dest[dest.length -1];
-    	window.location.href = dest;
-    	$("#conteudo").load(this.href, function( response, status, xhr ) {
-		if ( status == "error" )
-			$("#conteudo").load("404.html");
-		});
-    });*/
+{	
+    var path = 	window.location.pathname;
+    var end = path.indexOf('/', 1);
+    if(end>0)
+        path = path.substring(0, end);
+	$("a[href='"+path+"']").parent().addClass('active');	
 });

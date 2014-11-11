@@ -44,7 +44,10 @@
                     </thead>
                     <tbody>
                         <tr id="linhaMaterial">
-                            <td><select id="materiais" name="materiais" required></select></td>
+                            <td>
+                                <select id="materiais" name="materiais" required></select>
+                                <input name="material2" hidden disabled/>
+                            </td>
                             <td><input name="quantidade" type="number" required pattern="[0-9]+$"/></td>
                             <td><button id="removerLinha" onclick="removeMaterial(this)" type="button" alt="Remover" disabled>X</button></td>
                         </tr>

@@ -19,8 +19,8 @@ public:
     MateiralPtr getMaterialPorId(const int& id);
     void salvaEntrada(Entrada& entrada);
 	void alterarEntrada(Entrada& entrada);
-	void salvaListEntradaDeMaterial(EntradaDeMaterialList& list);
-	void alterarListEntradaDeMaterial(EntradaDeMaterialList& list, string id);
+    void salvaListEntradaDeMaterial(const EntradaDeMaterialList& list);
+    void alterarListEntradaDeMaterial(const EntradaDeMaterialList& list, const string id);
 	void excluirEntrada(string id);
 };
 

@@ -9,7 +9,7 @@ table.tabela td {
     border-collapse: collapse;
 }
 th, td {
-    padding: 5px;
+    padding: 4px;
     text-align: left;
 }
 table tbody tr:nth-child(even) {

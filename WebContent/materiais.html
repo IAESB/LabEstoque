@@ -5,7 +5,9 @@
 		<link href="css/materiais.css" rel="stylesheet" type="text/css"  media="all" />
 		<script src="js/materiais.js"></script>
 	</head>
-	<body>
+    <body>
+        <label id="busca">Procurar: <input type="search" oninput="filtraMaterial(this)"/></label>
+        <hr/>
 		<div id="listMateiral">
 			<div class="material" onclick="mostrarFormNovoMaterial();">
 				<img alt="Novo" src="images/serverces.png"/>
