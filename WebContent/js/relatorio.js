@@ -8,14 +8,17 @@ $(function()
     var inputs = document.querySelectorAll("#formNovoRelatorio input");
     if( params.length>0)
     for(var i=0; i<inputs.length; i++)
-    {
-        if(inputs[i].name == "saida"){
+    {        
+        if(inputs[i].name == "entrada") {
             if(params[inputs[i].name]!="on"){
-                inputs[i].checked = false; } 
-        }
-        else if(inputs[i].name == "entrada") {
+                inputs[i].checked = false;
+                $("#relatorioEntrada").hide();
+            }        
+        }else if(inputs[i].name == "saida"){
             if(params[inputs[i].name]!="on"){
-                inputs[i].checked = false;}
+                inputs[i].checked = false; 
+                $("#relatorioSaida").hide();
+            } 
         }
         else{
             inputs[i].value = params[inputs[i].name];
@@ -42,19 +45,23 @@ function imiprimirRelatorio()
     $("#relatorio").printElement();
 }
 
-function mostrarDetalheSaida(check)
-{
-    if(check.checked)
-        $("#detalheSaida").show();
-    else
-        $("#detalheSaida").hide();
-}
-
 function mostrarDetalheEntrada(check)
 {
-    if(check.checked)
+    if(check.checked){
         $("#detalheEntrada").show();
-    else
+    }
+    else{
         $("#detalheEntrada").hide();
+    }
+}
+
+function mostrarDetalheSaida(check)
+{
+    if(check.checked){
+        $("#detalheSaida").show();
+    }
+    else{
+        $("#detalheSaida").hide();
+    }
 }
 

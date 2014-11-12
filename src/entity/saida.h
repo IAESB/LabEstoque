@@ -23,8 +23,9 @@ public:
     Saida();
     Saida(int id);
     Saida(sql::ResultSet& rs);
-    string getSqlInsert();
+	string getSqlInsert();
 	string getSqlUpdate();
+	string getSqlDelete();
     int getId() const;
     void setId(int value);
     string getData() const;

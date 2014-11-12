@@ -39,6 +39,7 @@ SaidaDeMaterial::SaidaDeMaterial(sql::ResultSet &rs)
     saida = SaidaPtr(new Saida(rs.getInt(1)));
     material = MateiralPtr(new Mateiral(rs.getInt(2)));
     quantidade = rs.getInt(3);
+	material->setQuantidade(quantidade);
 }
 
 string SaidaDeMaterial::getSqlInsert()

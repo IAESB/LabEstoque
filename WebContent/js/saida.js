@@ -149,6 +149,7 @@ function validarSalvarSaida()
 {    
 	var idMaterial =-1;
     var erro = false;
+    var isAlterar = $("#formNovaSaida").prop("action").indexOf("/saida/alterar")>-1;
     var inputs = $("#tabelaMateriais :input");
     var inputsDisable = [];
     for(var i=0; i<inputs.length; i++)
@@ -162,7 +163,9 @@ function validarSalvarSaida()
         }
         else if(name=="quantidade")
         {
-            if( qtd< parseInt(input.value) ){
+            var valorInput = parseInt(input.value);            
+            qtd += isAlterar?valorInput:0;
+            if( qtd < valorInput ){
                 input.style.borderColor="red";
                 erro = true;
             }
@@ -197,6 +200,7 @@ function validarSalvarSaida()
 	   return false;
     }
     
+    $("input[name*=material2]").remove(); 
     
     return true;
 }

@@ -24,9 +24,13 @@ void SaidaDeMaterialModel::alterarSaidaDeMaterial(const SaidaDeMaterialList& sai
 		dao->update(*saida);
 }
 
-void SaidaDeMaterialModel::removerSaidaDeMaterial(const Saida& saida)
+void SaidaDeMaterialModel::removerSaidaDeMaterial(SaidaPtr& saida)
 {
-    dao->executeUpdate("DELETE FROM saida_de_material WHERE saida_id=" + to_string(saida.getId()));
+	SaidaDeMaterialList list = getListSaidaDeMaterial(saida);
+	for (SaidaDeMaterialPtr& sm : *list)
+		materialModel.incrementaQuantidadeMaterial(sm->getMaterial());
+
+    dao->executeUpdate("DELETE FROM saida_de_material WHERE saida_id=" + to_string(saida->getId()));
 }
 
 SaidaDeMaterialList SaidaDeMaterialModel::getListSaidaDeMaterial(SaidaPtr &saida)

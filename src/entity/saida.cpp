@@ -100,3 +100,8 @@ string Saida::getSqlUpdate()
 	sql += " WHERE id="+to_string(id);
 	return sql;
 }
+
+string Saida::getSqlDelete()
+{
+	return "DELETE FROM saida WHERE id=" + to_string(id);
+}

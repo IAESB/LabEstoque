@@ -55,7 +55,7 @@ void SaidaController::excluirSaida(Request &request, StreamResponse &response)
 {
 	try{
 		model.excluirSaida( request.get("id") );
-		response << "0k";
+		response << "ok";
 	}
 	catch (sql::SQLException& ex){
 		response << ex.what();
@@ -138,11 +138,8 @@ SaidaPtr SaidaController::criarSaida(Request& request)
 		auto itr = variables.begin();
 		string id = itr->first;
 		size_t fTraco = id.find('_');
-		if (fTraco == string::npos){
-			variables.erase(itr);
-			continue;
-		}
 		id = id.substr(fTraco + 1);
+
 		int qtd = stoi(variables.find("quantidade_" + id)->second);
 		MateiralPtr material(new Mateiral(stoi(id)));
 		material->setQuantidade(qtd);

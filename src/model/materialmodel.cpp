@@ -57,7 +57,7 @@ int MaterialModel::salvarMaterial(Mateiral &material)
 
 MateiralList MaterialModel::getListMaterial()
 {
-    MateiralList listMat = dao->select<Mateiral>("material m", "m.id, m.nome, m.descricao, m.imagem, m.quantidade, g.id as grupo_id, g.nome as grupo_nome", "LEFT OUTER JOIN grupo g ON(m.grupo_id=g.id)");
+    MateiralList listMat = dao->select<Mateiral>("material m", "m.id, m.nome, m.descricao, m.imagem, m.quantidade, g.id as grupo_id, g.nome as grupo_nome", "LEFT OUTER JOIN grupo g ON(m.grupo_id=g.id) ORDER BY m.nome");
     return listMat;
 }
 

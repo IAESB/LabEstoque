@@ -52,12 +52,13 @@ void SaidaModel::alterarSaida(SaidaPtr& saida)
 	solicitanteModel.salvaSolicitante(*saida->getSolicitante());
 	laboratorioModel.salvarLaboratorio(*saida->getLaboratorio());
 	dao->update(*saida);
-	saidaDeMaterialModel.removerSaidaDeMaterial(*saida);
+	saidaDeMaterialModel.removerSaidaDeMaterial(saida);
 	saidaDeMaterialModel.salvaSaidaDeMaterial(saida->getSaidaDeMaterialList());
 }
 
 void SaidaModel::excluirSaida(string id)
 {
-	dao->executeUpdate("DELETE FROM saida_de_material WHERE saida_id=" + id);
-	dao->executeUpdate("DELETE FROM saida WHERE id=" + id);
+	SaidaPtr saida = getSaidaPorId(id);
+	saidaDeMaterialModel.removerSaidaDeMaterial(saida);
+	dao->remove(*saida);
 }

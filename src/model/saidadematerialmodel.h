@@ -14,7 +14,7 @@ public:
 	void salvaSaidaDeMaterial(SaidaDeMaterial& saidaDeMaterial);
 	void salvaSaidaDeMaterial(const SaidaDeMaterialList& saidaDeMaterialList);
 	void alterarSaidaDeMaterial(const SaidaDeMaterialList& saidaDeMaterialList);
-	void removerSaidaDeMaterial(const Saida& saida);
+	void removerSaidaDeMaterial(SaidaPtr& saida);
     SaidaDeMaterialList getListSaidaDeMaterial(SaidaPtr& saida);
     SaidaDeMaterialList getListSaidaDeMaterial(Pesquisa& pesquisa);
 };
