@@ -31,7 +31,7 @@ namespace
 
 	const char* ARQ_LOCK = "tmp/labEstoque.lock";
 
-	void configureDao(string url, string user, string password, string dataBase){
+	void configureDao(string& url, string& user, string& password, string& dataBase){
 		DaoPrt dao = Dao::getInstance(url, user, password, dataBase);
 	}
 
@@ -90,12 +90,12 @@ int main(int argc, char** argv)
 			porta = vm["port"].as<int>();
 			std::cerr << "Usando porta: " << porta << endl;
 		}
-		string path = "WebContent";
+		string webDir = "../WebContent";
 		if (vm.count("webdir"))
 		{
-			path = vm["webdir"].as<string>();
+			webDir = vm["webdir"].as<string>();
 		}
-		cout << "WebDir: " << path << endl;
+		cout << "WebDir: " << webDir << endl;
 
 		mkdir("tmp");
 		ofstream arq(ARQ_LOCK);
@@ -111,7 +111,7 @@ int main(int argc, char** argv)
 					 vm.count("passowrd-data-base") ? vm["passowrd-data-base"].as<string>() : "root", 
 					 vm.count("data-base") ? vm["data-base"].as<string>() : "lab_estoque");
 		cout << "Server Up!" << endl;
-		Server server(porta, path.c_str());
+		Server server(porta, webDir.c_str());
 		server.setOption("enable_directory_listing", "false");
 		MaterialController material;
 		EntradaController entrada;

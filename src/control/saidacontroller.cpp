@@ -72,6 +72,7 @@ void SaidaController::salvarSaida(Request &request, StreamResponse &response)
 	try{
 		SaidaPtr saida = criarSaida(request);
         model.salvaSaida(saida);
+
         response.setCode(301);
         response.setHeader("Location", "/saida");
     }catch(sql::SQLException& ex){
@@ -89,18 +90,24 @@ void SaidaController::listaSaida(Request &request, StreamResponse &response)
     calassomys::View view;
 	view.setContent(ifstream(server->getOption("document_root") + "/template.html"));
 	view.insertContentId("conteudo", ifstream(server->getOption("document_root") + "/saida.html"));
-    MateiralList materialList = model.getListMaterial();
-    for(MateiralPtr& material: *materialList)
-		view.insertContentId("materiais", "<option value='" + to_string(material->getId()) + "' qtd='" + to_string(material->getQuantidade()) + "'>" + material->getNome() + " (" + to_string(material->getQuantidade()) + ")" + "</option>");
-    LaboratorioList laboratorioList = model.getListLaboratorio();
+    
+	EntradaDeMaterialList materialList = model.getListMaterial();
+	for (EntradaDeMaterialPtr& ent : *materialList){
+		MateiralPtr material = ent->getMaterial();
+		LotePtr lote = ent->getLote();
+		view.insertContentId("materiais", "<option material-id='" + to_string(material->getId()) + "' qtd='" + to_string(lote->getQuantidade()) + "' value='" + material->getNome() + ", "+lote->getNome()+", "+lote->getValidade()+" - " + to_string(lote->getQuantidade()) + "'>" + "</option>");
+	}
+    
+	LaboratorioList laboratorioList = model.getListLaboratorio();
     for(LaboratorioPtr& laboratorio: *laboratorioList)
         view.insertContentId("laboratorios",
              "<option value='"+laboratorio->getNome()+"' label='"+to_string(laboratorio->getId())+"'></option>");
-    SolicitanteList solicitantes = model.getListSolicitantes();
+    
+	SolicitanteList solicitantes = model.getListSolicitantes();
     for(SolicitantePtr& solicitante: *solicitantes)
         view.insertContentId("solicitantes", "<option value='"+solicitante->getNome()+"' label='"+to_string(solicitante->getId())+"'></option>");
-
-    SaidaList saidas = model.getListSaidas();
+    
+	SaidaList saidas = model.getListSaidas();
     for(SaidaPtr& saida: *saidas)
     {
         string html = "<tr onclick='mostrarSaida("+to_string(saida->getId())+");'>\

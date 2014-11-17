@@ -4,14 +4,20 @@
 #include "dao/dao.h"
 #include "entity/entradadematerial.h"
 #include "entity/pesquisa.h"
+#include "materialmodel.h"
+#include "lotemodel.h"
 
 class EntradaDeMaterialModel
 {
     DaoPrt dao;
+	MaterialModel materialModel;
+	LoteModel loteModel;
 public:
     EntradaDeMaterialModel();
-    EntradaDeMaterialList getListEntradaDeMaterial(string id="");
-    EntradaDeMaterialList getListEntradaDeMaterial(Pesquisa& relatorio);
+	EntradaDeMaterialList getListEntradaDeMaterial(string id = "");
+	EntradaDeMaterialList getListEntradaDeMaterial(Pesquisa& relatorio);
+	EntradaDeMaterialList getListMaterialComLote();
+    void salvarEntradaDeMaterial(EntradaDeMaterial& entradaDeMaterial);
 };
 
 #endif // ENTRADADEMATERIALMODEL_H

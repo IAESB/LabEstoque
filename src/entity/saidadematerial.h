@@ -3,6 +3,7 @@
 
 #include "saida.h"
 #include "mateiral.h"
+#include "lote.h"
 
 class Saida;
 typedef shared_ptr<Saida> SaidaPtr;
@@ -12,6 +13,7 @@ class SaidaDeMaterial
 {
     SaidaPtr saida;
     MateiralPtr material;
+    LotePtr lote;
     int quantidade;
 public:
     SaidaDeMaterial();
@@ -24,6 +26,8 @@ public:
     void setMaterial(const MateiralPtr &value);
     int getQuantidade() const;
     void setQuantidade(int value);
+    LotePtr getLote() const;
+    void setLote(const LotePtr &value);
 };
 typedef shared_ptr<SaidaDeMaterial> SaidaDeMaterialPtr;
 typedef shared_ptr< vector<SaidaDeMaterialPtr> > SaidaDeMaterialList;

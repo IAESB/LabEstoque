@@ -25,7 +25,7 @@ class Dao
     static DaoPrt instance;
     Dao(string url, string user, string password, string database);
 public:
-    static DaoPrt getInstance(string url="" /*tcp://127.0.0.1:3306*/, string user="", string password="", string database="");
+    static DaoPrt getInstance(const string& url="" /*tcp://127.0.0.1:3306*/, const string& user="", const string& password="", const string& database="");
     ~Dao();
 
     bool isConnected();
@@ -84,7 +84,7 @@ public:
 		Connection connection = getConnection();
 
         long long id = -1;
-        const string& sql = obj.getSqlInsert();
+        string sql = obj.getSqlInsert();
         unique_ptr<sql::Statement> stmt( connection->createStatement() );
         stmt->executeUpdate(sql);
         unique_ptr<sql::ResultSet> rs( stmt->executeQuery("SELECT LAST_INSERT_ID()") );

@@ -21,16 +21,6 @@ void EntradaDeMaterial::setMaterial(const MateiralPtr &value)
     material = value;
 }
 
-string EntradaDeMaterial::getLote() const
-{
-    return lote;
-}
-
-void EntradaDeMaterial::setLote(const string &value)
-{
-    lote = value;
-}
-
 float EntradaDeMaterial::getValor() const
 {
     return valor;
@@ -39,16 +29,6 @@ float EntradaDeMaterial::getValor() const
 void EntradaDeMaterial::setValor(float value)
 {
     valor = value;
-}
-
-string EntradaDeMaterial::getValidade() const
-{
-    return validade;
-}
-
-void EntradaDeMaterial::setValidade(const string &value)
-{
-    validade = value;
 }
 
 int EntradaDeMaterial::getQuantidade() const
@@ -60,34 +40,46 @@ void EntradaDeMaterial::setQuantidade(int value)
 {
     quantidade = value;
 }
+
+LotePtr EntradaDeMaterial::getLote() const
+{
+    return lote;
+}
+
+void EntradaDeMaterial::setLote(const LotePtr &value)
+{
+    lote = value;
+}
 EntradaDeMaterial::EntradaDeMaterial()
 {
 }
 
 EntradaDeMaterial::EntradaDeMaterial(sql::ResultSet &rs)
 {
-    lote = rs.getString(3);
-    valor = rs.getDouble(4);
-    validade = rs.getString(5);
-    quantidade = rs.getInt(6);
+    valor = rs.getDouble(3);
+    quantidade = rs.getInt(4);
     entrada = EntradaPtr(new Entrada);
-    entrada->setId(rs.getInt(7));
-    entrada->setData(rs.getString(8));
-    entrada->setFornecedor(rs.getString(9));
-    entrada->setAnotacao(rs.getString(10));
-    //entrada->setUsuario(rs.getint(11));
+    entrada->setId(rs.getInt(6));
+    entrada->setData(rs.getString(7));
+    entrada->setFornecedor(rs.getString(8));
+    entrada->setAnotacao(rs.getString(9));
+    //entrada->setUsuario(rs.getint(10));
     material = MateiralPtr(new Mateiral);
-    material->setId(rs.getInt(12));
-    material->setNome(rs.getString(13));
-    material->setDescricao(rs.getString(14));
-    //material->setGrupo(rs.getInt(15));
-    material->setImagem(rs.getString(16));
+    material->setId(rs.getInt(11));
+    material->setNome(rs.getString(12));
+    material->setDescricao(rs.getString(13));
+	material->setImagem(rs.getString(14));
+	material->setQuantidade(rs.getInt(15));
+	lote = LotePtr(new Lote);
+	lote->setId(rs.getInt(17));
+	lote->setNome(rs.getString(18));
+	lote->setValidade(rs.getString(19));
+	lote->setQuantidade(rs.getInt(20));
 }
 
 string EntradaDeMaterial::getSqlInsert()
 {
-	string validade = this->validade.empty() ? "NULL" : "'" + this->validade + "'";
-    string sql = "INSERT INTO entrada_de_material(entrada_id, material_id, lote, valor, validade, quantidade) \
-                  VALUES('"+to_string(entrada->getId())+"', '"+to_string(material->getId())+"', '"+lote+"', '"+to_string(valor)+"', "+validade+", '"+to_string(quantidade)+"')";
+    string sql = "INSERT INTO entrada_de_material(entrada_id, material_id, lote_id, valor, quantidade) \
+                                   VALUES('" + to_string(entrada->getId()) + "', '" + to_string(material->getId()) + "', " + (lote->getId()>0?"'"+to_string(lote->getId())+"'":"NULL") + ", '" + to_string(valor) + "', '" + to_string(quantidade) + "')";
     return sql;
 }

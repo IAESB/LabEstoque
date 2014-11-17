@@ -13,7 +13,7 @@ Dao::Dao(string url, string user, string password, string database)
 	getConnection();
 }
 
-DaoPrt Dao::getInstance(string url, string user, string password, string database)
+DaoPrt Dao::getInstance(const string& url, const string& user, const string& password, const string& database)
 {
     if( ! instance ){
         if(!url.empty() && !user.empty())

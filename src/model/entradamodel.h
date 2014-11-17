@@ -4,12 +4,14 @@
 #include "entity/entradadematerial.h"
 #include "materialmodel.h"
 #include "entradadematerialmodel.h"
+#include "lotemodel.h"
 #include "dao/dao.h"
 
 class EntradaModel
 {
     DaoPrt dao;
     MaterialModel materialModel;
+    LoteModel loteModel;
     EntradaDeMaterialModel entradaDeMaterialModel;
 public:
     EntradaModel();

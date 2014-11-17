@@ -5,6 +5,7 @@
 #include "laboratoriomodel.h"
 #include "solicitantemodel.h"
 #include "saidadematerialmodel.h"
+#include "entradadematerialmodel.h"
 
 class SaidaModel : public Model
 {
@@ -12,10 +13,11 @@ class SaidaModel : public Model
     LaboratorioModel laboratorioModel;
     SolicitanteModel solicitanteModel;
     SaidaDeMaterialModel saidaDeMaterialModel;
+	EntradaDeMaterialModel entradaDeMaterialModel;
 public:
     SaidaModel();
     SaidaPtr getSaidaPorId(string id);
-    MateiralList getListMaterial();
+    EntradaDeMaterialList getListMaterial();
     LaboratorioList getListLaboratorio();
     SolicitanteList getListSolicitantes();
     SaidaList getListSaidas();

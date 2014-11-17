@@ -16,9 +16,9 @@ SaidaPtr SaidaModel::getSaidaPorId(string id)
     return SaidaPtr();
 }
 
-MateiralList SaidaModel::getListMaterial()
+EntradaDeMaterialList SaidaModel::getListMaterial()
 {
-    return materialModel.getListMaterial();
+	return entradaDeMaterialModel.getListMaterialComLote();
 }
 
 LaboratorioList SaidaModel::getListLaboratorio()

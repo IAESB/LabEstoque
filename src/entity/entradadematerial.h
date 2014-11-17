@@ -4,14 +4,14 @@
 #include <cppconn/resultset.h>
 #include "entrada.h"
 #include "mateiral.h"
+#include "lote.h"
 
 class EntradaDeMaterial
 {
     EntradaPtr entrada;
     MateiralPtr material;
-    string lote;
+    LotePtr lote;
     float valor;
-    string validade;
     int quantidade;
 
 public:
@@ -22,14 +22,12 @@ public:
     void setEntrada(const EntradaPtr &value);
     MateiralPtr getMaterial() const;
     void setMaterial(const MateiralPtr &value);
-    string getLote() const;
-    void setLote(const string &value);
     float getValor() const;
     void setValor(float value);
-    string getValidade() const;
-    void setValidade(const string &value);
     int getQuantidade() const;
     void setQuantidade(int value);
+    LotePtr getLote() const;
+    void setLote(const LotePtr &value);
 };
 
 typedef shared_ptr<EntradaDeMaterial> EntradaDeMaterialPtr;

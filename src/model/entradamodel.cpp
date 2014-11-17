@@ -53,13 +53,10 @@ void EntradaModel::alterarListEntradaDeMaterial(const EntradaDeMaterialList& lis
 	}
 
     dao->executeUpdate("DELETE FROM entrada_de_material WHERE entrada_id=" + id);
-	for (EntradaDeMaterialPtr entradaDeMaterial : *list)
-	{
-		MateiralPtr mat = entradaDeMaterial->getMaterial();
-		mat->setQuantidade(entradaDeMaterial->getQuantidade());
-		materialModel.incrementaQuantidadeMaterial(mat);
-		dao->insert(*entradaDeMaterial);
-	}
+    for (EntradaDeMaterialPtr entradaDeMaterial : *list)
+    {
+        entradaDeMaterialModel.salvarEntradaDeMaterial(*entradaDeMaterial);
+    }
 }
 
 void EntradaModel::salvaListEntradaDeMaterial(const EntradaDeMaterialList& list)
@@ -69,10 +66,7 @@ void EntradaModel::salvaListEntradaDeMaterial(const EntradaDeMaterialList& list)
 
     for(EntradaDeMaterialPtr entradaDeMaterial: *list)
     {
-        MateiralPtr mat = entradaDeMaterial->getMaterial();
-        mat->setQuantidade(entradaDeMaterial->getQuantidade());
-        materialModel.incrementaQuantidadeMaterial(mat);
-        dao->insert(*entradaDeMaterial);
+        entradaDeMaterialModel.salvarEntradaDeMaterial(*entradaDeMaterial);
     }
 }
 

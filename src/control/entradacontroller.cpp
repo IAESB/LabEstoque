@@ -77,6 +77,7 @@ EntradaDeMaterialList EntradaController::criarEntradas(Request& request)
 		entradaDeMaterial = EntradaDeMaterialPtr(new EntradaDeMaterial);
 		entradaDeMaterial->setMaterial(material);
 		entradaDeMaterial->setEntrada(entrada);
+		entradaDeMaterial->setLote(LotePtr(new Lote));
 		vecEntradaMaetrial->push_back(entradaDeMaterial);
 
 		itr = variables.find("quantidade_" + id);
@@ -88,13 +89,13 @@ EntradaDeMaterialList EntradaController::criarEntradas(Request& request)
 		itr = variables.find("validade_" + id);
 		if (itr != variables.end())
 		{
-			entradaDeMaterial->setValidade(itr->second);
+            entradaDeMaterial->getLote()->setValidade(itr->second);
 			variables.erase(itr);
 		}
 		itr = variables.find("lote_" + id);
 		if (itr != variables.end())
 		{
-			entradaDeMaterial->setLote(itr->second);
+            entradaDeMaterial->getLote()->setNome(itr->second);
 			variables.erase(itr);
 		}
 		itr = variables.find("valor_" + id);
@@ -162,9 +163,9 @@ void EntradaController::getEntrada(Request &request, StreamResponse &response)
         Json::Value mat;
         mat["nome"] = ptr->getMaterial()->getNome();
         mat["quantidade"] = ptr->getQuantidade();
-        mat["validade"] = ptr->getValidade();
+        mat["validade"] = ptr->getLote()->getValidade();
         mat["valor"] = ptr->getValor();
-        mat["lote"] = ptr->getLote();
+        mat["lote"] = ptr->getLote()->getNome();
         json["materiais"].append(mat);
     }
     response << json;
