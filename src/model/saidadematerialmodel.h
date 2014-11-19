@@ -5,10 +5,13 @@
 #include "entity/pesquisa.h"
 #include "model.h"
 #include "materialmodel.h"
+#include "entity/entradadematerial.h"
+#include "lotemodel.h"
 
 class SaidaDeMaterialModel : public Model
 {
 	MaterialModel materialModel;
+    LoteModel loteModel;
 public:
     SaidaDeMaterialModel();
 	void salvaSaidaDeMaterial(SaidaDeMaterial& saidaDeMaterial);
@@ -17,6 +20,7 @@ public:
 	void removerSaidaDeMaterial(SaidaPtr& saida);
     SaidaDeMaterialList getListSaidaDeMaterial(SaidaPtr& saida);
     SaidaDeMaterialList getListSaidaDeMaterial(Pesquisa& pesquisa);
+    bool existeSaidaApartirDasEntradas(EntradaDeMaterialList entMatList);
 };
 
 #endif // SAIDADEMATERIALMODEL_H

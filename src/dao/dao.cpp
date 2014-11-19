@@ -41,7 +41,7 @@ Dao::Connection Dao::getConnection()
 		return connection;
     }
     else
-        throw Exception("N„o foi possivÈl realizar uma conex„o, verifique os parametros de conex„o do banco");
+        throw Exception("N√£o foi possiv√©l realizar uma conex√£o, verifique os parametros de conex√£o do banco");
 }
 
 shared_ptr<sql::ResultSet> Dao::executeQuery(const string &sql)

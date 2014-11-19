@@ -1,6 +1,6 @@
 project(LabEstoqueServer)
 cmake_minimum_required(VERSION 2.8)
-find_package(Boost COMPONENTS filesystem system thread )
+find_package(Boost COMPONENTS filesystem system thread program_options REQUIRED )
 set(MYSQL_DIR "C:/Program Files (x86)/MySQL/MySQL Connector C++ 1.1.4")
 set(JSON_DIR "C:/Program Files (x86)/jsoncpp")
 set(MONGOOSE_DIR "C:/Program Files (x86)/mongoose")
@@ -29,13 +29,13 @@ if(MSVC)
 		link_directories( ${LINK_DIRECTORIES} ${MYSQL_DIR}/lib/opt ../../htmlcxx/build/$(Configuration) ${JSON_DIR}/lib ${MONGOOSE_DIR}/lib)
 	ENDIF(CMAKE_BUILD_TYPE STREQUAL "Debug")
 else()
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g")
 endif()
 link_directories(c:/Boost/lib)
 
 add_definitions(-DCPPCONN_LIB_BUILD)
 add_executable(${PROJECT_NAME} ${FULL_SRC})
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} _mongoose jsoncpp mysqlcppconn htmlcxx)
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} _mongoose jsoncpp mysqlcppconn htmlcxx pthread)
 
 
 # install

@@ -15,6 +15,7 @@ class Lote
     int quantidade;
 public:
     Lote();
+    Lote(const int& id);
     Lote(sql::ResultSet& rs);
     string getSqlInsert();
     string getSqlUpdate();

@@ -35,6 +35,8 @@
 			</span>
 			<fieldset>
 				<legend>Materiais:</legend>
+                <datalist id="materiais"></datalist>
+                <datalist id="materiaisTodos"></datalist>
 				<table id="tabelaMateriais">
                     <thead>
                         <tr>
@@ -45,10 +47,10 @@
                     <tbody>
                         <tr id="linhaMaterial">
                             <td>
-                                <input list="materiais" name="material" required/>
-                                <datalist id="materiais"></datalist>
+                                <input list="materiais" name="lote" lote-id="0" required onchange='selecionaMaterial(this)'/>                                
+                                <input name="material" required hidden/>
                             </td>
-                            <td><input name="quantidade" type="number" required pattern="[0-9]+$"/></td>
+                            <td><input name="quantidade" type="number" min="1" required/></td>
                             <td><button id="removerLinha" onclick="removeMaterial(this)" type="button" alt="Remover" disabled>X</button></td>
                         </tr>
                     </tbody>

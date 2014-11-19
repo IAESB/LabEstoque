@@ -4,6 +4,7 @@
 #include "entity/entradadematerial.h"
 #include "materialmodel.h"
 #include "entradadematerialmodel.h"
+#include "saidadematerialmodel.h"
 #include "lotemodel.h"
 #include "dao/dao.h"
 
@@ -13,6 +14,7 @@ class EntradaModel
     MaterialModel materialModel;
     LoteModel loteModel;
     EntradaDeMaterialModel entradaDeMaterialModel;
+    SaidaDeMaterialModel saidaDeMaterialModel;
 public:
     EntradaModel();
     MateiralList getListMaterial();

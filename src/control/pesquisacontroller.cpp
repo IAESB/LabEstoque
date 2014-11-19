@@ -36,7 +36,7 @@ void PesquisaController::pesquisarRelatorio(Request &request, StreamResponse &re
 			view.insertContentId("selectMaterial",
 			"<option value='" + to_string(material->getId()) + "'>" + material->getNome() + "</option>");
 
-        Pesquisa& pesquisa = criarPesquisa(request);
+        Pesquisa pesquisa = criarPesquisa(request);
 
         view.setContentId("nome", pesquisa.getNome());
         view.setContentId("dataInicial", pesquisa.getData_inicial());
@@ -44,15 +44,15 @@ void PesquisaController::pesquisarRelatorio(Request &request, StreamResponse &re
 
 		string html;
         if (pesquisa.IsEntrada()){
-            EntradaDeMaterialList& entradaList = model.getListEntradaDeMaterial(pesquisa);
+            const EntradaDeMaterialList& entradaList = model.getListEntradaDeMaterial(pesquisa);
             for(EntradaDeMaterialPtr& ent: *entradaList){
                 html += "<tr>\
-                            <td>" + ent->getMaterial()->getNome() + "</td>\
+                            <td>" + ent->getMaterial()->getNome() + "</td> \
+                            <td>" + ent->getLote()->getNome() + "</td>\
                             <td>" + ent->getEntrada()->getData().substr(0, 10) + "</td>\
                             <td>" + ent->getEntrada()->getFornecedor() + "</td>\
                             <td>" + to_string(ent->getQuantidade()) + "</td>\
                             <td>" + ent->getLote()->getValidade().substr(0, 10) + "</td>\
-                            <td>" + ent->getLote()->getNome() + "</td>\
                             <td>" + to_string(ent->getValor(), 2) + "</td>\
                             <td>" + to_string(ent->getMaterial()->getQuantidade()) + "</td>\
                         </tr>\n";
@@ -61,11 +61,12 @@ void PesquisaController::pesquisarRelatorio(Request &request, StreamResponse &re
 		}
 		html.erase();
         if(pesquisa.IsSaida()){
-            SaidaDeMaterialList& saidaList = model.getListSaidaDeMaterial(pesquisa);
+            const SaidaDeMaterialList& saidaList = model.getListSaidaDeMaterial(pesquisa);
             for (SaidaDeMaterialPtr& sai : *saidaList)
             {
                 html += "<tr> \
                             <td>"+sai->getMaterial()->getNome()+"</td> \
+                            <td>"+sai->getLote()->getNome() + "</td> \
                             <td>"+sai->getSaida()->getData().substr(0,10)+"</td> \
                             <td>"+to_string(sai->getQuantidade())+"</td> \
                             <td>"+sai->getSaida()->getSolicitante()->getNome()+"</td> \
@@ -92,8 +93,8 @@ Pesquisa PesquisaController::criarPesquisa(Request &request)
     relatorio.setIsEntrada( request.get("entrada")=="on" );
     relatorio.setIsSaida(request.get("saida")=="on" );
     vector<string> vecIdMaterial;
-	auto& vars = request.getAllVariable(); 
-	auto& ppp = vars.equal_range("material");
+    auto vars = request.getAllVariable();
+    auto ppp = vars.equal_range("material");
 	for (auto it2 = ppp.first; it2 != ppp.second; ++it2){
 		vecIdMaterial.push_back(it2->second);
 	}

@@ -42,7 +42,12 @@ void Lote::setQuantidade(int value)
 }
 Lote::Lote()
 {
-	id = 0;
+    id = 0;
+}
+
+Lote::Lote(const int &id)
+{
+    this->id = id;
 }
 
 Lote::Lote(sql::ResultSet &rs)

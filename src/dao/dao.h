@@ -15,6 +15,7 @@ using namespace std;
 
 class Dao;
 typedef shared_ptr<Dao> DaoPrt;
+typedef const shared_ptr<sql::ResultSet>& ResultSet;
 
 class Dao
 {

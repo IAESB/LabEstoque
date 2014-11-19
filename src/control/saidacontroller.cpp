@@ -1,6 +1,6 @@
 #include "saidacontroller.h"
 #include "view/view.h"
-#include "json/json.h"
+#include "jsoncpp/json/json.h"
 
 SaidaController::SaidaController()
 {
@@ -24,8 +24,9 @@ void SaidaController::getSaida(Request &request, StreamResponse &response)
     json["solicitante"] = saida->getSolicitante()->getId();
     for(SaidaDeMaterialPtr& mat: *saida->getSaidaDeMaterialList())
     {
-		Json::Value matJ;
-		matJ["material_id"] = mat->getMaterial()->getId();
+        Json::Value matJ;
+        matJ["lote_id"] = mat->getLote()->getId();
+        matJ["material_id"] = mat->getMaterial()->getId();
         matJ["quantidade"] = mat->getQuantidade();
         json["materiais"].append(matJ);
     }
@@ -91,11 +92,21 @@ void SaidaController::listaSaida(Request &request, StreamResponse &response)
 	view.setContent(ifstream(server->getOption("document_root") + "/template.html"));
 	view.insertContentId("conteudo", ifstream(server->getOption("document_root") + "/saida.html"));
     
+    string option;
 	EntradaDeMaterialList materialList = model.getListMaterial();
+    int qtd;
 	for (EntradaDeMaterialPtr& ent : *materialList){
 		MateiralPtr material = ent->getMaterial();
 		LotePtr lote = ent->getLote();
-		view.insertContentId("materiais", "<option material-id='" + to_string(material->getId()) + "' qtd='" + to_string(lote->getQuantidade()) + "' value='" + material->getNome() + ", "+lote->getNome()+", "+lote->getValidade()+" - " + to_string(lote->getQuantidade()) + "'>" + "</option>");
+        qtd = lote->getQuantidade()?lote->getQuantidade():material->getQuantidade();
+        option = "<option material-id='" + to_string(material->getId())
+                + "' qtd='" + to_string(qtd)
+                + "' lote-id='"+ to_string(lote->getId())
+                + "' value='" + material->getNome() + ", lot:"+lote->getNome()+", val:"+lote->getValidade()+", qtd:" + to_string(qtd) + "'>"
+                + "</option>";
+        if(lote->getQuantidade()>0 || material->getQuantidade()>0)
+            view.insertContentId("materiais", option);
+        view.insertContentId("materiaisTodos", option);
 	}
     
 	LaboratorioList laboratorioList = model.getListLaboratorio();
@@ -119,9 +130,10 @@ void SaidaController::listaSaida(Request &request, StreamResponse &response)
     }
     response << view;
 }
+
 SaidaPtr SaidaController::criarSaida(Request& request)
 {
-	auto& variables = request.getAllVariable();
+    auto variables = request.getAllVariable();
 	SolicitantePtr solicitante(new Solicitante);
 	solicitante->setNome(variables.find("solicitante")->second);
 	LaboratorioPtr laboratorio(new Laboratorio);
@@ -130,9 +142,9 @@ SaidaPtr SaidaController::criarSaida(Request& request)
 	variables.erase("solicitante");
 	variables.erase("data");
 	variables.erase("laboratorio");
-	auto id = variables.find("id");
-	if (id != variables.end())
-		variables.erase(id);
+    auto itr = variables.find("id");
+    if (itr != variables.end())
+        variables.erase(itr);
 
 	SaidaPtr saida(new Saida);
 	saida->setData(data);
@@ -142,20 +154,29 @@ SaidaPtr SaidaController::criarSaida(Request& request)
 	SaidaDeMaterialList vecMateriais(new vector<SaidaDeMaterialPtr>);
 	while (variables.size())
 	{
-		auto itr = variables.begin();
+        itr = variables.begin();
 		string id = itr->first;
 		size_t fTraco = id.find('_');
 		id = id.substr(fTraco + 1);
 
-		int qtd = stoi(variables.find("quantidade_" + id)->second);
-		MateiralPtr material(new Mateiral(stoi(id)));
+        itr = variables.find("quantidade_" + id);
+        int qtd = stoi(itr->second);
+        variables.erase(itr);
+
+        itr = variables.find("material_" + id);
+        MateiralPtr material(new Mateiral( stoi(itr->second) ));
 		material->setQuantidade(qtd);
+        variables.erase(itr);
 
 		SaidaDeMaterialPtr saidaDeMaterial(new SaidaDeMaterial);
 		saidaDeMaterial->setMaterial(material);
 		saidaDeMaterial->setSaida(saida);
 		saidaDeMaterial->setQuantidade(qtd);
-		variables.erase("quantidade_" + id);
+
+        LotePtr lote(new Lote);
+        lote->setId(stoi(id));
+        lote->setQuantidade(qtd);
+        saidaDeMaterial->setLote(lote);
 
 		vecMateriais->push_back(saidaDeMaterial);
 	}

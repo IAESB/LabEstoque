@@ -8,6 +8,7 @@ void SaidaDeMaterialModel::salvaSaidaDeMaterial(SaidaDeMaterial &saidaDeMaterial
 {
     dao->insert(saidaDeMaterial);
 	materialModel.decrementaQuantidadeMaterial(saidaDeMaterial.getMaterial());
+    loteModel.decrementaLote(*saidaDeMaterial.getLote());
 }
 
 
@@ -27,8 +28,10 @@ void SaidaDeMaterialModel::alterarSaidaDeMaterial(const SaidaDeMaterialList& sai
 void SaidaDeMaterialModel::removerSaidaDeMaterial(SaidaPtr& saida)
 {
 	SaidaDeMaterialList list = getListSaidaDeMaterial(saida);
-	for (SaidaDeMaterialPtr& sm : *list)
+    for (SaidaDeMaterialPtr& sm : *list){
 		materialModel.incrementaQuantidadeMaterial(sm->getMaterial());
+        loteModel.incrementaLote(*sm->getLote());
+    }
 
     dao->executeUpdate("DELETE FROM saida_de_material WHERE saida_id=" + to_string(saida->getId()));
 }
@@ -45,17 +48,19 @@ SaidaDeMaterialList SaidaDeMaterialModel::getListSaidaDeMaterial(Pesquisa &pesqu
 	condicoes += pesquisa.getQuantidadeSaidaAte() > -1 ? " AND sm.quantidade <=" + to_string(pesquisa.getQuantidadeSaidaAte()) : "";
 	condicoes += pesquisa.getSolicitante().size() ? " AND so.nome LIKE '%"+pesquisa.getSolicitante()+"%'" : "";
     condicoes += pesquisa.getLaboratorio().size() ? " AND l.nome LIKE '%"+pesquisa.getLaboratorio()+"%'" : "";
+    condicoes += pesquisa.getLote().size() ? " AND lo.nome LIKE '%"+pesquisa.getLote()+"%'" : "";
 
 	string materiais;
 	for (string& id : pesquisa.getMateriais())
 		materiais += (materiais.empty() ? " m.id=" : " OR m.id=") + id;
 
-    auto& rs = dao->executeQuery("SELECT * FROM material m \
+    ResultSet rs = dao->executeQuery("SELECT * FROM material m \
                                   LEFT OUTER JOIN grupo g ON(m.grupo_id=g.id) \
                                   LEFT OUTER JOIN saida_de_material sm ON(sm.material_id=m.id) \
                                   LEFT OUTER JOIN saida s ON(sm.saida_id = s.id) \
                                   LEFT OUTER JOIN laboratorio l ON( s.laboratorio_id=l.id) \
                                   LEFT OUTER JOIN solicitante so ON(s.solicitante_id=so.id) \
+                                  LEFT OUTER JOIN lote lo ON(lo.id = sm.lote_id) \
                                   WHERE s.data>='" + pesquisa.getData_inicial() + "' AND s.data<='" + pesquisa.getData_fianal() + "'"
 								  + (materiais.empty() ? "" : " AND (" + materiais + ")")
                                   +condicoes);
@@ -76,22 +81,41 @@ SaidaDeMaterialList SaidaDeMaterialModel::getListSaidaDeMaterial(Pesquisa &pesqu
 
         SaidaDeMaterialPtr saidaDeMaterial(new SaidaDeMaterial());
         saidaDeMaterial->setMaterial(material);
-        saidaDeMaterial->setQuantidade(rs->getInt(12 ));
+        saidaDeMaterial->setQuantidade(rs->getInt(14));
 
         SaidaPtr saida(new Saida());
-        saida->setData(rs->getString(14));
+        saida->setData(rs->getString(16));
 
 		LaboratorioPtr laboratorio(new Laboratorio);
-		laboratorio->setNome(rs->getString(19));
+        laboratorio->setNome(rs->getString(21));
 
 		SolicitantePtr solicitante(new Solicitante());
-		solicitante->setNome(rs->getString(21));
+        solicitante->setNome(rs->getString(23));
+
+        LotePtr lote(new Lote);
+        lote->setId(rs->getInt(25));
+        lote->setNome(rs->getString(26));
 
 		saida->setLaboratorio(laboratorio);
 		saida->setSolicitante(solicitante);
 		saidaDeMaterial->setSaida(saida);
+        saidaDeMaterial->setLote(lote);
 		list->push_back(saidaDeMaterial);
     }
 
     return list;
+}
+
+bool SaidaDeMaterialModel::existeSaidaApartirDasEntradas(EntradaDeMaterialList entMatList)
+{
+    string lotesId;
+    for(EntradaDeMaterialPtr& entMat: *entMatList){
+        if(lotesId.empty())
+            lotesId= "lote_id=" + to_string(entMat->getLote()->getId());
+        else
+            lotesId+=" OR lote_id="+to_string(entMat->getLote()->getId());
+    }
+    auto result = dao->select<SaidaDeMaterial>("saida_de_material", "*", "WHERE "+lotesId);
+
+    return result->size();
 }

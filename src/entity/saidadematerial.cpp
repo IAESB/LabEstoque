@@ -47,16 +47,19 @@ SaidaDeMaterial::SaidaDeMaterial()
 
 SaidaDeMaterial::SaidaDeMaterial(sql::ResultSet &rs)
 {
-    saida = SaidaPtr(new Saida(rs.getInt(1)));
-    material = MateiralPtr(new Mateiral(rs.getInt(2)));
-    quantidade = rs.getInt(3);
-	material->setQuantidade(quantidade);
+    saida = SaidaPtr(new Saida(rs.getInt(2)));
+    material = MateiralPtr(new Mateiral(rs.getInt(3)));
+    lote = LotePtr(new Lote(rs.getInt(4)));
+    quantidade = rs.getInt(5);
+    material->setQuantidade(quantidade);
+    lote->setQuantidade(quantidade);
 }
 
 string SaidaDeMaterial::getSqlInsert()
 {
+    string loteId = lote->getId()?"'"+to_string(lote->getId())+"'":"NULL";
     return "INSERT INTO saida_de_material (saida_id, material_id, quantidade, lote_id) \
-            VALUE ('" + to_string(saida->getId()) + "', '" + to_string(material->getId()) + "', '" + to_string(quantidade) + "', '"+to_string(lote->getId())+"')";
+            VALUE ('" + to_string(saida->getId()) + "', '" + to_string(material->getId()) + "', '" + to_string(quantidade) + "', "+loteId+")";
 }
 
 string SaidaDeMaterial::getSqlUpdate()

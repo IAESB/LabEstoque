@@ -1,11 +1,26 @@
+function selecionaMaterial(lote)
+{
+    var opt = document.querySelector("#materiais option[value='"+lote.value+"']");
+    var idMat = opt.getAttribute("material-id") ;
+    var material = lote.parentElement.querySelector("input[name=material]");
+    material.value = idMat;
+    var quantidade = lote.parentElement.parentElement.querySelector("input[name=quantidade]");
+    quantidade.setAttribute("max", opt.getAttribute("qtd") );
+    lote.setAttribute("lote-id", opt.getAttribute("lote-id"));
+}
+
 function desabilitaEdicao(formNovaSaida)
 {
-    var fields =  formNovaSaida.querySelectorAll("input, select");
+    var fields =  formNovaSaida.querySelectorAll("input");
     for(var i=0; i<fields.length; i++)
         fields[i].setAttribute("disabled", true);
     var buttons = formNovaSaida.querySelectorAll("fieldset button");
     for(var i=0; i<buttons.length; i++)
         buttons[i].style.display = "none";
+    
+    var lotes = formNovaSaida.querySelectorAll("input[name=lote]")
+    for(var i=0; i<lotes.length; i++)
+        lotes[i].setAttribute("list", "materiais");
     
     var btAlterar = formNovaSaida.querySelector("#btSalvar");
     btAlterar.style.display = "none";
@@ -14,14 +29,17 @@ function desabilitaEdicao(formNovaSaida)
 
 function abilitaEdicao(formNovaSaida)
 {
-    var fields =  formNovaSaida.querySelectorAll("input, select");
+    var fields =  formNovaSaida.querySelectorAll("input");
     for(var i=0; i<fields.length; i++)
         fields[i].removeAttribute("disabled");
     
     var buttons = formNovaSaida.querySelectorAll("button");
     for(var i=0; i<buttons.length; i++)
-        buttons[i].style.display = "inline";  
+        buttons[i].style.display = "inline"; 
     
+    var lotes = formNovaSaida.querySelectorAll("input[name=lote]")
+    for(var i=0; i<lotes.length; i++)
+        lotes[i].setAttribute("list", "materiaisTodos");
 }
 
 function removerSaida(id)
@@ -79,13 +97,17 @@ function mostrarSaida(idSaida)
         {
             var mat = saida.materiais[i];
             var linha = document.querySelector("#tabelaMateriais tbody tr:last-child");
-            var selectMat = linha.querySelector("#materiais");
-            var inputMat2 = linha.querySelector("input[name=material]");
-            selectMat.value = mat.material_id;
-            var materialNome = selectMat.querySelector("option[material-id='"+mat.material_id+"']").getAttribute("value");
-            materialNome = materialNome.substring(0, materialNome.lastIndexOf('-') );
+            var selectMat = document.querySelector("#materiaisTodos");
+            var inputMat2 = linha.querySelector("input[name=lote]");
+            inputMat2.setAttribute("lote-id", mat.lote_id);
+            var opt = selectMat.querySelector("option[lote-id='"+mat.lote_id+"']");
+            if(mat.lote_id==0)
+                opt = selectMat.querySelector("option[material-id='"+mat.material_id+"']");
+            var materialNome = opt.getAttribute("value");
+            materialNome = materialNome.substring(0, materialNome.lastIndexOf('qtd:') );
             inputMat2.value = materialNome;
             linha.querySelector("input[name=quantidade]").value = mat.quantidade;
+            linha.querySelector("input[name=material]").value = mat.material_id;
             
             maisUmMaterial();
         }
@@ -136,46 +158,20 @@ function mostrarNovaSaida()
 
 function validarSalvarSaida()
 {    
-	var idMaterial =-1;
-    var erro = false;
     var isAlterar = $("#formNovaSaida").prop("action").indexOf("/saida/alterar")>-1;
-    var inputs = $("#tabelaMateriais :input");
-    var qtd;
-    for(var i=0; i<inputs.length; i++)
-    {
-        var input = inputs[i];
-        var name = input.getAttribute("name");
-        if (name=="material")
-        {            
-            var opt = document.querySelector("#tabelaMateriais option[value='"+input.value+"']");
-            qtd = parseInt( opt.attributes.qtd.value );
-        }
-        else if(name=="quantidade")
-        {
-            var valorInput = parseInt(input.value);            
-            qtd += isAlterar?valorInput:0;
-            if( qtd < valorInput ){
-                input.style.borderColor="red";
-                erro = true;
-            }
-        }
-    }
-    if(erro){
-        return false;
-    }
+    var inputs = $("#tabelaMateriais :input");    
     
     for(var i=0; i<inputs.length; i++)
     {
         var input = inputs[i];
         var name = input.getAttribute("name");
-        if (name=="material")
-        {      
-            var opt = document.querySelector("#tabelaMateriais option[value='"+input.value+"']");
-            idMaterial = parseInt( opt.getAttribute("material-id") );
+        if (name=="lote")
+        {
+            idLote = parseInt( input.getAttribute("lote-id") );
             input.remove();
         }
         else{
-            input.setAttribute("name", name+"_"+idMaterial);
+            input.setAttribute("name", name+"_"+idLote);
         }
     }
     

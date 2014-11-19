@@ -1,7 +1,7 @@
 #include "entradacontroller.h"
 #include "view/view.h"
 #include "entity/entradadematerial.h"
-#include <json/json.h>
+#include <jsoncpp/json/json.h>
 
 EntradaController::EntradaController()
 {

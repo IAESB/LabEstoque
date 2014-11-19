@@ -1,8 +1,12 @@
 #ifndef WIN32
+#   define DLL_EXPORT
 #	include <unistd.h>
+#   include <sys/stat.h>
+#else
+#   define DLL_EXPORT __declspec(dllexport)
+#   include <direct.h>
 #endif
 #include <stdlib.h>
-#include <direct.h>
 #include <signal.h>
 #include <iostream>
 #include <fstream>
@@ -31,13 +35,13 @@ namespace
 
 	const char* ARQ_LOCK = "tmp/labEstoque.lock";
 
-	void configureDao(string& url, string& user, string& password, string& dataBase){
+    void configureDao(const string& url, const string& user, const string& password, const string& dataBase){
 		DaoPrt dao = Dao::getInstance(url, user, password, dataBase);
 	}
 
 	volatile static bool running = true;
 
-	extern "C" __declspec(dllexport) void handle_signal(int sig)
+    extern "C" DLL_EXPORT void handle_signal(int sig)
 	{
 		cout << "Signal: " << sig << endl << "Exiting..." << endl;
 		running = false;
@@ -97,7 +101,7 @@ int main(int argc, char** argv)
 		}
 		cout << "WebDir: " << webDir << endl;
 
-		mkdir("tmp");
+        mkdir("tmp", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 		ofstream arq(ARQ_LOCK);
 		if (!arq.good()){
 			cerr << "problemas ao criar o arquivo de trava: " << ARQ_LOCK << endl;
@@ -125,11 +129,12 @@ int main(int argc, char** argv)
 		server.start();		
 
 		while (running) {
-			boost::this_thread::sleep(boost::posix_time::seconds(2));
+            boost::this_thread::sleep(boost::posix_time::seconds(1));
 			if (verificaArqLock())
 				handle_signal(0);
 		}
 
+        server.stop();
 		cout << "Server Down!" << endl;
 	}
 	catch (po::error& e)
@@ -149,7 +154,7 @@ int main(int argc, char** argv)
 	return SUCCESS;
 }
 
-extern "C" __declspec(dllexport) int startServer(int argc, char** argv)
+extern "C" DLL_EXPORT int startServer(int argc, char** argv)
 {
 #ifdef SHARED_LIB
 	boost::thread thread(run, argv);
