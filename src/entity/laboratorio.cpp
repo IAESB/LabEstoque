@@ -29,10 +29,10 @@ Laboratorio::Laboratorio(int id)
     this->id = id;
 }
 
-Laboratorio::Laboratorio(sql::ResultSet &rs)
+Laboratorio::Laboratorio(soci::row &rs)
 {
-    id = rs.getInt(1);
-    nome = rs.getString(2);
+    id = rs.get<int>(0);
+    nome = rs.get<string>(1);
 }
 
 string Laboratorio::getSqlInsert()

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
-#include <cppconn/resultset.h>
+#include <soci/row.h>
 using namespace std;
 
 class Grupo
@@ -15,7 +15,7 @@ class Grupo
 public:
     Grupo();
     Grupo(const string& nome);
-    Grupo(sql::ResultSet& rs);
+    Grupo(soci::row& r);
     string getSqlInsert();
     int getId() const;
     void setId(int value);

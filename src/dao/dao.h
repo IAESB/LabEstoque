@@ -4,95 +4,79 @@
 #include <memory>
 #include <vector>
 #include <iostream>
-#include <mysql_driver.h>
-#include <cppconn/driver.h>
-#include <cppconn/exception.h>
-#include <cppconn/resultset.h>
-#include <cppconn/statement.h>
-#include <cppconn/prepared_statement.h>
+#include <soci/soci.h>
 
 using namespace std;
 
 class Dao;
 typedef shared_ptr<Dao> DaoPrt;
-typedef const shared_ptr<sql::ResultSet>& ResultSet;
+typedef soci::rowset<soci::row> ResultSet;
 
 class Dao
 {
-    string url;
-    string user;
-    string password;
-    string database;
+    soci::session sql;
     static DaoPrt instance;
-    Dao(string url, string user, string password, string database);
+    Dao(string host, string user, string password, string database);
 public:
     static DaoPrt getInstance(const string& url="" /*tcp://127.0.0.1:3306*/, const string& user="", const string& password="", const string& database="");
     ~Dao();
 
     bool isConnected();
-	typedef shared_ptr<sql::Connection> Connection;
-	Connection getConnection();
+    soci::session* getConnection();
 
     void executeUpdate(const string& sql);
-    shared_ptr<sql::ResultSet> executeQuery(const string& sql);
+    ResultSet executeQuery(const string& sql);
 
     template<typename type>
     bool update(type& obj)
     {
-		Connection connection = getConnection();
+        soci::session* connection = getConnection();
 
         string sql = obj.getSqlUpdate();
-        unique_ptr<sql::Statement> stmt( connection->createStatement() );
-        if(stmt->executeUpdate(sql)>0)
-            return false;
+        *connection << sql;
+
         return true;
     }
 
     template<typename type>
     bool remove(type& obj)
     {
-		Connection connection = getConnection();
+        soci::session* connection = getConnection();
 
         string sql = obj.getSqlDelete();
-        unique_ptr<sql::Statement> stmt( connection->createStatement() );
-        if(stmt->executeUpdate(sql)>0)
-            return true;
+        *connection << sql;
         return false;
     }
 
     template<typename type>
     shared_ptr< vector< shared_ptr<type> > > select(string table, string columns="", string options="")
     {
-		Connection connection = getConnection();
+        soci::session* connection = getConnection();
 
         shared_ptr< vector< shared_ptr<type> > > vec(new vector< shared_ptr<type> >);
         string sql = "SELECT ";
         sql += columns.empty()?"*":columns;
         sql += " FROM "+table+" ";
         sql += options.empty()?"":options;
-        unique_ptr<sql::Statement> stmt( connection->createStatement() );
-        unique_ptr<sql::ResultSet> rs( stmt->executeQuery(sql) );
-        while (rs->next()) {
-            vec->push_back( shared_ptr<type>(new type(*rs) ) );
+
+        soci::rowset<soci::row> linhas = connection->prepare << sql;
+        for(soci::row& linha: linhas) {
+            vec->push_back( shared_ptr<type>(new type(linha) ) );
         }
-        rs->close();
+
         return vec;
     }
 
     template<typename type>
     long long insert(type& obj)
     {
-		Connection connection = getConnection();
+        soci::session* connection = getConnection();
 
         long long id = -1;
         string sql = obj.getSqlInsert();
-        unique_ptr<sql::Statement> stmt( connection->createStatement() );
-        stmt->executeUpdate(sql);
-        unique_ptr<sql::ResultSet> rs( stmt->executeQuery("SELECT LAST_INSERT_ID()") );
 
-        if (rs->next())
-            id = rs->getInt(1);
-        rs->close();
+        *connection << sql;
+        *connection << "SELECT LAST_INSERT_ID()", soci::into(id);
 
         return id;
     }

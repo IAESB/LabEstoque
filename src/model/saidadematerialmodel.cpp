@@ -54,7 +54,7 @@ SaidaDeMaterialList SaidaDeMaterialModel::getListSaidaDeMaterial(Pesquisa &pesqu
 	for (string& id : pesquisa.getMateriais())
 		materiais += (materiais.empty() ? " m.id=" : " OR m.id=") + id;
 
-    ResultSet rs = dao->executeQuery("SELECT * FROM material m \
+    ResultSet linhas = dao->executeQuery("SELECT * FROM material m \
                                   LEFT OUTER JOIN grupo g ON(m.grupo_id=g.id) \
                                   LEFT OUTER JOIN saida_de_material sm ON(sm.material_id=m.id) \
                                   LEFT OUTER JOIN saida s ON(sm.saida_id = s.id) \
@@ -66,35 +66,35 @@ SaidaDeMaterialList SaidaDeMaterialModel::getListSaidaDeMaterial(Pesquisa &pesqu
                                   +condicoes);
 
     SaidaDeMaterialList list( new vector<SaidaDeMaterialPtr>() );
-    while(rs->next())
+    for(soci::row& rs: linhas)
     {
         MateiralPtr material(new Mateiral());
-        material->setNome(rs->getString(2));
-        material->setDescricao(rs->getString(3));
-        material->setImagem(rs->getString(4));
-        material->setQuantidade(rs->getInt(5));
+        material->setNome(rs.get<string>(2));
+        material->setDescricao(rs.get<string>(3));
+        material->setImagem(rs.get<string>(4));
+        material->setQuantidade(rs.get<int>(5));
 
         GrupoPtr grupo(new Grupo());
-        grupo->setId(rs->getInt(7));
-        grupo->setNome(rs->getString(8));
+        grupo->setId(rs.get<int>(7));
+        grupo->setNome(rs.get<string>(8));
         material->setGrupo(grupo);
 
         SaidaDeMaterialPtr saidaDeMaterial(new SaidaDeMaterial());
         saidaDeMaterial->setMaterial(material);
-        saidaDeMaterial->setQuantidade(rs->getInt(14));
+        saidaDeMaterial->setQuantidade(rs.get<int>(14));
 
         SaidaPtr saida(new Saida());
-        saida->setData(rs->getString(16));
+        saida->setData(rs.get<string>(16));
 
 		LaboratorioPtr laboratorio(new Laboratorio);
-        laboratorio->setNome(rs->getString(21));
+        laboratorio->setNome(rs.get<string>(21));
 
 		SolicitantePtr solicitante(new Solicitante());
-        solicitante->setNome(rs->getString(23));
+        solicitante->setNome(rs.get<string>(23));
 
         LotePtr lote(new Lote);
-        lote->setId(rs->getInt(25));
-        lote->setNome(rs->getString(26));
+        lote->setId(rs.get<int>(25));
+        lote->setNome(rs.get<string>(26));
 
 		saida->setLaboratorio(laboratorio);
 		saida->setSolicitante(solicitante);

@@ -1,7 +1,7 @@
 #ifndef ENTRADA_H
 #define ENTRADA_H
 
-#include <cppconn/resultset.h>
+#include <soci/row.h>
 #include "usuario.h"
 #include "mateiral.h"
 
@@ -14,7 +14,7 @@ class Entrada
     UsuarioPtr usuario;
 public:
     Entrada();
-    Entrada(sql::ResultSet& rs);
+    Entrada(soci::row& rs);
     string getSqlInsert();
 	string getSqlUpdate();
 	string getSqlDelete();

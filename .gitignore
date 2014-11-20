@@ -6,6 +6,7 @@ build/
 *.lock
 *.*~
 ~$*.*
+CMakeLists.txt.user*
 
 # Windows image file caches
 Thumbs.db

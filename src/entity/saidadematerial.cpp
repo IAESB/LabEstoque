@@ -45,12 +45,12 @@ SaidaDeMaterial::SaidaDeMaterial()
 {
 }
 
-SaidaDeMaterial::SaidaDeMaterial(sql::ResultSet &rs)
+SaidaDeMaterial::SaidaDeMaterial(soci::row &rs)
 {
-    saida = SaidaPtr(new Saida(rs.getInt(2)));
-    material = MateiralPtr(new Mateiral(rs.getInt(3)));
-    lote = LotePtr(new Lote(rs.getInt(4)));
-    quantidade = rs.getInt(5);
+    saida = SaidaPtr(new Saida(rs.get<int>(2)));
+    material = MateiralPtr(new Mateiral(rs.get<int>(3)));
+    lote = LotePtr(new Lote(rs.get<int>(4)));
+    quantidade = rs.get<int>(5);
     material->setQuantidade(quantidade);
     lote->setQuantidade(quantidade);
 }

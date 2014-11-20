@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
-#include <cppconn/resultset.h>
+#include <soci/row.h>
 using namespace std;
 
 class Laboratorio
@@ -14,7 +14,7 @@ class Laboratorio
 public:
     Laboratorio();
     Laboratorio(int id);
-    Laboratorio(sql::ResultSet& rs);
+    Laboratorio(soci::row& rs);
     string getSqlInsert();
     int getId() const;
     void setId(int value);

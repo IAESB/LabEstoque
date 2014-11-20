@@ -13,6 +13,7 @@
 #include <boost/thread.hpp>
 #include "boost/program_options.hpp" 
 #include <mongoose/Server.h>
+#include "util.hpp"
 #include "control/materialcontroller.h"
 #include "control/entradacontroller.h"
 #include "control/saidacontroller.h"
@@ -72,7 +73,7 @@ int main(int argc, char** argv)
 			("help,h", "Print help messages")
 			("port,p", po::value<int>(), "<PORT> set port to open socket ex.: 8080")
 			("webdir,w", po::value<string>(), "<DIR> set dir to web content ex.: ../WebContent")
-			("url-data-base,r", po::value<string>(), "<URL> set url to connect data base ex.: tcp://localhost:3306")
+            ("host-data-base,r", po::value<string>(), "<URL> set url to connect data base ex.: localhost")
 			("user-data-base,u", po::value<string>(), "<USER> set user connect data base ex.: root")
 			("passowrd-data-base,s", po::value<string>(), "<PASSWORD> set user connect data base ex.: root")
 			("data-base,d", po::value<string>(), "<DATA BASE> set data base ex.: estoque_lab");
@@ -101,7 +102,7 @@ int main(int argc, char** argv)
 		}
 		cout << "WebDir: " << webDir << endl;
 
-        mkdir("tmp", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+		makedir("tmp"); //mkdir("tmp", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 		ofstream arq(ARQ_LOCK);
 		if (!arq.good()){
 			cerr << "problemas ao criar o arquivo de trava: " << ARQ_LOCK << endl;
@@ -110,7 +111,7 @@ int main(int argc, char** argv)
 		arq << "running" << endl;
 		arq.close();
 
-		configureDao(vm.count("url-data-base") ? vm["url-data-base"].as<string>() : "tcp://localhost:3306", 
+        configureDao(vm.count("url-data-base") ? vm["url-data-base"].as<string>() : "localhost",
 					 vm.count("user-data-base") ? vm["user-data-base"].as<string>() : "root", 
 					 vm.count("passowrd-data-base") ? vm["passowrd-data-base"].as<string>() : "root", 
 					 vm.count("data-base") ? vm["data-base"].as<string>() : "lab_estoque");

@@ -2,7 +2,7 @@
 #define LOTE_H
 
 #include <string>
-#include <cppconn/resultset.h>
+#include <soci/row.h>
 #include <vector>
 #include <memory>
 using namespace std;
@@ -16,7 +16,7 @@ class Lote
 public:
     Lote();
     Lote(const int& id);
-    Lote(sql::ResultSet& rs);
+    Lote(soci::row& rs);
     string getSqlInsert();
     string getSqlUpdate();
     string getSqlDelete();

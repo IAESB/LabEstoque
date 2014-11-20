@@ -4,7 +4,7 @@
 #include <iostream>
 #include <memory>
 #include <vector>
-#include <cppconn/resultset.h>
+#include <soci/row.h>
 using namespace std;
 
 class Solicitante
@@ -15,7 +15,7 @@ class Solicitante
 public:
     Solicitante();
     Solicitante(int id);
-    Solicitante(sql::ResultSet& rs);
+    Solicitante(soci::row& rs);
     string getSqlInsert();
     int getId() const;
     void setId(int value);

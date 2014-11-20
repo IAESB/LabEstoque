@@ -46,12 +46,12 @@ Entrada::Entrada()
 {
 }
 
-Entrada::Entrada(sql::ResultSet &rs)
+Entrada::Entrada(soci::row &rs)
 {
-    id = rs.getInt(1);
-    data = rs.getString(2);
-    fornecedor = rs.getString(3);
-    anotacao = rs.getString(4);
+    id = rs.get<int>(0);
+    data = rs.get<string>(1);
+    fornecedor = rs.get<string>(2);
+    anotacao = rs.get<string>(3);
 }
 
 string Entrada::getSqlInsert()

@@ -22,7 +22,7 @@ class Saida
 public:
     Saida();
     Saida(int id);
-    Saida(sql::ResultSet& rs);
+    Saida(soci::row& rs);
 	string getSqlInsert();
 	string getSqlUpdate();
 	string getSqlDelete();

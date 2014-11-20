@@ -70,17 +70,15 @@ Saida::Saida(int id)
     this->id = id;
 }
 
-Saida::Saida(sql::ResultSet &rs)
+Saida::Saida(soci::row &rs)
 {
-    id = rs.getInt(1);
-    data = rs.getString(2);
-    laboratorio = LaboratorioPtr(new Laboratorio(rs.getInt(3)));
-    solicitante = SolicitantePtr(new Solicitante(rs.getInt(4)));
-    //usuario = rs.getInt(5);
-	if (int i = rs.findColumn("lab"))
-		laboratorio->setNome(rs.getString(i));
-	if (int i = rs.findColumn("solicitante"))
-		solicitante->setNome(rs.getString(i));
+    id = rs.get<int>(0);
+    data = rs.get<string>(1);
+    laboratorio = LaboratorioPtr(new Laboratorio(rs.get<int>(2)));
+    solicitante = SolicitantePtr(new Solicitante(rs.get<int>(3)));
+    //usuario = rs.get<int>(6);
+    laboratorio->setNome(rs.get<string>("lab"));
+    solicitante->setNome(rs.get<string>("solicitante"));
 }
 
 string Saida::getSqlInsert()

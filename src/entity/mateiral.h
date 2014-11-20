@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <vector>
-#include <cppconn/resultset.h>
+#include <soci/row.h>
 #include "grupo.h"
 using namespace std;
 
@@ -18,7 +18,7 @@ class Mateiral
 public:
     Mateiral();
     Mateiral(const int& id);
-    Mateiral(sql::ResultSet& rs);
+    Mateiral(soci::row& rs);
 
     string getSqlInsert();
     string getSqlUpdate();

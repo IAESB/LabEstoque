@@ -11,4 +11,10 @@ inline string to_string(const long double &_Val, const streamsize& precision)
     return out.str();
 }
 
+#if _MSC_VER || __MINGW32__
+#	define makedir(x) mkdir(x)
+#else
+#	define makedir(x) mkdir(x, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)
+#endif
+
 #endif // UTIL_HPP

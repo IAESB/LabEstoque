@@ -31,7 +31,7 @@ EntradaDeMaterialList EntradaDeMaterialModel::getListEntradaDeMaterial(Pesquisa&
     for (string& id : pesquisa.getMateriais())
 		materiais += (materiais.empty()?" m.id=":" OR m.id=") + id;
 
-    ResultSet rs = dao->executeQuery("SELECT * FROM material m \
+    ResultSet linhas = dao->executeQuery("SELECT * FROM material m \
 							   LEFT OUTER JOIN grupo g ON(m.grupo_id=g.id)\
                                LEFT OUTER JOIN entrada_de_material em ON(em.material_id=m.id) \
                                LEFT OUTER JOIN entrada e ON(em.entrada_id=e.id) \
@@ -44,28 +44,28 @@ EntradaDeMaterialList EntradaDeMaterialModel::getListEntradaDeMaterial(Pesquisa&
 
 	
 	EntradaDeMaterialList list(new vector<EntradaDeMaterialPtr>);
-    while(rs->next())
+    for(soci::row& rs: linhas)
     {
         MateiralPtr material(new Mateiral());
-        material->setNome(rs->getString(2));
-        material->setDescricao(rs->getString(3));
-        material->setImagem(rs->getString(4));
-        material->setQuantidade(rs->getInt(5));
+        material->setNome(rs.get<string>(2));
+        material->setDescricao(rs.get<string>(3));
+        material->setImagem(rs.get<string>(4));
+        material->setQuantidade(rs.get<int>(5));
         GrupoPtr grupo(new Grupo());
-        grupo->setId(rs->getInt(7));
-		grupo->setNome(rs->getString(8));
+        grupo->setId(rs.get<int>(7));
+        grupo->setNome(rs.get<string>(8));
 		material->setGrupo(grupo);
 		EntradaDeMaterialPtr entradaMaterial(new EntradaDeMaterial());
-        entradaMaterial->setValor(rs->getDouble(14));
-		entradaMaterial->setQuantidade(rs->getInt(15));
+        entradaMaterial->setValor(rs.get<double>(14));
+        entradaMaterial->setQuantidade(rs.get<int>(15));
         EntradaPtr entrada(new Entrada());
-        entrada->setData(rs->getString(17));
-        entrada->setFornecedor(rs->getString(18));
-        entrada->setAnotacao(rs->getString(19));
+        entrada->setData(rs.get<string>(17));
+        entrada->setFornecedor(rs.get<string>(18));
+        entrada->setAnotacao(rs.get<string>(19));
         LotePtr lote(new Lote);
-        lote->setId(rs->getInt(21));
-        lote->setNome(rs->getString(22));
-        lote->setValidade(rs->getString(23));
+        lote->setId(rs.get<int>(21));
+        lote->setNome(rs.get<string>(22));
+        lote->setValidade(rs.get<string>(23));
         entradaMaterial->setLote(lote);
         entradaMaterial->setEntrada(entrada);
         entradaMaterial->setMaterial(material);
@@ -77,26 +77,26 @@ EntradaDeMaterialList EntradaDeMaterialModel::getListEntradaDeMaterial(Pesquisa&
 
 EntradaDeMaterialList EntradaDeMaterialModel::getListMaterialComLote()
 {
-    const auto& rs = dao->executeQuery("SELECT DISTINCT m.*, l.* FROM lote l \
+    ResultSet linhas = dao->executeQuery("SELECT DISTINCT m.*, l.* FROM lote l \
                                         RIGHT OUTER JOIN entrada_de_material em ON(em.lote_id = l.id) \
                                         RIGHT OUTER JOIN  material m ON(m.id = em.material_id) \
                                         ORDER BY m.nome");
 
 	EntradaDeMaterialList list(new vector<EntradaDeMaterialPtr>);
-	while (rs->next())
+    for(soci::row& rs: linhas)
 	{
 		MateiralPtr material(new Mateiral());
-		material->setId(rs->getInt(1));
-		material->setNome(rs->getString(2));
-		material->setDescricao(rs->getString(3));
-		material->setImagem(rs->getString(4));
-		material->setQuantidade(rs->getInt(5));
+        material->setId(rs.get<int>(0));
+        material->setNome(rs.get<string>(1));
+        material->setDescricao(rs.get<string>(2));
+        material->setImagem(rs.get<string>(3));
+        material->setQuantidade(rs.get<int>(4));
 
 		LotePtr lote(new Lote);
-		lote->setId(rs->getInt(7));
-		lote->setNome(rs->getString(8));
-		lote->setValidade(rs->getString(9));
-		lote->setQuantidade(rs->getInt(10));
+        lote->setId(rs.get<int>(6, 0));
+        lote->setNome(rs.get<string>(7, ""));
+        lote->setValidade(rs.get<string>(8, ""));
+        lote->setQuantidade(rs.get<int>(9, 0));
 
 		EntradaDeMaterialPtr entradaMaterial(new EntradaDeMaterial());
         entradaMaterial->setMaterial(material);

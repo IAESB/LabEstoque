@@ -10,10 +10,10 @@ Grupo::Grupo(const string& nome)
     this->nome = nome;
 }
 
-Grupo::Grupo(sql::ResultSet &rs)
+Grupo::Grupo(soci::row& rs)
 {
-    id = rs.getInt(1);
-    nome = rs.getString(2);
+    id = rs.get<int>(0);
+    nome = rs.get<string>(1);
 }
 
 int Grupo::getId() const

@@ -39,11 +39,11 @@ Solicitante::Solicitante(int id)
     this->id = id;
 }
 
-Solicitante::Solicitante(sql::ResultSet &rs)
+Solicitante::Solicitante(soci::row &rs)
 {
-    id = rs.getInt(1);
-    nome = rs.getString(2);
-    matricula = rs.getString(3);
+    id = rs.get<int>(0);
+    nome = rs.get<string>(1);
+    matricula = rs.get<string>(2);
 }
 
 string Solicitante::getSqlInsert()

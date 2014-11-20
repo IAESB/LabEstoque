@@ -1,16 +1,12 @@
 #include "dao.h"
 #include "exception/exception.h"
+#include <soci/mysql/soci-mysql.h>
 
 DaoPrt Dao::instance;
 
-Dao::Dao(string url, string user, string password, string database)
+Dao::Dao(string host, string user, string password, string database)
 {    
-    this->url = url;
-    this->user = user;
-    this->password = password;
-    this->database = database;
-
-	getConnection();
+    sql.open(soci::mysql, "host="+host+" db="+database+" user="+user+" password="+password);
 }
 
 DaoPrt Dao::getInstance(const string& url, const string& user, const string& password, const string& database)
@@ -31,32 +27,24 @@ Dao::~Dao()
 }
 
 
-Dao::Connection Dao::getConnection()
+soci::session* Dao::getConnection()
 {
-    if(!url.empty() && !user.empty()){
-        sql::Driver *driver = get_driver_instance();
-        sql::Connection* con = driver->connect(url, user, password);
-		Connection connection(con);
-        connection->setSchema(database);
-		return connection;
-    }
-    else
-        throw Exception("Não foi possivél realizar uma conexão, verifique os parametros de conexão do banco");
+    return &sql;
 }
 
-shared_ptr<sql::ResultSet> Dao::executeQuery(const string &sql)
+ResultSet Dao::executeQuery(const string &sql)
 {
-    Connection connection = getConnection();
+    soci::session* connection = getConnection();
 
-    unique_ptr<sql::Statement> stmt(connection->createStatement());
-    shared_ptr<sql::ResultSet> rs(stmt->executeQuery(sql));
+    ResultSet rs = connection->prepare << sql;
+
     return rs;
 }
 
 void Dao::executeUpdate(const string& sql)
 {
-	Connection connection = getConnection();
+    soci::session* connection = getConnection();
 
-    unique_ptr<sql::Statement> stmt(connection->createStatement());
-    stmt->executeUpdate(sql);
+    *connection << sql;
+    connection->commit();
 }

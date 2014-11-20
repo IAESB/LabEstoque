@@ -41,13 +41,9 @@ void SaidaController::alterarSaida(Request &request, StreamResponse &response)
 		model.alterarSaida(saida);
 		response.setCode(301);
 		response.setHeader("Location", "/saida");
-	}
-	catch (sql::SQLException& ex){
-		mensagem(response, ex.what());
-		cerr << ex.what() << endl;
-		cerr << ex.getErrorCode() << ex.getSQLState() << endl;
-	}
+    }
 	catch (exception& ex){
+        cerr << ex.what() << endl;
 		mensagem(response, ex.what());
 	}
 }
@@ -57,13 +53,9 @@ void SaidaController::excluirSaida(Request &request, StreamResponse &response)
 	try{
 		model.excluirSaida( request.get("id") );
 		response << "ok";
-	}
-	catch (sql::SQLException& ex){
-		response << ex.what();
-		cerr << ex.what() << endl;
-		cerr << ex.getErrorCode() << ex.getSQLState() << endl;
-	}
+    }
 	catch (exception& ex){
+        cerr << ex.what() << endl;
 		response << ex.what();
 	}
 }
@@ -76,12 +68,10 @@ void SaidaController::salvarSaida(Request &request, StreamResponse &response)
 
         response.setCode(301);
         response.setHeader("Location", "/saida");
-    }catch(sql::SQLException& ex){
-        mensagem(response, ex.what());
-        cerr << ex.what() << endl;
-        cerr << ex.getErrorCode() << ex.getSQLState() << endl;
+
     }catch(exception& ex){
         mensagem(response, ex.what());
+        cerr << ex.what() << endl;
     }
 
 }

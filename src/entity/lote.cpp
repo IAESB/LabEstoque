@@ -50,12 +50,12 @@ Lote::Lote(const int &id)
     this->id = id;
 }
 
-Lote::Lote(sql::ResultSet &rs)
+Lote::Lote(soci::row &rs)
 {
-    id = rs.getInt(1);
-    nome = rs.getString(2);
-    validade = rs.getString(3);
-	quantidade = rs.getInt(4);
+    id = rs.get<int>(0);
+    nome = rs.get<string>(1);
+    validade = rs.get<string>(2);
+    quantidade = rs.get<int>(3);
 }
 
 string Lote::getSqlInsert()

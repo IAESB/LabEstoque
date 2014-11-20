@@ -68,17 +68,17 @@ Mateiral::Mateiral(const int& id)
     this->id = id;
 }
 
-Mateiral::Mateiral(sql::ResultSet &rs)
+Mateiral::Mateiral(soci::row &rs)
 {
-    id = rs.getInt64(1);
-    nome = rs.getString(2);
-    descricao = rs.getString(3);
-    imagem = rs.getString(4);
-	quantidade = rs.getInt(5);
-	if (rs.findColumn("grupo_nome")){
+    id = rs.get<int>(0);
+    nome = rs.get<string>(1);
+    descricao = rs.get<string>(2);
+    imagem = rs.get<string>(3);
+    quantidade = rs.get<int>(4);
+    if (rs.size()>6){
 		GrupoPtr grupo(new Grupo);
-		grupo->setId(rs.getInt(6));
-		grupo->setNome(rs.getString(7));
+        grupo->setId(rs.get<int>(5));
+        grupo->setNome(rs.get<string>(6));
 		setGrupo(grupo);
 	}
 }

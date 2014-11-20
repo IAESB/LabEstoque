@@ -54,27 +54,27 @@ EntradaDeMaterial::EntradaDeMaterial()
 {
 }
 
-EntradaDeMaterial::EntradaDeMaterial(sql::ResultSet &rs)
+EntradaDeMaterial::EntradaDeMaterial(soci::row& rs)
 {
-    valor = rs.getDouble(5);
-    quantidade = rs.getInt(6);
+    valor = rs.get<double>(5);
+    quantidade = rs.get<int>(6);
     entrada = EntradaPtr(new Entrada);
-    entrada->setId(rs.getInt(7));
-    entrada->setData(rs.getString(8));
-    entrada->setFornecedor(rs.getString(9));
-    entrada->setAnotacao(rs.getString(10));
-    //entrada->setUsuario(rs.getint(10));
+    entrada->setId(rs.get<int>(7));
+    entrada->setData(rs.get<string>(8));
+    entrada->setFornecedor(rs.get<string>(9));
+    entrada->setAnotacao(rs.get<string>(10));
+    //entrada->setUsuario(rs.get<int>(10));
     material = MateiralPtr(new Mateiral);
-    material->setId(rs.getInt(12));
-    material->setNome(rs.getString(13));
-    material->setDescricao(rs.getString(14));
-    material->setImagem(rs.getString(15));
-    material->setQuantidade(rs.getInt(16));
+    material->setId(rs.get<int>(12));
+    material->setNome(rs.get<string>(13));
+    material->setDescricao(rs.get<string>(14));
+    material->setImagem(rs.get<string>(15));
+    material->setQuantidade(rs.get<int>(16));
 	lote = LotePtr(new Lote);
-    lote->setId(rs.getInt(18));
-    lote->setNome(rs.getString(19));
-    lote->setValidade(rs.getString(20));
-    lote->setQuantidade(rs.getInt(21));
+    lote->setId(rs.get<int>(18));
+    lote->setNome(rs.get<string>(19));
+    lote->setValidade(rs.get<string>(20));
+    lote->setQuantidade(rs.get<int>(21));
 }
 
 string EntradaDeMaterial::getSqlInsert()

@@ -1,7 +1,7 @@
 #ifndef ENTRADADEMATERIAL_H
 #define ENTRADADEMATERIAL_H
 
-#include <cppconn/resultset.h>
+#include <soci/row.h>
 #include "entrada.h"
 #include "mateiral.h"
 #include "lote.h"
@@ -16,7 +16,7 @@ class EntradaDeMaterial
 
 public:
     EntradaDeMaterial();
-    EntradaDeMaterial(sql::ResultSet& rs);
+    EntradaDeMaterial(soci::row& r);
     string getSqlInsert();
     EntradaPtr getEntrada() const;
     void setEntrada(const EntradaPtr &value);
