@@ -1,5 +1,5 @@
 #include "entradadematerial.h"
-
+#include "util.hpp"
 
 EntradaPtr EntradaDeMaterial::getEntrada() const
 {
@@ -56,25 +56,25 @@ EntradaDeMaterial::EntradaDeMaterial()
 
 EntradaDeMaterial::EntradaDeMaterial(soci::row& rs)
 {
-    valor = rs.get<double>(5);
-    quantidade = rs.get<int>(6);
+    valor = rs.get<double>(4);
+    quantidade = rs.get<int>(5);
     entrada = EntradaPtr(new Entrada);
-    entrada->setId(rs.get<int>(7));
-    entrada->setData(rs.get<string>(8));
-    entrada->setFornecedor(rs.get<string>(9));
-    entrada->setAnotacao(rs.get<string>(10));
+    entrada->setId(rs.get<int>(6));
+    entrada->setData(to_string( rs.get<std::tm>(7), "%F") );
+    entrada->setFornecedor(rs.get<string>(8));
+    entrada->setAnotacao(rs.get<string>(9));
     //entrada->setUsuario(rs.get<int>(10));
     material = MateiralPtr(new Mateiral);
-    material->setId(rs.get<int>(12));
-    material->setNome(rs.get<string>(13));
-    material->setDescricao(rs.get<string>(14));
-    material->setImagem(rs.get<string>(15));
-    material->setQuantidade(rs.get<int>(16));
+    material->setId(rs.get<int>(11));
+    material->setNome(rs.get<string>(12));
+    material->setDescricao(rs.get<string>(13));
+    material->setImagem(rs.get<string>(14));
+    material->setQuantidade(rs.get<int>(15));
 	lote = LotePtr(new Lote);
-    lote->setId(rs.get<int>(18));
-    lote->setNome(rs.get<string>(19));
-    lote->setValidade(rs.get<string>(20));
-    lote->setQuantidade(rs.get<int>(21));
+    lote->setId(rs.get<int>(17, 0));
+    lote->setNome(rs.get<string>(18, ""));
+    lote->setValidade(rs.get<string>(19, ""));
+    lote->setQuantidade(rs.get<int>(20, 0));
 }
 
 string EntradaDeMaterial::getSqlInsert()

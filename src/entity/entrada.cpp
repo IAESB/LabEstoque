@@ -1,4 +1,5 @@
 #include "entrada.h"
+#include "util.hpp"
 
 
 int Entrada::getId() const
@@ -48,8 +49,8 @@ Entrada::Entrada()
 
 Entrada::Entrada(soci::row &rs)
 {
-    id = rs.get<int>(0);
-    data = rs.get<string>(1);
+    id = rs.get<int>(0);;
+    data = to_string(rs.get<std::tm>(1), "%F");
     fornecedor = rs.get<string>(2);
     anotacao = rs.get<string>(3);
 }

@@ -1,4 +1,5 @@
 #include "entradadematerialmodel.h"
+#include "util.hpp"
 
 EntradaDeMaterialModel::EntradaDeMaterialModel()
 {
@@ -47,25 +48,25 @@ EntradaDeMaterialList EntradaDeMaterialModel::getListEntradaDeMaterial(Pesquisa&
     for(soci::row& rs: linhas)
     {
         MateiralPtr material(new Mateiral());
-        material->setNome(rs.get<string>(2));
-        material->setDescricao(rs.get<string>(3));
-        material->setImagem(rs.get<string>(4));
-        material->setQuantidade(rs.get<int>(5));
+        material->setNome(rs.get<string>(1));
+        material->setDescricao(rs.get<string>(2));
+        material->setImagem(rs.get<string>(3));
+        material->setQuantidade(rs.get<int>(4));
         GrupoPtr grupo(new Grupo());
-        grupo->setId(rs.get<int>(7));
-        grupo->setNome(rs.get<string>(8));
+        grupo->setId(rs.get<int>(6, 0));
+        grupo->setNome(rs.get<string>(7, ""));
 		material->setGrupo(grupo);
 		EntradaDeMaterialPtr entradaMaterial(new EntradaDeMaterial());
-        entradaMaterial->setValor(rs.get<double>(14));
-        entradaMaterial->setQuantidade(rs.get<int>(15));
+        entradaMaterial->setValor(rs.get<double>(13));
+        entradaMaterial->setQuantidade(rs.get<int>(14));
         EntradaPtr entrada(new Entrada());
-        entrada->setData(rs.get<string>(17));
-        entrada->setFornecedor(rs.get<string>(18));
-        entrada->setAnotacao(rs.get<string>(19));
+        entrada->setData(to_string( rs.get<tm>(16), "%F"));
+        entrada->setFornecedor(rs.get<string>(17));
+        entrada->setAnotacao(rs.get<string>(18));
         LotePtr lote(new Lote);
-        lote->setId(rs.get<int>(21));
-        lote->setNome(rs.get<string>(22));
-        lote->setValidade(rs.get<string>(23));
+        lote->setId(rs.get<int>(20, 0));
+        lote->setNome(rs.get<string>(21, ""));
+        lote->setValidade( to_string( rs.get<tm>(22, tm())) );
         entradaMaterial->setLote(lote);
         entradaMaterial->setEntrada(entrada);
         entradaMaterial->setMaterial(material);

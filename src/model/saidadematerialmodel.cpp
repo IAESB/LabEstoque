@@ -1,4 +1,5 @@
 #include "saidadematerialmodel.h"
+#include "util.hpp"
 
 SaidaDeMaterialModel::SaidaDeMaterialModel()
 {
@@ -69,32 +70,32 @@ SaidaDeMaterialList SaidaDeMaterialModel::getListSaidaDeMaterial(Pesquisa &pesqu
     for(soci::row& rs: linhas)
     {
         MateiralPtr material(new Mateiral());
-        material->setNome(rs.get<string>(2));
-        material->setDescricao(rs.get<string>(3));
-        material->setImagem(rs.get<string>(4));
-        material->setQuantidade(rs.get<int>(5));
+        material->setNome(rs.get<string>(1));
+        material->setDescricao(rs.get<string>(2));
+        material->setImagem(rs.get<string>(3));
+        material->setQuantidade(rs.get<int>(4));
 
         GrupoPtr grupo(new Grupo());
-        grupo->setId(rs.get<int>(7));
-        grupo->setNome(rs.get<string>(8));
+        grupo->setId(rs.get<int>(6, 0));
+        grupo->setNome(rs.get<string>(7, ""));
         material->setGrupo(grupo);
 
         SaidaDeMaterialPtr saidaDeMaterial(new SaidaDeMaterial());
         saidaDeMaterial->setMaterial(material);
-        saidaDeMaterial->setQuantidade(rs.get<int>(14));
+        saidaDeMaterial->setQuantidade(rs.get<int>(13));
 
         SaidaPtr saida(new Saida());
-        saida->setData(rs.get<string>(16));
+        saida->setData(to_string( rs.get<tm>(15) ));
 
 		LaboratorioPtr laboratorio(new Laboratorio);
-        laboratorio->setNome(rs.get<string>(21));
+        laboratorio->setNome(rs.get<string>(20));
 
 		SolicitantePtr solicitante(new Solicitante());
-        solicitante->setNome(rs.get<string>(23));
+        solicitante->setNome(rs.get<string>(22));
 
         LotePtr lote(new Lote);
-        lote->setId(rs.get<int>(25));
-        lote->setNome(rs.get<string>(26));
+        lote->setId(rs.get<int>(24, 0));
+        lote->setNome(rs.get<string>(25, ""));
 
 		saida->setLaboratorio(laboratorio);
 		saida->setSolicitante(solicitante);

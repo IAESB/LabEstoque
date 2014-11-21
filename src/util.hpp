@@ -2,13 +2,25 @@
 #define UTIL_HPP
 
 #include <iomanip>
+#include <sstream>
 
-inline string to_string(const long double &_Val, const streamsize& precision)
+inline std::string to_string(const long double &_Val, const streamsize& precision)
 {	// convert long double to string
 
     std::ostringstream out;
     out << std::fixed << std::setprecision(precision) << _Val;
     return out.str();
+}
+
+inline std::string to_string(const std::tm& tm, const char* format = "%F")
+{
+    std::tm _default = std::tm();
+    if(difftime(mktime((std::tm*)&tm), mktime(&_default)) == 0)
+        return "";
+
+    char buffer [80];
+    strftime (buffer,80, format, &tm);
+    return buffer;
 }
 
 #if _MSC_VER || __MINGW32__

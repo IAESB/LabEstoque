@@ -1,4 +1,5 @@
 #include "saida.h"
+#include "util.hpp"
 
 
 int Saida::getId() const
@@ -73,12 +74,14 @@ Saida::Saida(int id)
 Saida::Saida(soci::row &rs)
 {
     id = rs.get<int>(0);
-    data = rs.get<string>(1);
+    data = to_string( rs.get<tm>(1), "%F");
     laboratorio = LaboratorioPtr(new Laboratorio(rs.get<int>(2)));
     solicitante = SolicitantePtr(new Solicitante(rs.get<int>(3)));
-    //usuario = rs.get<int>(6);
-    laboratorio->setNome(rs.get<string>("lab"));
-    solicitante->setNome(rs.get<string>("solicitante"));
+    //usuario = rs.get(4)
+    if(rs.size()>6){
+        laboratorio->setNome(rs.get<string>("lab"));
+        solicitante->setNome(rs.get<string>("solicitante"));
+    }
 }
 
 string Saida::getSqlInsert()
