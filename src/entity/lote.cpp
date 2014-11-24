@@ -1,5 +1,5 @@
 #include "lote.h"
-
+#include "util.hpp"
 
 int Lote::getId() const
 {
@@ -54,7 +54,7 @@ Lote::Lote(soci::row &rs)
 {
     id = rs.get<int>(0);
     nome = rs.get<string>(1);
-    validade = rs.get<string>(2);
+    validade = to_string( rs.get<tm>(2) );
     quantidade = rs.get<int>(3);
 }
 

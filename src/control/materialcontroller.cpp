@@ -53,7 +53,7 @@ void MaterialController::salvarMaterial(Request &request, StreamResponse &respon
     if(!grupo.empty())
         material.setGrupo(GrupoPtr(new Grupo(grupo)));
     material.setImagem(imagem);
-    material.setQuantidade(stoi(quantidade));
+    material.setQuantidade(stoi(quantidade.size()?quantidade:"0"));
 
     try{
         model.salvarMaterial(material);

@@ -35,7 +35,7 @@ link_directories(c:/Boost/lib)
 
 add_definitions(-DCPPCONN_LIB_BUILD)
 add_executable(${PROJECT_NAME} ${FULL_SRC})
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} _mongoose jsoncpp htmlcxx soci_mysql soci_core)
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} _mongoose jsoncpp htmlcxx soci_mysql soci_core mysql)
 if(UNIX)
 	target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} pthread)
 else()
@@ -44,6 +44,6 @@ endif()
 
 
 # install
-install (FILES libmysql.dll DESTINATION bin)
+#install (FILES libmysql.dll DESTINATION bin)
 install (DIRECTORY WebContent/ DESTINATION WebContent)
 install (TARGETS ${PROJECT_NAME} DESTINATION bin)

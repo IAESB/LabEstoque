@@ -1,5 +1,4 @@
 #include "dao.h"
-#include "exception/exception.h"
 #include <soci/mysql/soci-mysql.h>
 
 DaoPrt Dao::instance;
@@ -15,7 +14,7 @@ DaoPrt Dao::getInstance(const string& url, const string& user, const string& pas
         if(!url.empty() && !user.empty())
             instance.reset(new Dao(url, user, password, database));
         else
-            throw Exception("Passe a URL, Usuario e Senha na primeira vez que chamar: Dao::getInstance");
+            throw std::runtime_error("Passe a URL, Usuario e Senha na primeira vez que chamar: Dao::getInstance");
     }
 
 

@@ -74,7 +74,7 @@ Saida::Saida(int id)
 Saida::Saida(soci::row &rs)
 {
     id = rs.get<int>(0);
-    data = to_string( rs.get<tm>(1), "%F");
+    data = to_string( rs.get<tm>(1));
     laboratorio = LaboratorioPtr(new Laboratorio(rs.get<int>(2)));
     solicitante = SolicitantePtr(new Solicitante(rs.get<int>(3)));
     //usuario = rs.get(4)

@@ -44,7 +44,7 @@ function mostrarEntrada(id)
             var linha = formEntrada.querySelector("#tabelaMateriais tbody tr:last-child");
             linha.querySelector("input[name=material]").value = dados.materiais[i].nome;
             linha.querySelector("input[name=quantidade]").value = dados.materiais[i].quantidade;
-            linha.querySelector("input[name=validade]").value = dados.materiais[i].validade.substr(0, 10);
+            linha.querySelector("input[name=validade]").value = dados.materiais[i].validade;
             linha.querySelector("input[name=lote]").value = dados.materiais[i].lote;
             linha.querySelector("input[name=valor]").value = dados.materiais[i].valor;
             

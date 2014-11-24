@@ -33,8 +33,13 @@ namespace
     const size_t ERROR_UNHANDLED_EXCEPTION = 3;
 #endif
 
+#ifdef _WIN32
+    const string NAME_LOCK = "/labEstoque.lock";
+#else
+    const string NAME_LOCK = "/labEstoque.lock";
+#endif
+#define ARQ_LOCK std::getenv("TMP")+NAME_LOCK
 
-	const char* ARQ_LOCK = "tmp/labEstoque.lock";
 
     void configureDao(const string& url, const string& user, const string& password, const string& dataBase){
 		DaoPrt dao = Dao::getInstance(url, user, password, dataBase);
@@ -50,7 +55,7 @@ namespace
 
 	bool verificaArqLock()
 	{
-		ifstream arq(ARQ_LOCK);
+        ifstream arq(ARQ_LOCK);
 		return !arq.is_open();
 	}
 
@@ -102,8 +107,8 @@ int main(int argc, char** argv)
 		}
 		cout << "WebDir: " << webDir << endl;
 
-		makedir("tmp"); //mkdir("tmp", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-		ofstream arq(ARQ_LOCK);
+        //makedir("tmp"); //mkdir("tmp", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        ofstream arq(ARQ_LOCK);
 		if (!arq.good()){
 			cerr << "problemas ao criar o arquivo de trava: " << ARQ_LOCK << endl;
 			return ERROR_IN_FILE_LOCK;

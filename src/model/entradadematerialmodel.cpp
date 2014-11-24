@@ -60,7 +60,7 @@ EntradaDeMaterialList EntradaDeMaterialModel::getListEntradaDeMaterial(Pesquisa&
         entradaMaterial->setValor(rs.get<double>(13));
         entradaMaterial->setQuantidade(rs.get<int>(14));
         EntradaPtr entrada(new Entrada());
-        entrada->setData(to_string( rs.get<tm>(16), "%F"));
+        entrada->setData(to_string( rs.get<tm>(16)));
         entrada->setFornecedor(rs.get<string>(17));
         entrada->setAnotacao(rs.get<string>(18));
         LotePtr lote(new Lote);
@@ -96,7 +96,7 @@ EntradaDeMaterialList EntradaDeMaterialModel::getListMaterialComLote()
 		LotePtr lote(new Lote);
         lote->setId(rs.get<int>(6, 0));
         lote->setNome(rs.get<string>(7, ""));
-        lote->setValidade(rs.get<string>(8, ""));
+        lote->setValidade( to_string(rs.get<tm>(8, tm())));
         lote->setQuantidade(rs.get<int>(9, 0));
 
 		EntradaDeMaterialPtr entradaMaterial(new EntradaDeMaterial());

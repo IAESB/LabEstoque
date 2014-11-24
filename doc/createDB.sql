@@ -128,18 +128,31 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `lab_estoque`.`lote`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `lab_estoque`.`lote` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(45) NULL,
+  `validade` TIMESTAMP NULL,
+  `quantidade` INT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `lab_estoque`.`entrada_de_material`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `lab_estoque`.`entrada_de_material` (
+  `id` INT NOT NULL AUTO_INCREMENT,
   `entrada_id` INT NOT NULL,
   `material_id` INT NOT NULL,
-  `lote` VARCHAR(45) NULL,
+  `lote_id` INT NULL,
   `valor` DECIMAL NULL,
-  `validade` DATETIME NULL,
   `quantidade` INT NULL,
-  PRIMARY KEY (`entrada_id`, `material_id`),
+  PRIMARY KEY (`id`, `entrada_id`, `material_id`),
   INDEX `fk_entrada_has_material_material1_idx` (`material_id` ASC),
   INDEX `fk_entrada_has_material_entrada1_idx` (`entrada_id` ASC),
+  INDEX `fk_entrada_de_material_lote1_idx` (`lote_id` ASC),
   CONSTRAINT `fk_entrada_has_material_entrada1`
     FOREIGN KEY (`entrada_id`)
     REFERENCES `lab_estoque`.`entrada` (`id`)
@@ -149,6 +162,11 @@ CREATE TABLE IF NOT EXISTS `lab_estoque`.`entrada_de_material` (
     FOREIGN KEY (`material_id`)
     REFERENCES `lab_estoque`.`material` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_entrada_de_material_lote1`
+    FOREIGN KEY (`lote_id`)
+    REFERENCES `lab_estoque`.`lote` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -157,12 +175,15 @@ ENGINE = InnoDB;
 -- Table `lab_estoque`.`saida_de_material`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `lab_estoque`.`saida_de_material` (
+  `id` INT NOT NULL AUTO_INCREMENT,
   `saida_id` INT NOT NULL,
   `material_id` INT NOT NULL,
+  `lote_id` INT NULL,
   `quantidade` INT NULL,
-  PRIMARY KEY (`saida_id`, `material_id`),
+  PRIMARY KEY (`id`, `saida_id`, `material_id`),
   INDEX `fk_saida_has_material_material1_idx` (`material_id` ASC),
   INDEX `fk_saida_has_material_saida1_idx` (`saida_id` ASC),
+  INDEX `fk_saida_de_material_lote1_idx` (`lote_id` ASC),
   CONSTRAINT `fk_saida_has_material_saida1`
     FOREIGN KEY (`saida_id`)
     REFERENCES `lab_estoque`.`saida` (`id`)
@@ -172,40 +193,46 @@ CREATE TABLE IF NOT EXISTS `lab_estoque`.`saida_de_material` (
     FOREIGN KEY (`material_id`)
     REFERENCES `lab_estoque`.`material` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_saida_de_material_lote1`
+    FOREIGN KEY (`lote_id`)
+    REFERENCES `lab_estoque`.`lote` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `lab_estoque`.`relatorio`
+-- Table `lab_estoque`.`pesquisa`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `lab_estoque`.`relatorio` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(45) NULL,
-  `data_inicial` TIMESTAMP NULL,
-  `data_fianal` TIMESTAMP NULL,
-  `isEntrada` TINYINT(1) NULL,
-  `isSaida` TINYINT(1) NULL,
-  `materiais` TINYTEXT NULL,
-  `quantidadeMaterialDe` INT NULL,
-  `quantidadeMaterialAte` INT NULL,
-  `lote` VARCHAR(45) NULL,
-  `validadade` VARCHAR(45) NULL,
-  `valor` VARCHAR(45) NULL,
-  `quantidadeEntradaDe` INT NULL,
-  `quantidadeEntradaAte` INT NULL,
-  `quantidadeSaidaDe` INT NULL,
-  `quantidadeSaidaAte` INT NULL,
-  `usuario_id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `lab_estoque`.`pesquisa` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(45) NULL DEFAULT NULL,
+  `data_inicial` TIMESTAMP NULL DEFAULT NULL,
+  `data_fianal` TIMESTAMP NULL DEFAULT NULL,
+  `isEntrada` TINYINT(1) NULL DEFAULT NULL,
+  `isSaida` TINYINT(1) NULL DEFAULT NULL,
+  `materiais` TINYTEXT NULL DEFAULT NULL,
+  `quantidadeMaterialDe` INT(11) NULL DEFAULT NULL,
+  `quantidadeMaterialAte` INT(11) NULL DEFAULT NULL,
+  `lote` VARCHAR(45) NULL DEFAULT NULL,
+  `validadade` VARCHAR(45) NULL DEFAULT NULL,
+  `valor` VARCHAR(45) NULL DEFAULT NULL,
+  `quantidadeEntradaDe` INT(11) NULL DEFAULT NULL,
+  `quantidadeEntradaAte` INT(11) NULL DEFAULT NULL,
+  `quantidadeSaidaDe` INT(11) NULL DEFAULT NULL,
+  `quantidadeSaidaAte` INT(11) NULL,
+  `laboratorio` VARCHAR(45) NULL,
+  `solicitante` VARCHAR(45) NULL,
+  `usuario_id` INT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_relatorio_usuario1_idx` (`usuario_id` ASC),
-  CONSTRAINT `fk_relatorio_usuario1`
+  INDEX `fk_pesquisa_usuario1_idx` (`usuario_id` ASC),
+  CONSTRAINT `fk_pesquisa_usuario1`
     FOREIGN KEY (`usuario_id`)
     REFERENCES `lab_estoque`.`usuario` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB
-COMMENT = '	';
+ENGINE = InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

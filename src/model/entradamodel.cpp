@@ -1,5 +1,4 @@
 ﻿#include "entradamodel.h"
-#include "exception/exception.h"
 
 EntradaModel::EntradaModel()
 {
@@ -75,7 +74,7 @@ void EntradaModel::excluirEntrada(string id)
 {
     EntradaDeMaterialList emList = entradaDeMaterialModel.getListEntradaDeMaterial(id);
     if(saidaDeMaterialModel.existeSaidaApartirDasEntradas(emList))
-        throw Exception("Inpossível remover entradas que ja existem saida");
+        throw std::runtime_error("Inpossível remover entradas que ja existem saida");
 
     dao->executeUpdate("DELETE FROM entrada_de_material WHERE entrada_id=" + id);
 

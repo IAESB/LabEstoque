@@ -60,7 +60,7 @@ EntradaDeMaterial::EntradaDeMaterial(soci::row& rs)
     quantidade = rs.get<int>(5);
     entrada = EntradaPtr(new Entrada);
     entrada->setId(rs.get<int>(6));
-    entrada->setData(to_string( rs.get<std::tm>(7), "%F") );
+    entrada->setData(to_string( rs.get<std::tm>(7)) );
     entrada->setFornecedor(rs.get<string>(8));
     entrada->setAnotacao(rs.get<string>(9));
     //entrada->setUsuario(rs.get<int>(10));
@@ -73,7 +73,7 @@ EntradaDeMaterial::EntradaDeMaterial(soci::row& rs)
 	lote = LotePtr(new Lote);
     lote->setId(rs.get<int>(17, 0));
     lote->setNome(rs.get<string>(18, ""));
-    lote->setValidade(rs.get<string>(19, ""));
+    lote->setValidade(to_string(rs.get<tm>(19, tm())));
     lote->setQuantidade(rs.get<int>(20, 0));
 }
 
