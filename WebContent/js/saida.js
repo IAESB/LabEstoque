@@ -87,6 +87,8 @@ function mostrarSaida(idSaida)
     {
         document.querySelector("#formNovaSaida input[name=data]").value = saida.data.substr(0, 10);
         
+        document.querySelector("#formNovaSaida textarea[name=anotacao]").value = saida.anotacao;
+        
         var opt = document.querySelector("#laboratorios option[label='"+saida.laboratorio+"'");
         document.querySelector("#formNovaSaida input[name=laboratorio]").value = opt.value;
         

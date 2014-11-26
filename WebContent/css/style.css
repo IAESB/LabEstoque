@@ -1111,6 +1111,3 @@ body{
 input ,  select , textarea { 
     color :  #000; 
 }
-#conteudo{
-    overflow-y: auto;
-}

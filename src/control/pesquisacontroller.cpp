@@ -26,6 +26,8 @@ void PesquisaController::listaRelatorio(Request &request, StreamResponse& respon
 
 void PesquisaController::pesquisarRelatorio(Request &request, StreamResponse &response)
 {
+    int somaQtd=0, somaEmEstoque=0;
+    float somaValor=0;
 	try{
 		calassomys::View view;
 		view.setContent(ifstream(server->getOption("document_root") + "/template.html"));
@@ -56,11 +58,25 @@ void PesquisaController::pesquisarRelatorio(Request &request, StreamResponse &re
                             <td>" + to_string(ent->getValor(), 2) + "</td>\
                             <td>" + to_string(ent->getMaterial()->getQuantidade()) + "</td>\
                         </tr>\n";
+                somaQtd+=ent->getQuantidade();
+                somaValor+=ent->getValor();
+                somaEmEstoque+=ent->getMaterial()->getQuantidade();
             }
+            html += "<tr>\
+                        <th>Total</th> \
+                        <th>-</th>\
+                        <th>-</th>\
+                        <th>-</th>\
+                        <th>" + to_string(somaQtd) + "</th>\
+                        <th>-</th>\
+                        <th>" + to_string(somaValor, 2) + "</th>\
+                        <th>" + to_string(somaEmEstoque) + "</th>\
+                    </tr>\n";
             view.insertContentId("tbodyEntrada", html);
 		}
 		html.erase();
         if(pesquisa.IsSaida()){
+            somaQtd=0, somaValor=0, somaEmEstoque=0;
             const SaidaDeMaterialList& saidaList = model.getListSaidaDeMaterial(pesquisa);
             for (SaidaDeMaterialPtr& sai : *saidaList)
             {
@@ -73,7 +89,19 @@ void PesquisaController::pesquisarRelatorio(Request &request, StreamResponse &re
                             <td>"+sai->getSaida()->getLaboratorio()->getNome()+"</td> \
                             <td>" + to_string(sai->getMaterial()->getQuantidade()) + "</td>\
                          </tr>";
+
+                somaQtd+=sai->getQuantidade();
+                somaEmEstoque+=sai->getMaterial()->getQuantidade();
             }
+            html += "<tr> \
+                        <th>Total</th> \
+                        <th>-</th> \
+                        <th>-</th> \
+                        <th>"+to_string(somaQtd)+"</th> \
+                        <th>-</th> \
+                        <th>-</th> \
+                        <th>" + to_string(somaEmEstoque) + "</th>\
+                     </tr>";
             view.insertContentId("tbodySaida", html);
         }
 		response << view;

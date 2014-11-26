@@ -10,3 +10,7 @@
 input[type=number]{
     width: 100%;
 }
+
+textarea {
+    width: 99.5%;
+}

@@ -22,7 +22,7 @@
 				<input name="data" type="date" required/>
 			</span>
 			<span>
-				<label>Laboratório:</label>
+				<label>Destino:</label>
 				<input list="laboratorios" name="laboratorio" required/>
 				<datalist id="laboratorios">
 				</datalist>
@@ -57,6 +57,9 @@
 				</table>
 				<button id="maisUm" onclick="maisUmMaterial()" type="button">Mais Um</button>
 			</fieldset>
+            <label>Anotação:
+                <textarea name="anotacao" rows="3" id="anotacao"></textarea>
+            </label>
             <button type="submit" id="btSalvar">Salvar</button>
 			<button type="button" id="btAlterar">Alterar</button>
 			<button type="button" id="btExcluir">Excluir</button>

@@ -35,7 +35,7 @@ link_directories(c:/Boost/lib)
 
 add_definitions(-DCPPCONN_LIB_BUILD)
 add_executable(${PROJECT_NAME} ${FULL_SRC})
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} _mongoose jsoncpp htmlcxx soci_mysql soci_core mysql)
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} _mongoose jsoncpp htmlcxx soci_mysql soci_core mysql psapi)
 if(UNIX)
 	target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} pthread)
 else()

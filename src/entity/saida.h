@@ -15,6 +15,7 @@ class Saida
 {
     int id;
     string data;
+    string anotacao;
     UsuarioPtr usuario;
     LaboratorioPtr laboratorio;
     SolicitantePtr solicitante;
@@ -38,6 +39,8 @@ public:
     void setSolicitante(const SolicitantePtr &value);
     SaidaDeMaterialList getSaidaDeMaterialList() const;
     void setSaidaDeMateriais(const SaidaDeMaterialList &value);
+    string getAnotacao() const;
+    void setAnotacao(const string &value);
 };
 typedef shared_ptr<Saida> SaidaPtr;
 typedef shared_ptr< vector<SaidaPtr> > SaidaList;

@@ -22,6 +22,7 @@ void SaidaController::getSaida(Request &request, StreamResponse &response)
     json["data"] = saida->getData();
     json["laboratorio"] = saida->getLaboratorio()->getId();
     json["solicitante"] = saida->getSolicitante()->getId();
+    json["anotacao"] = saida->getAnotacao();
     for(SaidaDeMaterialPtr& mat: *saida->getSaidaDeMaterialList())
     {
         Json::Value matJ;
@@ -42,8 +43,9 @@ void SaidaController::alterarSaida(Request &request, StreamResponse &response)
 		response.setCode(301);
 		response.setHeader("Location", "/saida");
     }
-	catch (exception& ex){
+    catch (const exception& ex){
         cerr << ex.what() << endl;
+        cerr << booster::trace(ex);
 		mensagem(response, ex.what());
 	}
 }
@@ -54,7 +56,7 @@ void SaidaController::excluirSaida(Request &request, StreamResponse &response)
 		model.excluirSaida( request.get("id") );
 		response << "ok";
     }
-	catch (exception& ex){
+    catch (const exception& ex){
         cerr << ex.what() << endl;
 		response << ex.what();
 	}
@@ -129,9 +131,11 @@ SaidaPtr SaidaController::criarSaida(Request& request)
 	LaboratorioPtr laboratorio(new Laboratorio);
 	laboratorio->setNome(variables.find("laboratorio")->second);
 	string data = variables.find("data")->second;
+    string anotacao = variables.find("anotacao")->second;
 	variables.erase("solicitante");
-	variables.erase("data");
-	variables.erase("laboratorio");
+    variables.erase("data");
+    variables.erase("laboratorio");
+    variables.erase("anotacao");
     auto itr = variables.find("id");
     if (itr != variables.end())
         variables.erase(itr);
@@ -140,6 +144,7 @@ SaidaPtr SaidaController::criarSaida(Request& request)
 	saida->setData(data);
 	saida->setSolicitante(solicitante);
 	saida->setLaboratorio(laboratorio);
+    saida->setAnotacao(anotacao);
 
 	SaidaDeMaterialList vecMateriais(new vector<SaidaDeMaterialPtr>);
 	while (variables.size())

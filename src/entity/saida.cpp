@@ -62,6 +62,16 @@ void Saida::setSaidaDeMateriais(const SaidaDeMaterialList &value)
 {
     materiais = value;
 }
+
+string Saida::getAnotacao() const
+{
+    return anotacao;
+}
+
+void Saida::setAnotacao(const string &value)
+{
+    anotacao = value;
+}
 Saida::Saida()
 {
 }
@@ -78,7 +88,8 @@ Saida::Saida(soci::row &rs)
     laboratorio = LaboratorioPtr(new Laboratorio(rs.get<int>(2)));
     solicitante = SolicitantePtr(new Solicitante(rs.get<int>(3)));
     //usuario = rs.get(4)
-    if(rs.size()>6){
+    anotacao = rs.get<string>(5, "");
+    if(rs.size()>7){
         laboratorio->setNome(rs.get<string>("lab"));
         solicitante->setNome(rs.get<string>("solicitante"));
     }
@@ -86,9 +97,9 @@ Saida::Saida(soci::row &rs)
 
 string Saida::getSqlInsert()
 {
-    string sql = "INSERT INTO saida(data, laboratorio_id";
+    string sql = "INSERT INTO saida(data, anotacao, laboratorio_id";
     sql += solicitante?", solicitante_id)":")";
-    sql+= "VALUE( '"+data+"', '"+to_string(laboratorio->getId())+"'";
+    sql+= "VALUE( '"+data+"', '"+anotacao+"', '"+to_string(laboratorio->getId())+"'";
     sql += solicitante?", '"+to_string(solicitante->getId())+"')":")";
     return sql;
 }
@@ -96,7 +107,7 @@ string Saida::getSqlInsert()
 
 string Saida::getSqlUpdate()
 {
-	string sql = "UPDATE saida SET data='" + data + "', laboratorio_id='" + to_string(laboratorio->getId()) + "'";
+    string sql = "UPDATE saida SET data='" + data + "', anotacao='"+anotacao+"', laboratorio_id='" + to_string(laboratorio->getId()) + "'";
 	sql += solicitante ? ", solicitante_id='" + to_string(solicitante->getId()) + "'" : "";
 	sql += " WHERE id="+to_string(id);
 	return sql;

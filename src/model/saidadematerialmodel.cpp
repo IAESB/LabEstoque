@@ -88,14 +88,14 @@ SaidaDeMaterialList SaidaDeMaterialModel::getListSaidaDeMaterial(Pesquisa &pesqu
         saida->setData(to_string( rs.get<tm>(15) ));
 
 		LaboratorioPtr laboratorio(new Laboratorio);
-        laboratorio->setNome(rs.get<string>(20));
+        laboratorio->setNome(rs.get<string>(21));
 
 		SolicitantePtr solicitante(new Solicitante());
-        solicitante->setNome(rs.get<string>(22));
+        solicitante->setNome(rs.get<string>(23));
 
         LotePtr lote(new Lote);
-        lote->setId(rs.get<int>(24, 0));
-        lote->setNome(rs.get<string>(25, ""));
+        lote->setId(rs.get<int>(25, 0));
+        lote->setNome(rs.get<string>(26, ""));
 
 		saida->setLaboratorio(laboratorio);
 		saida->setSolicitante(solicitante);
