@@ -33,10 +33,11 @@ void PesquisaController::pesquisarRelatorio(Request &request, StreamResponse &re
 		view.setContent(ifstream(server->getOption("document_root") + "/template.html"));
 		view.insertContentId("conteudo", ifstream(server->getOption("document_root") + "/relatorio.html"));
 
+        string html;
 		MateiralList listMat = model.getListMaterial();
 		for (MateiralPtr& material : *listMat)
-			view.insertContentId("selectMaterial",
-			"<option value='" + to_string(material->getId()) + "'>" + material->getNome() + "</option>");
+            html+="<option value='" + to_string(material->getId()) + "'>" + material->getNome() + "</option>";
+        view.insertContentId("selectMaterial", html);
 
         Pesquisa pesquisa = criarPesquisa(request);
 
@@ -44,7 +45,31 @@ void PesquisaController::pesquisarRelatorio(Request &request, StreamResponse &re
         view.setContentId("dataInicial", pesquisa.getData_inicial());
         view.setContentId("dataFinal", pesquisa.getData_fianal());
 
-		string html;
+        html.erase();
+        if(pesquisa.getIsMaterial()){
+            listMat = model.getListMaterial(pesquisa);
+            GrupoPtr grupo;            
+            for (MateiralPtr& material : *listMat)
+            {
+                grupo = material->getGrupo();
+                html += "<tr>\
+                            <td>" + material->getNome() + "</td> \
+                            <td>" + material->getDescricao() + "</td>\
+                            <td>" + (grupo?grupo->getNome():"") + "</td>\
+                            <td>" + to_string(material->getQuantidade()) + "</td>\
+                        </tr>\n";
+                somaQtd+=material->getQuantidade();
+            }
+            html += "<tr>\
+                        <th>Total</th> \
+                        <td>-</td>\
+                        <td>-</td>\
+                        <th>" + to_string(somaQtd) + "</th>\
+                    </tr>\n";
+            view.insertContentId("tbodyMaterial", html);
+        }
+        somaQtd=0;
+        html.erase();
         if (pesquisa.IsEntrada()){
             const EntradaDeMaterialList& entradaList = model.getListEntradaDeMaterial(pesquisa);
             for(EntradaDeMaterialPtr& ent: *entradaList){
@@ -70,7 +95,7 @@ void PesquisaController::pesquisarRelatorio(Request &request, StreamResponse &re
                         <th>" + to_string(somaQtd) + "</th>\
                         <th>-</th>\
                         <th>" + to_string(somaValor, 2) + "</th>\
-                        <th>" + to_string(somaEmEstoque) + "</th>\
+                        <th>-</th>\
                     </tr>\n";
             view.insertContentId("tbodyEntrada", html);
 		}
@@ -100,7 +125,7 @@ void PesquisaController::pesquisarRelatorio(Request &request, StreamResponse &re
                         <th>"+to_string(somaQtd)+"</th> \
                         <th>-</th> \
                         <th>-</th> \
-                        <th>" + to_string(somaEmEstoque) + "</th>\
+                        <th>-</th>\
                      </tr>";
             view.insertContentId("tbodySaida", html);
         }
@@ -120,6 +145,7 @@ Pesquisa PesquisaController::criarPesquisa(Request &request)
     relatorio.setDataFianal( request.get("dataFinal") );
     relatorio.setIsEntrada( request.get("entrada")=="on" );
     relatorio.setIsSaida(request.get("saida")=="on" );
+    relatorio.setIsMaterial(request.get("materialChk")=="on");
     vector<string> vecIdMaterial;
     auto vars = request.getAllVariable();
     auto ppp = vars.equal_range("material");

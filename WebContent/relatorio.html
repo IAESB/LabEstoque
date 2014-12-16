@@ -11,34 +11,35 @@
             <form action="/relatorio/pesquisar" method="get" id="formNovoRelatorio">
                 <label>Nome do Relatorio: <input name="nome" placeholder="Identifique o relatorio"></label>
                 <fieldset>
+                    <legend>Tipo</legend>
+                    <label><input type="checkbox" name="materialChk" onchange="mostrarDetalheMaterial(this);">Material</label>
+                    <label><input type="checkbox" name="entrada" onchange="mostrarDetalheEntrada(this);">Entrada</label>
+                    <label><input type="checkbox" name="saida" onchange="mostrarDetalheSaida(this);">Saida</label>
+                </fieldset>
+                <fieldset>
                     <legend>Periodo</legend>
                     <label>Inicio<input type="date" name="dataIncial" required></label><br/>
                     <label>Fim<input type="date" name="dataFinal" required></label>
                 </fieldset>
                 <fieldset>
-                    <legend>Tipo</legend>
-                    <label><input type="checkbox" name="entrada" onchange="mostrarDetalheEntrada(this);">Entrada</label>
-                    <label><input type="checkbox" name="saida" onchange="mostrarDetalheSaida(this);">Saida</label>
-                </fieldset>
-                <fieldset>
                     <legend>Materiais</legend>
                     <select name="material" multiple id="selectMaterial">
                     </select><br/>
-                    <label>Em estoque de <input name="quantidadeMaterialDe" type="number"> ate <input name="quantidadeMaterialAte" type="number"> </label>
-                    <label>Lote<input name="lote"></label><br/>
+                    <label>Qtd. de <input name="quantidadeMaterialDe" type="number"> ate <input name="quantidadeMaterialAte" type="number"> </label>
                 </fieldset>
                 <fieldset id="detalheEntrada">
                     <legend>Entrada</legend>
                     <label>Fornecedor<input name="fornecedor"></label><br/>
                     <label>Validade<input name="validade"></label><br/>
                     <label>Valor<input name="valor"></label><br/>
-                    <label>Quantidade de <input name="quantidadeEntradaDe" type="number"> ate <input name="quantidadeEntradaAte" type="number"> </label>
+                    <label>Lote<input name="lote"></label><br/>
+                    <label>Qtd. de <input name="quantidadeEntradaDe" type="number"> ate <input name="quantidadeEntradaAte" type="number"> </label>
                 </fieldset>
                 <fieldset id="detalheSaida">
                     <legend>Saida</legend>
                     <label>Destino<input name="laboratorio"></label><br/>
                     <label>Solicitante<input name="solicitante"></label><br/>
-                    <label>Quantidade de <input name="quantidadeSaidaDe" type="number"> ate <input name="quantidadeSaidaAte" type="number"> </label>
+                    <label>Qtd. de <input name="quantidadeSaidaDe" type="number"> ate <input name="quantidadeSaidaAte" type="number"> </label>
                 </fieldset>
                 <button type="submit">Pesquisar</button>
             </form>
@@ -52,6 +53,22 @@
 
                 <p>Periodo de <label id="dataInicial">----</label> ate <label id="dataFinal">----</label></p>
 
+                <div id="relatorioMaterial">
+                    <h2>Materiais</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Descrição</th>
+                                <th>Grupo</th>
+                                <th>Quantidade</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyMaterial">
+                        </tbody>
+                    </table>
+                </div>
+                
                 <div id="relatorioEntrada">
                     <h2>Entradas</h2>
                     <table>
@@ -71,7 +88,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div id="relatorioSai   da">
+                <div id="relatorioSaida">
                     <h2>Saidas</h2>
                     <table>
                         <thead>

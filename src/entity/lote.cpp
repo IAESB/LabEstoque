@@ -54,18 +54,20 @@ Lote::Lote(soci::row &rs)
 {
     id = rs.get<int>(0);
     nome = rs.get<string>(1);
-    validade = to_string( rs.get<tm>(2) );
-    quantidade = rs.get<int>(3);
+    validade = to_string( rs.get<tm>(2, tm()) );
+    quantidade = rs.get<int>(3, 0);
 }
 
 string Lote::getSqlInsert()
 {
-    return "INSERT INTO lote(nome, validade, quantidade) VALUES('"+nome+"', '"+validade+"', '"+to_string(quantidade)+"')";
+    string val = validade.size()?"'"+validade+"'":"NULL";
+    return "INSERT INTO lote(nome, validade, quantidade) VALUES('"+nome+"', "+val+", '"+to_string(quantidade)+"')";
 }
 
 string Lote::getSqlUpdate()
 {
-    return "UPDATE lote SET nome='"+nome+"', validade='"+validade+"', quantidade='"+to_string(quantidade)+"' WHERE id="+to_string(id);
+    string val = validade.size()?"validade='"+validade+"',":"";
+    return "UPDATE lote SET nome='"+nome+"', "+val+" quantidade='"+to_string(quantidade)+"' WHERE id="+to_string(id);
 }
 
 string Lote::getSqlDelete()

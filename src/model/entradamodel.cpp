@@ -73,7 +73,7 @@ void EntradaModel::salvaListEntradaDeMaterial(const EntradaDeMaterialList& list)
 void EntradaModel::excluirEntrada(string id)
 {
     EntradaDeMaterialList emList = entradaDeMaterialModel.getListEntradaDeMaterial(id);
-    if(saidaDeMaterialModel.existeSaidaApartirDasEntradas(emList))
+    if(emList->size() && saidaDeMaterialModel.existeSaidaApartirDasEntradas(emList))
         throw std::runtime_error("Inpossível remover entradas que ja existem saida");
 
     dao->executeUpdate("DELETE FROM entrada_de_material WHERE entrada_id=" + id);

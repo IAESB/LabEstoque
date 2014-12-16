@@ -9,10 +9,11 @@ EntradaDeMaterialModel::EntradaDeMaterialModel()
 EntradaDeMaterialList EntradaDeMaterialModel::getListEntradaDeMaterial(string idEntrada)
 {
     return dao->select<EntradaDeMaterial>("entrada_de_material em ",
-                                          "em.*, e.*, m.*, l.*",
+                                          "em.*, e.*, m.*, l.*, g.*",
                                           "LEFT OUTER JOIN entrada e ON(em.entrada_id=e.id) \
                                            LEFT OUTER JOIN material m ON(em.material_id=m.id) \
                                            LEFT OUTER JOIN lote l ON(em.lote_id=l.id) \
+                                           LEFT OUTER JOIN grupo g ON(m.grupo_id=g.id)\
                                            WHERE em.entrada_id="+idEntrada);
 }
 

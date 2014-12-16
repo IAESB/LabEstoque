@@ -200,6 +200,17 @@ void Pesquisa::setLaboratorio(const string &value)
 {
     laboratorio = value;
 }
+
+
+bool Pesquisa::getIsMaterial() const
+{
+    return isMaterial;
+}
+
+void Pesquisa::setIsMaterial(bool value)
+{
+    isMaterial = value;
+}
 Pesquisa::Pesquisa()
 {
 }

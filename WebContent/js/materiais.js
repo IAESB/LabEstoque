@@ -15,6 +15,10 @@ function mostrarMaterial(id)
     excluir.style.display="";
     excluir.onclick = function(event)
     {
+        var decisao = confirm("Deseja realmente realizar essa exclusão permanentemente?");
+        if (!decisao){
+            return;
+        }
         window.location.href = "/material/excluir?id="+id;
     }; 
 }

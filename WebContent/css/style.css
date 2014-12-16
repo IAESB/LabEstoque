@@ -31,7 +31,7 @@ body{
 	font-family :verdana, arial, helvetica, helve, sans-serif;
 }
 .wrap{
-	width:80%;
+    width:98%;
 	margin:0 auto;
 }
 /*---start-header-----*/
@@ -213,7 +213,7 @@ body{
 /***** Media Quries *****/
 @media only screen and (max-width: 1024px) {
 	.wrap{
-		width:90%;
+		
 	}	
 }
 /*  GRID OF THREE   ============================================================================= */
@@ -305,14 +305,14 @@ body{
 /***** Media Quries *****/
 @media only screen and (max-width: 1024px) {
 	.wrap{
-		width:90%;
+		
 	}	
 }
 /*  GO FULL WIDTH AT LESS THAN 640 PIXELS */
 @media only screen and (max-width: 640px) {
 	
 	.wrap{
-		width:95%;
+		
 	}
 	.col { 
 		margin: 2% 0 2% 0%;
@@ -328,7 +328,7 @@ body{
 @media only screen and (max-width: 480px) {
 	
 	.wrap{
-		width:95%;
+		
 	}
 	.col { 
 		margin: 2% 0 2% 0%;
@@ -343,7 +343,7 @@ body{
 @media only screen and (max-width: 640px){
 	
 	.wrap{
-		width:95%;
+		
 	}
 	.col { 
 		margin: 2% 0 2% 0%;
@@ -359,7 +359,7 @@ body{
 @media only screen and (max-width: 480px) {
 	
 	.wrap{
-		width:95%;
+		
 	}
 	.col { 
 		margin: 2% 0 2% 0%;
@@ -482,14 +482,14 @@ body{
 /***** Media Quries *****/
 @media only screen and (max-width: 1024px) {
 	.wrap{
-		width:90%;
+		
 	}	
 }
 
 /*  GO FULL WIDTH AT LESS THAN 480 PIXELS */
 @media only screen and (max-width: 640px){
 	.wrap{
-		width:95%;
+		
 	}
 	.col { 
 		margin: 2% 0 2% 0%;
@@ -510,7 +510,7 @@ body{
 
 @media only screen and (max-width: 480px) {
 	.wrap{
-		 width:95%;
+		
 	}
 	.col { 
 		margin: 2% 0 2% 0%;
@@ -655,7 +655,6 @@ body{
 
 @media only screen and (max-width: 640px) and (min-width: 480px)  {
 	.wrap{
-		width:95%;
 	}
 	.image{
 		padding:3%;
@@ -680,7 +679,6 @@ body{
 @media only screen and (max-width: 480px) {
 	
 	.wrap{
-		width:90%;
 	}
 	.image{
 		padding:5%;
@@ -864,14 +862,14 @@ body{
 /***** Media Quries *****/
 @media only screen and (max-width: 1024px) {
 	.wrap{
-		width:95%;
+		
 	}	
 }
 /*  GO FULL WIDTH AT LESS THAN 800 PIXELS */
 
 @media only screen and (max-width: 800px) {
 	.wrap{
-		width:95%;
+		
 	}
 	.span_2_of_3 {
 		width:94%;
@@ -890,7 +888,7 @@ body{
 
 @media only screen and (max-width: 640px) and (min-width: 480px) {
 	.wrap{
-		width:95%;
+		
 	}
 	.span_2_of_3 {
 		width:94%;
@@ -912,7 +910,7 @@ body{
 
 @media only screen and (max-width: 480px) {
 	.wrap{
-		width:95%;
+		
 	}
 	.span_2_of_3 {
 		width:90%;
@@ -932,12 +930,12 @@ body{
 /*  responsive-design */
 @media only screen and (max-width: 1366px) {
 	.wrap{
-		width:95%;
+		/*width:95%;*/
 	}
 }
 @media only screen and (max-width:1280px) {
 	.wrap{
-		width:90%;
+		/*width:90%;*/
 	}
 	.flexslider {
 		width: 77%;
@@ -965,7 +963,7 @@ body{
 }
 @media only screen and (max-width:1024px) {
 	.wrap{
-		width:90%;
+		/*width:90%;*/
 	}
 	.flexslider {
 		width: 75%;
@@ -1000,7 +998,7 @@ body{
 }
 @media only screen and (max-width:800px) {
 	.wrap{
-		width:760px;
+		
 	}
 	.banner-slider {
 		background-image:none;
@@ -1034,7 +1032,7 @@ body{
 }
 @media only screen and (max-width:640px) {
 	.wrap{
-		width:90%;
+		
 	}
 	.logo {
 		float:none;
@@ -1080,7 +1078,7 @@ body{
 }
 @media only screen and (max-width:480px) {
 	.wrap{
-		width:90%;
+		
 	}
 	.top-nav ul li a {
 		padding:20px 13.1px;

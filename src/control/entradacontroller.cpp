@@ -104,6 +104,18 @@ EntradaDeMaterialList EntradaController::criarEntradas(Request& request)
 			entradaDeMaterial->setValor(stof(itr->second.empty() ? "0" : itr->second));
 			variables.erase(itr);
 		}
+        itr = variables.find("grupo_" + id);
+        if (itr != variables.end())
+        {
+            material->setGrupo(GrupoPtr(new Grupo(itr->second)));
+            variables.erase(itr);
+        }
+        itr = variables.find("descricao_" + id);
+        if (itr != variables.end())
+        {
+            material->setDescricao(itr->second);
+            variables.erase(itr);
+        }
 	}
 
 	return vecEntradaMaetrial;
@@ -166,6 +178,8 @@ void EntradaController::getEntrada(Request &request, StreamResponse &response)
         mat["validade"] = ptr->getLote()->getValidade();
         mat["valor"] = ptr->getValor();
         mat["lote"] = ptr->getLote()->getNome();
+        mat["grupo"] = ptr->getMaterial()->getGrupo()->getNome();
+        mat["descricao"] = ptr->getMaterial()->getDescricao();
         json["materiais"].append(mat);
     }
     response << json;

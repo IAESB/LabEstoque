@@ -61,6 +61,20 @@ MateiralList MaterialModel::getListMaterial()
     return listMat;
 }
 
+MateiralList MaterialModel::getListMaterial(Pesquisa &pesquisa)
+{
+    string where;
+    for (string& id : pesquisa.getMateriais())
+        where += (where.empty()?" m.id=":" OR m.id=") + id;
+
+    where += pesquisa.getQuantidadeMaterialDe()<0 ? "" : (where.size()?" AND ":"")+("m.quantidade>=" + to_string( pesquisa.getQuantidadeMaterialDe() ));
+    where += pesquisa.getQuantidadeMaterialAte()<0 ? "" : (where.size()?" AND ":"")+("m.quantidade<=" + to_string( pesquisa.getQuantidadeMaterialAte() ));
+
+    MateiralList listMat = dao->select<Mateiral>("material m", "m.id, m.nome, m.descricao, m.imagem, m.quantidade, g.id as grupo_id, g.nome as grupo_nome",
+                                                 "LEFT OUTER JOIN grupo g ON(m.grupo_id=g.id) "+(where.size()?"WHERE "+where:"")+" ORDER BY m.nome ");
+    return listMat;
+}
+
 GrupoList MaterialModel::getListGrupo()
 {
     return grupoModel.getListGrupo();

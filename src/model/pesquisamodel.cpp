@@ -9,6 +9,11 @@ MateiralList PesquisaModel::getListMaterial()
     return materialModel.getListMaterial();
 }
 
+MateiralList PesquisaModel::getListMaterial(Pesquisa &pesquisa)
+{
+    return materialModel.getListMaterial(pesquisa);
+}
+
 EntradaDeMaterialList PesquisaModel::getListEntradaDeMaterial(Pesquisa &pesquisa)
 {
     return entradaDeMaterialModel.getListEntradaDeMaterial(pesquisa);

@@ -25,8 +25,10 @@
 							<th>Nome</th>
 							<th>Quantidade</th>
 							<th>Validade</th>
-							<th>Lote</th>
-							<th>Valor</th>
+                            <th>Lote</th>
+                            <th>Valor</th>
+                            <th>Grupo</th>
+                            <th>Descrição</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -39,7 +41,9 @@
 							<td><input name="quantidade" type="number" required/></td>
 							<td><input name="validade" type="date"/></td>
 							<td><input name="lote" type="text"/></td>
-							<td><input name="valor" type="number" step="any" pattern="^\d+(\.|\,)\d{2}$"/></td>
+                            <td><input name="valor" type="number" step="any" pattern="^\d+(\.|\,)\d{2}$"/></td>
+                            <td><input name="grupo" type="text"/></td>
+                            <td><input name="descricao" type="text"/></td>
 							<td><button id="removerLinha" onclick="removeMaterial(this)" type="button" alt="Remover" disabled>X</button></td>
 						</tr>
 					</tbody>

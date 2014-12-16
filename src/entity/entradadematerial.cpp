@@ -75,6 +75,7 @@ EntradaDeMaterial::EntradaDeMaterial(soci::row& rs)
     lote->setNome(rs.get<string>(18, ""));
     lote->setValidade(to_string(rs.get<tm>(19, tm())));
     lote->setQuantidade(rs.get<int>(20, 0));
+    material->setGrupo(GrupoPtr(new Grupo(rs.get<string>(22, ""))));
 }
 
 string EntradaDeMaterial::getSqlInsert()

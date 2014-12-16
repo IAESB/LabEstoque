@@ -44,6 +44,7 @@ endif()
 
 
 # install
-#install (FILES libmysql.dll DESTINATION bin)
+install (FILES restart.bat restartHide.vbs createDump.bat DESTINATION bin)
+install (FILES doc/estoqueLabQuimica.mwb DESTINATION doc)
 install (DIRECTORY WebContent/ DESTINATION WebContent)
 install (TARGETS ${PROJECT_NAME} DESTINATION bin)

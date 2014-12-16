@@ -75,12 +75,14 @@ Mateiral::Mateiral(soci::row &rs)
     descricao = rs.get<string>(2);
     imagem = rs.get<string>(3);
     quantidade = rs.get<int>(4);
-    if (rs.size()>6){
-		GrupoPtr grupo(new Grupo);
-        grupo->setId(rs.get<int>(5, 0));
-        grupo->setNome(rs.get<string>(6, ""));
-		setGrupo(grupo);
-	}
+    int grupoId = rs.get<int>(5, 0);
+    if(grupoId){
+        grupo = GrupoPtr(new Grupo);
+        grupo->setId(grupoId);
+        if (rs.size()>6){
+            grupo->setNome(rs.get<string>(6, ""));
+        }
+    }
 }
 
 string Mateiral::getSqlInsert()

@@ -44,6 +44,10 @@ function abilitaEdicao(formNovaSaida)
 
 function removerSaida(id)
 {
+    var decisao = confirm("Deseja realmente realizar essa exclusão permanentemente?");
+    if (!decisao){
+        return;
+    }
     $.post("/saida/excluir", {id: id}, function(result)
     {
         if(result == "ok")
@@ -79,7 +83,7 @@ function mostrarSaida(idSaida)
     }
     
     var btExcluir = document.querySelector("#btExcluir");
-    btExcluir.onclick = function(event){
+    btExcluir.onclick = function(event){        
         removerSaida(idSaida);
     }
     

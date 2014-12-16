@@ -110,13 +110,17 @@ SaidaDeMaterialList SaidaDeMaterialModel::getListSaidaDeMaterial(Pesquisa &pesqu
 bool SaidaDeMaterialModel::existeSaidaApartirDasEntradas(EntradaDeMaterialList entMatList)
 {
     string lotesId;
+    string matsId;
     for(EntradaDeMaterialPtr& entMat: *entMatList){
-        if(lotesId.empty())
+        if(lotesId.empty()){
             lotesId= "lote_id=" + to_string(entMat->getLote()->getId());
-        else
+            matsId = "material_id=" + to_string(entMat->getMaterial()->getId());
+        }else{
             lotesId+=" OR lote_id="+to_string(entMat->getLote()->getId());
+            matsId = " OR material_id=" + to_string(entMat->getMaterial()->getId());
+        }
     }
-    auto result = dao->select<SaidaDeMaterial>("saida_de_material", "*", "WHERE "+lotesId);
+    auto result = dao->select<SaidaDeMaterial>("saida_de_material", "*", "WHERE ("+matsId+(lotesId.empty()?"":") AND ("+lotesId)+")");
 
     return result->size();
 }

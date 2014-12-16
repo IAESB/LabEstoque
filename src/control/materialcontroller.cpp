@@ -19,14 +19,16 @@ void MaterialController::listaMateriais(Request &request, StreamResponse &respon
             view.insertContentId("grupos", "<option value='"+grupo->getNome()+"'>");
         }
         MateiralList list = model.getListMaterial();
+        string grupoNome;
         for(MateiralPtr& material: *list)
         {
+            grupoNome = material->getGrupo()?material->getGrupo()->getNome():"";
             const string& img = material->getImagem().size()?material->getImagem():"/images/ampolas.jpg";
             string html = "<div class='material' name='"+material->getNome()+"' onclick=mostrarMaterial('" + to_string(material->getId()) + "') id='mat" + to_string(material->getId()) + "'>\
                     <img name='imagem' src='"+img+"'/>\
                     <h4 name='nome'>"+material->getNome()+"</h4>\
                     <label name='descricao'>"+material->getDescricao()+"</label>\
-                    <span>Grupo: <label name='grupo'>"+material->getGrupo()->getNome()+"</label></span>\
+                    <span>Grupo: <label name='grupo'>"+grupoNome+"</label></span>\
 					<span>Quantidade: <label name='quantidade'>"+to_string(material->getQuantidade())+"</label></span>\
                     </div>";
                     view.insertContentId("listMateiral", html);

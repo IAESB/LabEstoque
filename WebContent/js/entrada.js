@@ -1,6 +1,10 @@
 
 function removeEntrada(id)
 {
+    var decisao = confirm("Deseja realmente realizar essa exclusão permanentemente?");
+    if (!decisao){
+        return;
+    }
     $.post("/entrada/excluir", {id: id}, function(result)
     {
         if(result == "ok")
@@ -47,6 +51,8 @@ function mostrarEntrada(id)
             linha.querySelector("input[name=validade]").value = dados.materiais[i].validade;
             linha.querySelector("input[name=lote]").value = dados.materiais[i].lote;
             linha.querySelector("input[name=valor]").value = dados.materiais[i].valor;
+            linha.querySelector("input[name=grupo]").value = dados.materiais[i].grupo;
+            linha.querySelector("input[name=descricao]").value = dados.materiais[i].descricao;
             
             maisUmMaterial();
 		}

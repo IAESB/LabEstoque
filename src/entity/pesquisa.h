@@ -13,6 +13,7 @@ class Pesquisa
     string data_fianal;
     bool isEntrada;
     bool isSaida;
+    bool isMaterial;
     vector<string> materiais;
     int quantidadeMaterialDe;
     int quantidadeMaterialAte;
@@ -70,6 +71,8 @@ public:
     void setMateriais(const vector<string> &value);
     string getLaboratorio() const;
     void setLaboratorio(const string &value);
+    bool getIsMaterial() const;
+    void setIsMaterial(bool value);
 };
 
 #endif // RELATORIO_H

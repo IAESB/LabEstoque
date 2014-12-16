@@ -15,6 +15,7 @@ class PesquisaModel : public Model
 public:
     PesquisaModel();
     MateiralList getListMaterial();
+    MateiralList getListMaterial(Pesquisa& pesquisa);
     EntradaDeMaterialList getListEntradaDeMaterial(Pesquisa& pesquisa);
     SaidaDeMaterialList getListSaidaDeMaterial(Pesquisa& pesquisa);
 };
