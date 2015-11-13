@@ -2,12 +2,16 @@
 .material{
 	box-shadow: 10px 10px 5px #888888;
     background-color: #cccccc; 
-	width:250px;
+	width:305px;
 	height:100px;
 	float: left;
 	margin: 10px;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.vencido{
+	box-shadow: 10px 10px 5px #F00;	
 }
 
 .material h4{

@@ -79,7 +79,7 @@ void PesquisaController::pesquisarRelatorio(Request &request, StreamResponse &re
                             <td>" + ent->getEntrada()->getData().substr(0, 10) + "</td>\
                             <td>" + ent->getEntrada()->getFornecedor() + "</td>\
                             <td>" + to_string(ent->getQuantidade()) + "</td>\
-                            <td>" + ent->getLote()->getValidade().substr(0, 10) + "</td>\
+                            <td>" + to_string(ent->getLote()->getValidade()).substr(0, 10) + "</td>\
                             <td>" + to_string(ent->getValor(), 2) + "</td>\
                             <td>" + to_string(ent->getMaterial()->getQuantidade()) + "</td>\
                         </tr>\n";

@@ -7,6 +7,7 @@
 #include "materialmodel.h"
 #include "lotemodel.h"
 
+
 class EntradaDeMaterialModel
 {
     DaoPrt dao;
@@ -16,7 +17,7 @@ public:
     EntradaDeMaterialModel();
 	EntradaDeMaterialList getListEntradaDeMaterial(string id = "");
 	EntradaDeMaterialList getListEntradaDeMaterial(Pesquisa& relatorio);
-	EntradaDeMaterialList getListMaterialComLote();
+    EntradaDeMaterialList getListMaterialComLote(string ordeBy="m.nome");
     void salvarEntradaDeMaterial(EntradaDeMaterial& entradaDeMaterial);
 };
 

@@ -4,7 +4,9 @@
 #include "grupomodel.h"
 #include "entity/mateiral.h"
 #include "entity/pesquisa.h"
+#include "entity/entradadematerial.h"
 #include "dao/dao.h"
+
 
 class MaterialModel
 {
@@ -19,6 +21,7 @@ public:
 	bool decrementaQuantidadeMaterial(MateiralPtr material);
     MateiralPtr getMaterialPorId(const int& id);
     MateiralList getListMaterial();
+    EntradaDeMaterialList getListMaterialComLote();
     MateiralList getListMaterial(Pesquisa& pesquisa);
     GrupoList getListGrupo();
 };

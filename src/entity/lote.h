@@ -11,7 +11,7 @@ class Lote
 {
     int id;
     string nome;
-    string validade;
+    tm validade;
     int quantidade;
 public:
     Lote();
@@ -24,8 +24,8 @@ public:
     void setId(int value);
     string getNome() const;
     void setNome(const string &value);
-    string getValidade() const;
-    void setValidade(const string &value);
+    tm getValidade() const;
+    void setValidade(const tm &value);
     int getQuantidade() const;
     void setQuantidade(int value);
 };

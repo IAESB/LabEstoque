@@ -73,7 +73,7 @@ EntradaDeMaterial::EntradaDeMaterial(soci::row& rs)
 	lote = LotePtr(new Lote);
     lote->setId(rs.get<int>(17, 0));
     lote->setNome(rs.get<string>(18, ""));
-    lote->setValidade(to_string(rs.get<tm>(19, tm())));
+    lote->setValidade(rs.get<tm>(19, tm()));
     lote->setQuantidade(rs.get<int>(20, 0));
     material->setGrupo(GrupoPtr(new Grupo(rs.get<string>(22, ""))));
 }

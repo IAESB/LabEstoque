@@ -21,12 +21,12 @@ void Lote::setNome(const string &value)
     nome = value;
 }
 
-string Lote::getValidade() const
+tm Lote::getValidade() const
 {
     return validade;
 }
 
-void Lote::setValidade(const string &value)
+void Lote::setValidade(const tm &value)
 {
     validade = value;
 }
@@ -54,19 +54,21 @@ Lote::Lote(soci::row &rs)
 {
     id = rs.get<int>(0);
     nome = rs.get<string>(1);
-    validade = to_string( rs.get<tm>(2, tm()) );
+    validade =  rs.get<tm>(2, tm());
     quantidade = rs.get<int>(3, 0);
 }
 
 string Lote::getSqlInsert()
 {
-    string val = validade.size()?"'"+validade+"'":"NULL";
+    string val = to_string(validade);
+    val = val.size()?"'"+val+"'":"NULL";
     return "INSERT INTO lote(nome, validade, quantidade) VALUES('"+nome+"', "+val+", '"+to_string(quantidade)+"')";
 }
 
 string Lote::getSqlUpdate()
 {
-    string val = validade.size()?"validade='"+validade+"',":"";
+    string val = to_string(validade);
+    val = val.size()?"validade='"+val+"',":"";
     return "UPDATE lote SET nome='"+nome+"', "+val+" quantidade='"+to_string(quantidade)+"' WHERE id="+to_string(id);
 }
 

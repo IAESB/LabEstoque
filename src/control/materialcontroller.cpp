@@ -1,5 +1,6 @@
 #include "materialcontroller.h"
 #include "view/view.h"
+#include "util.hpp"
 
 
 MaterialController::MaterialController()
@@ -18,21 +19,37 @@ void MaterialController::listaMateriais(Request &request, StreamResponse &respon
         {
             view.insertContentId("grupos", "<option value='"+grupo->getNome()+"'>");
         }
-        MateiralList list = model.getListMaterial();
+        EntradaDeMaterialList list = model.getListMaterialComLote();
         string grupoNome;
-        for(MateiralPtr& material: *list)
+        string htmlMatVencido;
+        string htmlMatValido;
+        const string divMat = "<div class='material";
+        time_t hoje = time(NULL);
+        for(EntradaDeMaterialPtr& em: *list)
         {
+            const MateiralPtr& material = em->getMaterial();
+            const LotePtr& lote = em->getLote();
+            const string& validade = to_string(lote->getValidade());
             grupoNome = material->getGrupo()?material->getGrupo()->getNome():"";
             const string& img = material->getImagem().size()?material->getImagem():"/images/ampolas.jpg";
-            string html = "<div class='material' name='"+material->getNome()+"' onclick=mostrarMaterial('" + to_string(material->getId()) + "') id='mat" + to_string(material->getId()) + "'>\
+            const string& html = "' name='"+material->getNome()+"' onclick=mostrarMaterial('" + to_string(material->getId()) + "') id='mat" + to_string(material->getId()) + "'>\
                     <img name='imagem' src='"+img+"'/>\
                     <h4 name='nome'>"+material->getNome()+"</h4>\
                     <label name='descricao'>"+material->getDescricao()+"</label>\
                     <span>Grupo: <label name='grupo'>"+grupoNome+"</label></span>\
-					<span>Quantidade: <label name='quantidade'>"+to_string(material->getQuantidade())+"</label></span>\
-                    </div>";
-                    view.insertContentId("listMateiral", html);
+                    <span>Quantidade: <label name='quantidade'>"+to_string(material->getQuantidade())+"</label></span>"+
+                    (validade.size()?"<span>Validade: <label name='validade'>"+validade+"</label></span>":"")+
+                    "</div>";
+
+            tm tm = lote->getValidade();
+            time_t val = mktime(&tm);
+            if(val<hoje && lote->getQuantidade()>0)
+                htmlMatVencido+=divMat+" vencido"+html;
+            else
+                htmlMatValido+=divMat+html;
         }
+        view.insertContentId("listMateiral", htmlMatVencido);
+        view.insertContentId("listMateiral", htmlMatValido);
         response << view;
     }
     catch(exception &ex){

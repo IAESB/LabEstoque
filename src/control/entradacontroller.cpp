@@ -2,6 +2,7 @@
 #include "view/view.h"
 #include "entity/entradadematerial.h"
 #include <jsoncpp/json/json.h>
+#include <iomanip>      // std::get_time
 
 EntradaController::EntradaController()
 {
@@ -88,8 +89,10 @@ EntradaDeMaterialList EntradaController::criarEntradas(Request& request)
 		}
 		itr = variables.find("validade_" + id);
 		if (itr != variables.end())
-		{
-            entradaDeMaterial->getLote()->setValidade(itr->second);
+        {
+            struct std::tm tm;
+            sscanf(itr->second.c_str(), "%Y-%m-%d", &tm.tm_year, &tm.tm_mon, &tm.tm_mday);
+            entradaDeMaterial->getLote()->setValidade(tm);
 			variables.erase(itr);
 		}
 		itr = variables.find("lote_" + id);
@@ -175,7 +178,7 @@ void EntradaController::getEntrada(Request &request, StreamResponse &response)
         Json::Value mat;
         mat["nome"] = ptr->getMaterial()->getNome();
         mat["quantidade"] = ptr->getQuantidade();
-        mat["validade"] = ptr->getLote()->getValidade();
+        mat["validade"] = to_string(ptr->getLote()->getValidade());
         mat["valor"] = ptr->getValor();
         mat["lote"] = ptr->getLote()->getNome();
         mat["grupo"] = ptr->getMaterial()->getGrupo()->getNome();

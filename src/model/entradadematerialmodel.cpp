@@ -67,7 +67,7 @@ EntradaDeMaterialList EntradaDeMaterialModel::getListEntradaDeMaterial(Pesquisa&
         LotePtr lote(new Lote);
         lote->setId(rs.get<int>(20, 0));
         lote->setNome(rs.get<string>(21, ""));
-        lote->setValidade( to_string( rs.get<tm>(22, tm())) );
+        lote->setValidade( rs.get<tm>(22, tm()) );
         entradaMaterial->setLote(lote);
         entradaMaterial->setEntrada(entrada);
         entradaMaterial->setMaterial(material);
@@ -77,12 +77,12 @@ EntradaDeMaterialList EntradaDeMaterialModel::getListEntradaDeMaterial(Pesquisa&
     return list;
 }
 
-EntradaDeMaterialList EntradaDeMaterialModel::getListMaterialComLote()
+EntradaDeMaterialList EntradaDeMaterialModel::getListMaterialComLote(string ordeBy)
 {
     ResultSet linhas = dao->executeQuery("SELECT DISTINCT m.*, l.* FROM lote l \
                                         RIGHT OUTER JOIN entrada_de_material em ON(em.lote_id = l.id) \
                                         RIGHT OUTER JOIN  material m ON(m.id = em.material_id) \
-                                        ORDER BY m.nome");
+                                        ORDER BY "+ordeBy);
 
 	EntradaDeMaterialList list(new vector<EntradaDeMaterialPtr>);
     for(soci::row& rs: linhas)
@@ -97,7 +97,7 @@ EntradaDeMaterialList EntradaDeMaterialModel::getListMaterialComLote()
 		LotePtr lote(new Lote);
         lote->setId(rs.get<int>(6, 0));
         lote->setNome(rs.get<string>(7, ""));
-        lote->setValidade( to_string(rs.get<tm>(8, tm())));
+        lote->setValidade( rs.get<tm>(8, tm()));
         lote->setQuantidade(rs.get<int>(9, 0));
 
 		EntradaDeMaterialPtr entradaMaterial(new EntradaDeMaterial());

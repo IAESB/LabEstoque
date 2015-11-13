@@ -45,7 +45,7 @@ void SaidaController::alterarSaida(Request &request, StreamResponse &response)
     }
     catch (const exception& ex){
         cerr << ex.what() << endl;
-        cerr << booster::trace(ex);
+        //cerr << booster::trace(ex);
 		mensagem(response, ex.what());
 	}
 }
@@ -94,7 +94,7 @@ void SaidaController::listaSaida(Request &request, StreamResponse &response)
         option = "<option material-id='" + to_string(material->getId())
                 + "' qtd='" + to_string(qtd)
                 + "' lote-id='"+ to_string(lote->getId())
-                + "' value='" + material->getNome() + ", lot:"+lote->getNome()+", val:"+lote->getValidade()+", qtd:" + to_string(qtd) + "'>"
+                + "' value='" + material->getNome() + ", lot:"+lote->getNome()+", val:"+to_string(lote->getValidade())+", qtd:" + to_string(qtd) + "'>"
                 + "</option>";
         if(lote->getQuantidade()>0 || material->getQuantidade()>0)
             view.insertContentId("materiais", option);
